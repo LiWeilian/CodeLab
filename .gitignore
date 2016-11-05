@@ -1,9 +1,12 @@
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
+*.exe
 
 # Folder config file
 Desktop.ini
+bin
+obj
 
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
