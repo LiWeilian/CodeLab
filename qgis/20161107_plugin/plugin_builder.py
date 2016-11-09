@@ -34,9 +34,13 @@ def plugin_file(pluginDir, file):
 # will make will wreak havoc....
 
 myDir = os.getcwd()
+
 print "Checking that we are in the <qgis dir>/src/plugins/ directory....",
 
-pluginsDirectory = os.path.join('src', 'plugins')
+# pluginsDirectory = os.path.join('src', 'plugins')
+pluginsDirectory = myDir
+
+print myDir[-len(pluginsDirectory):]
 
 if myDir[-len(pluginsDirectory):] == pluginsDirectory:
     print "yes"
