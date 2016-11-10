@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Magic function</title>
+        <script>
+            function myFunc(){
+                alert("yes");
+            }
+            myFunc();
+        </script>
+        <script>
+            //定义式优先执行
+            
+            function myFunc(){ //1
+                alert("yes");  
+            }
+            myFunc(); //3，输出no
+            
+            
+            var myFunc = function(){ //4
+                alert("hello");
+            }
+            myFunc(); //5，输出hello
+            
+            function myFunc(){ //2
+                alert("no"); 
+            }
+            myFunc(); //6，输出hello
+        </script>
+    </head>
+</html>
