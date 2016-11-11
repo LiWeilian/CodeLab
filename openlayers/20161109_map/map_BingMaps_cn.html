@@ -1,0 +1,46 @@
+<html>
+
+<head>
+  <title>ol3加载Bing在线地图</title>
+  <link rel="stylesheet" type="text/css" href="http://localhost:18080/openlayers/v3.19.1/css/ol.css">
+  <script type="text/javascript" src="http://localhost:18080/openlayers/v3.19.1/build/ol.js" charset="utf-8"></script>
+</head>
+
+<body>
+    <div id="map" style="width:100%;"></div>
+    <script>
+
+        // 创建地图
+        new ol.Map({
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.XYZ({
+                        wrapX: false,
+                        tileUrlFunction: tileUrlFunction
+                    })
+                })
+            ],
+            view: new ol.View({
+                center: [0, 0],
+                zoom: 2
+            }),
+            target: "map"
+        });
+
+        // Bing在线地图的url构造函数
+        function tileUrlFunction(coord, params1, params2) {
+            return getVETileUrl(coord[0], coord[1], -coord[2] - 1);
+        }
+
+        function getVETileUrl(z, x, y) {
+            for(var a="",c=x,d=y,e=0;e<z;e++) {
+                a=((c&1)+2*(d&1)).toString()+a;
+                c>>=1;
+                d>>=1
+            }
+            return 'http://dynamic.t0.tiles.ditu.live.com/comp/ch/' + a + '?it=G,VE,BX,L,LA&mkt=zh-cn,syr&n=z&og=111&ur=CN'
+        }
+    </script>
+</body>
+
+</html>
