@@ -1,0 +1,30 @@
+<!Doctype html>
+<html xmlns=http://www.w3.org/1999/xhtml>
+	<head>
+		<meta http-equiv=Content-Type content="text/html;charset=utf-8">
+        <title>Who am I</title>
+		<script type="text/javascript">
+			function WhoAmI(){
+				alert("I am " + this.name + " of " + typeof(this));
+			}
+			WhoAmI();
+            
+            var williamli = {name: 'WilliamLi'};
+            WhoAmI.call(williamli);
+            williamli.WhoAmI = WhoAmI;
+            williamli.WhoAmI();
+            
+            var williamli2 = {name: "WilliamLi2"};
+            williamli2.WhoAmI.call(williamli2);
+            
+            ({name: "WilliamLi3", WhoTheFuckAmI:WhoAmI}).WhoTheFuckAmI();
+            
+            WhoAmI.WhoAmI = WhoAmI;
+            WhoAmI.name = "WAI_FUNCT";
+            WhoAmI.WhoAmI();
+		</script>
+	</head>
+	<body>
+		
+	</body>
+</html>

@@ -1,0 +1,41 @@
+<!Doctype html>
+<html xmlns=http://www.w3.org/1999/xhtml>
+	<head>
+		<meta http-equiv=Content-Type content="text/html;charset=utf-8">
+        <title>Construct Object</title>
+		<script type="text/javascript">
+            
+			function Person(name){
+                this.name = name;
+                
+            }
+            
+            Person.prototype.sayHello = function(){
+                alert("Hello, I am " + this.name);
+            }
+            
+            function Employee(name, salary){
+                Person.call(this, name);
+                this.salary = salary;
+            }
+            
+            Employee.prototype = new Person();
+            
+            Employee.prototype.showMeTheMoney = function(){
+                alert(this.name + " $ " + this.salary);
+            }
+            
+            var williamLi = new Person("WilliamLi");
+            var williamLi2 = new Employee("WilliamLi2", 12345);
+            
+            williamLi.sayHello();
+            williamLi2.sayHello();
+            williamLi2.showMeTheMoney();
+            
+            alert(williamLi.sayHello == williamLi2.sayHello);
+		</script>
+	</head>
+	<body>
+		
+	</body>
+</html>
