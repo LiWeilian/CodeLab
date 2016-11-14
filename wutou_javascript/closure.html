@@ -1,0 +1,37 @@
+<!Doctype html>
+<html xmlns=http://www.w3.org/1999/xhtml>
+	<head>
+		<meta http-equiv=Content-Type content="text/html;charset=utf-8">
+        <title>Closure</title>
+		<script type="text/javascript">
+            function Person(firstName, lastName, age)
+            {
+                var _firstName = firstName;
+                var _lastName = lastName;
+                
+                this.age = age;
+                
+                this.getName = function()
+                {
+                    return (_firstName + " " + _lastName);
+                }
+                
+                this.sayHello = function()
+                {
+                    alert("Hello, I'm " + _firstName + " " + _lastName);
+                }
+            }
+            
+            var williamLi = new Person("William", "Li", 34);
+            var williamLi2 = new Person("William", "Li Jr", 3);
+            
+            williamLi.sayHello();
+            williamLi2.sayHello();
+            alert(williamLi.getName() + " " + williamLi.age);
+            alert(williamLi._firstName);
+		</script>
+	</head>
+	<body>
+		
+	</body>
+</html>
