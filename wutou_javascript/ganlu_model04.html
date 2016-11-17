@@ -2,7 +2,7 @@
 <html xmlns=http://www.w3.org/1999/xhtml>
 	<head>
 		<meta http-equiv=Content-Type content="text/html;charset=utf-8">
-        <title>Ganlu Model 03</title>
+        <title>Ganlu Model 04</title>
 		<script type="text/javascript">
             function Class()
 			{
@@ -17,6 +17,13 @@
 				for (var member in aDefine)
 					if (member != "Create")
 						aPrototype[member] = aDefine[member];
+				
+				if (aDefine.toString != Object.prototype.toString)
+					aPrototype.toString = aDefine.toString;
+				if (aDefine.toLocaleString != Object.prototype.toLocaleString)
+					aPrototype.toLocaleString = aDefine.toLocaleString;
+				if (aDefine.valueOf != Object.prototype.valueOf)
+					aPrototype.valueOf = aDefine.valueOf;
 
 				if (aDefine.Create)
 				{
@@ -48,6 +55,7 @@
 				return false;
 			};
 
+			//不支持Opera
 			object.prototype.base = function()
 			{
 				var Caller = object.prototype.base.caller;
