@@ -1,0 +1,41 @@
+<!Doctype html>
+<html xmlns=http://www.w3.org/1999/xhtml>
+<head>                  
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <meta content=always name=referrer>
+    <title>OpenLayers 3 Source.XYZ</title>
+    <link href="http://localhost:18080/openlayers/v3.19.1/css/ol.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="http://localhost:18080/openlayers/v3.19.1/build/ol.js" charset="utf-8"></script>
+</head>
+
+<body>
+    <div id="map" style="width: 100%"></div>
+    <script type="text/javascript">
+
+        //创建地图
+        var map = new ol.Map({
+            layers: [
+                // 底图用Open Street Map 地图
+                new ol.layer.Tile({
+                    source: new ol.source.OSM()
+                }),
+                // 再加载一个geojson的矢量地图
+                new ol.layer.Vector({
+                    source: new ol.source.Vector({
+                        url: 'http://localhost:18080/openlayers/data/geojson/line-samples.geojson',     // 地图来源
+                        format: new ol.format.GeoJSON()    // 解析矢量地图的格式化类
+                    })
+                })
+            ],
+            view: new ol.View({ 
+                center: [-72.980624870461128, 48.161307640513321],
+                zoom: 8,
+                projection: 'EPSG:4326'
+            }),
+            target: 'map'
+        });
+    </script>
+</body>
+
+</html>
