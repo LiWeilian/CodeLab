@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="http://localhost:18080/jquery/jquery-1.11.3.js"></script>
+        <script>
+            /*
+            $(document).ready(function(){
+                $("#btnClick").click(function(){
+                alert("hahaha");
+                $.ajax({
+                    url: "http://www.runoob.com/try/demo_source/demo_test.txt",
+                    success: function(data){
+                        $("#div1").html(data);
+                    }
+                });
+            });
+            });
+            */
+            $(document).ready(function(){
+                $("#btnClick").click(function(){
+                    alert("click");
+                    $.ajax({url:"http://localhost:18080/openlayers/data/geojson/line-samples.geojson",success:function(result){
+                        $("#div1").html(result);
+                    }});
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <button id="btnClick" >CLICK</button>
+        <div id="div1">
+
+        </div>
+    </body>
+</html>
