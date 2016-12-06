@@ -33,10 +33,16 @@
         function addGeoJSON(src) {
             var layer = new ol.layer.Vector({
                 source: new ol.source.Vector({
+                    /*
+                    url: 'http://localhost:18080/openlayers/data/geojson/line-samples.geojson',     // 地图来源
+                    format: new ol.format.GeoJSON()    // 解析矢量地图的格式化类
+                    */
+                    
                     features: (new ol.format.GeoJSON()).readFeatures(src, {     // 用readFeatures方法可以自定义坐标系
                         dataProjection: 'EPSG:4326',    // 设定地图数据的坐标系
                         featureProjection: 'EPSG:3857' // 设定创建Feature用的坐标系
                     })
+                    
                 })
             });
             map.addLayer(layer);

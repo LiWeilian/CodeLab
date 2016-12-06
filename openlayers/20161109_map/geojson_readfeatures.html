@@ -1,0 +1,34 @@
+<!Doctype html>
+<html>
+<head>                  
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <meta content=always name=referrer>
+    <title>Test geojson read features</title>
+    <link href="http://localhost:18080/openlayers/v3.19.1/css/ol.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="http://localhost:18080/openlayers/v3.19.1/build/ol.js" charset="utf-8"></script>
+    <script type="text/javascript" src="http://localhost:18080/jquery/jquery-1.11.3.js"></script>
+</head>
+
+<body>
+    <div id="map" style="width: 100%"></div>
+    <script type="text/javascript">
+        var xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        xhr.open("GET", "http://localhost:18080/openlayers/data/geojson/line-samples.geojson", false);
+        xhr.send("");
+        var src = xhr.responseText;
+        var features = (new ol.format.GeoJSON()).readFeatures(src, {     // 用readFeatures方法可以自定义坐标系
+                        dataProjection: 'EPSG:4326',    // 设定地图数据的坐标系
+                        featureProjection: 'EPSG:3857' // 设定创建Feature用的坐标系
+                    });
+        if(features != null)
+        {
+            alert("y");
+        } else
+        {
+            alert("no");
+        }
+    </script>
+</body>
+
+</html>
