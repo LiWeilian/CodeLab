@@ -1,0 +1,79 @@
+<!Doctype html>
+<html>
+<head>                  
+    <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <meta content=always name=referrer>
+    <title>Vector Trans Coords</title>
+    <link href="http://localhost:18080/openlayers/v3.19.1/css/ol.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="http://localhost:18080/openlayers/v3.19.1/build/ol.js" charset="utf-8"></script>
+    <script type="text/javascript" src="http://localhost:18080/jquery/jquery-1.11.3.js"></script>
+</head>
+
+<body>
+    <div id="map" style="width: 100%"></div>
+    <script type="text/javascript">
+
+        //创建地图
+        var map = new ol.Map({
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM()
+                })
+            ],
+            view: new ol.View({ 
+                center: [-72.980624870461128, 48.161307640513321],
+                zoom: 8,
+                projection: 'EPSG:4326'
+            }),
+            target: 'map'
+        });
+
+        // 加载矢量地图
+        function addGeoJSON(src) {
+            var layer = new ol.layer.Vector({
+                source: new ol.source.Vector({
+                    /*
+                    url: 'http://localhost:18080/openlayers/data/geojson/line-samples.geojson',     // 地图来源
+                    format: new ol.format.GeoJSON()    // 解析矢量地图的格式化类
+                    */
+                    
+                    features: (new ol.format.GeoJSON()).readFeatures(src, {     // 用readFeatures方法可以自定义坐标系
+                        dataProjection: 'EPSG:4326',    // 设定地图数据的坐标系
+                        featureProjection: 'EPSG:4326' // 设定创建Feature用的坐标系
+                    })
+                    
+                })
+            });
+            map.addLayer(layer);
+
+            var source = layer.getSource();
+            var features = source.getFeatures();
+            if (features != null)
+            {
+                for (var i = 0; i < features.length; i++)
+                {
+                    feature = features[i];
+                    var style = new ol.style.Style({
+                        stroke: new ol.style.Stroke({
+                            color: 'green',
+                            size: 2
+                        })
+                    });
+                    feature.setStyle(style);
+                }
+            }
+        }
+
+        // 使用ajax获取矢量地图数据
+        $.ajax({
+            url: 'http://localhost:18080/openlayers/data/geojson/line-samples.geojson',
+            success: function(data, status) {
+                // 成功获取到数据内容后，调用方法添加到地图
+                addGeoJSON(data);
+            }
+        });
+    </script>
+</body>
+
+</html>
