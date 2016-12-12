@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Overlay</title>
+        <link href="http://localhost:18080/openlayers/v3.19.1/css/ol.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="http://localhost:18080/openlayers/v3.19.1/build/ol.js" charset="utf-8"></script>
+    </head>
+    <body>
+        <div id="map" style="width: 100%"></div>
+        <div id="anchor"><img src="./img/anchor.png" alt="示例锚点"></div>
+        <script type="text/javascript">
+            var map = new ol.Map({
+                layers: [
+                    new ol.layer.Tile({
+                        source: new ol.source.OSM()
+                    })
+                ],
+                target: 'map',
+                view: new ol.View({
+                    projection: 'EPSG:4326',
+                    center: [113, 23],
+                    zoom: 10
+                })
+            });
+
+            var anchor = new ol.Overlay({
+                element: document.getElementById("anchor")
+            });
+
+            anchor.setPosition([113, 23]);
+            map.addOverlay(anchor);
+        </script>
+    </body>
+</html>
