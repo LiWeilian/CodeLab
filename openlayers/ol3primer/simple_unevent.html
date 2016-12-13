@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Simple Event</title>
+    <title>Simple UnEvent</title>
     <link href="http://localhost:18080/openlayers/v3.19.1/css/ol.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="http://localhost:18080/openlayers/v3.19.1/build/ol.js" charset="utf-8"></script>
+    <script type="text/javascript" src="http://localhost:18080/openlayers/v3.13.1/build/ol.js" charset="utf-8"></script>
 </head>
 <body>
 <div id="map" style="width: 100%"></div></p>
@@ -23,10 +23,27 @@
         })
     });
 
+    //1
+    /*
     var key = map.on('singleclick', function(event){
         alert(ol.proj.transform(map.getEventCoordinate(event), 'EPSG:3857', 'EPSG:4326'));
         map.unByKey(key);
-    })
+    });
+    */
+
+    //2
+    /*
+    var singleclickListener = function(event){
+        alert(ol.proj.transform(map.getEventCoordinate(event), 'EPSG:3857', 'EPSG:4326'));
+        map.un('singleclick', singleclickListener);
+    };
+    map.on('singleclick', singleclickListener);
+    */
+
+    //3
+    map.once('singleclick', function(event){
+        alert(ol.proj.transform(map.getEventCoordinate(event), 'EPSG:3857', 'EPSG:4326'));
+    });
 </script>
 </body>
 </html>
