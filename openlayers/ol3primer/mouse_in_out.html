@@ -12,7 +12,7 @@
 <body>
 <div id="map" style="width: 100%, height: 400px"></div>
 <script>
-
+    var features = [];
     // 在原点处创建一个feature
     var feature1 = new ol.Feature({
         geometry: new ol.geom.Point([0, 0])
@@ -28,6 +28,8 @@
         })
     }));
 
+    feature1.mousein = false;
+
     // 在坐标[5000000, 5000000]处创建另一个feature
     var feature2 = new ol.Feature({
         geometry: new ol.geom.Point([5000000, 5000000])
@@ -42,6 +44,7 @@
             })
         })
     }));
+    feature2.mousein = false;
 
     // 创建地图
     var map = new ol.Map({
@@ -66,14 +69,18 @@
     // 为地图注册鼠标移动事件的监听
     map.on('pointermove', function(event){
         map.forEachFeatureAtPixel(event.pixel, function(feature){
+            // 为进入的feature发送自定义的mousein消息
+            if(!feature.mousein){
+                feature.mousein = true;
+                feature.dispatchEvent({type: 'mousein', event: event});
+            }
             // 为移动到的feature发送自定义的mousemove消息
             feature.dispatchEvent({type: 'mousemove', event: event});
-            //feature.dispatchEvent('mousemove');
         });
     });
 
     // 为feature1注册自定义事件mousemove的监听
-    feature1.on('mousemove', function(event){
+    feature1.on('mousein', function(event){
         // 修改feature的样式为半径100像素的园，用蓝色填充
         this.setStyle(new ol.style.Style({
             image: new ol.style.Circle({
@@ -86,7 +93,7 @@
     });
 
     // 为feature2注册自定义事件mousemove的监听
-    feature2.on('mousemove', function(event){
+    feature2.on('mousein', function(event){
         // 修改feature的样式为半径100像素的园，用蓝色填充
         this.setStyle(new ol.style.Style({
             image: new ol.style.Circle({
