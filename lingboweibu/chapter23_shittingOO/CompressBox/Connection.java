@@ -36,45 +36,45 @@ public class Connection
         box.setParameters(ap);
     }
 
-    //鍘嬬缉锛屽唴瀛樺埌鍐呭瓨
+    //压缩，内存到内存
     private void Compress(byte[] in, byte[] out)
         throws CompressException
     {
         box.Compress(in, out);
     }
 
-    //瑙ｅ帇锛屽唴瀛樺埌鍐呭瓨
+    //解压，内存到内存
     private void Decompress(byte[] in, byte[] out)
         throws CompressException
     {
         box.Decompress(in, out);
     }
 
-    //鍘嬬缉锛屾枃浠跺埌鏂囦欢
+    //压缩，文件到文件
     public void Compress(String inFileName, String outFIleName)
         throws CompressException
     {
         byte[] in = null;
         byte[] out = null;
 
-        //鐪佺暐銆傘�傘��
+        //省略。。。
 
         Compress(in, out);
 
-        //鐪佺暐銆傘�傘�傘��
+        //省略。。。
     }
 
-    //瑙ｅ帇锛屾枃浠跺埌鏂囦欢
+    //解压，文件到文件
     public void Decompress(String inFileName, String outFIleName)
         throws CompressException
     {
         byte[] in = null;
         byte[] out = null;
 
-        //鐪佺暐銆傘�傘��
+        //省略。。。
 
         Decompress(in, out);
 
-        //鐪佺暐銆傘�傘�傘��
+        //省略。。。
     }
 }
