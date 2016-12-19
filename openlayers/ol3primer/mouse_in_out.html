@@ -6,7 +6,7 @@
     <meta content=always name=referrer>
     <title>Custom Event</title>
     <link href="http://localhost:18080/openlayers/v3.19.1/css/ol.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="http://localhost:18080/openlayers/v3.13.1/build/ol.js" charset="utf-8"></script>
+    <script type="text/javascript" src="http://localhost:18080/openlayers/v3.19.1/build/ol.js" charset="utf-8"></script>
 </head>
 
 <body>
@@ -29,6 +29,8 @@
     }));
 
     feature1.mousein = false;
+    feature1.pointerflag = false;
+    features[0] = feature1;
 
     // 在坐标[5000000, 5000000]处创建另一个feature
     var feature2 = new ol.Feature({
@@ -45,6 +47,8 @@
         })
     }));
     feature2.mousein = false;
+    feature2.pointerflag = false;
+    features[1] = feature2;
 
     // 创建地图
     var map = new ol.Map({
@@ -68,7 +72,13 @@
 
     // 为地图注册鼠标移动事件的监听
     map.on('pointermove', function(event){
+        for (var i = 0; i < features.length; i++)
+        {
+            features[i].pointerflag = false;
+        }
+
         map.forEachFeatureAtPixel(event.pixel, function(feature){
+            feature.pointerflag = true;
             // 为进入的feature发送自定义的mousein消息
             if(!feature.mousein){
                 feature.mousein = true;
@@ -77,9 +87,18 @@
             // 为移动到的feature发送自定义的mousemove消息
             feature.dispatchEvent({type: 'mousemove', event: event});
         });
+
+        for (var i = 0; i < features.length; i++)
+        {
+            if (features[i].pointerflag == false && features[i].mousein)
+            {
+                features[i].mousein = false;
+                features[i].dispatchEvent({type: 'mouseout', event: event});
+            }
+        }
     });
 
-    // 为feature1注册自定义事件mousemove的监听
+    // 为feature1注册自定义事件mousein的监听
     feature1.on('mousein', function(event){
         // 修改feature的样式为半径100像素的园，用蓝色填充
         this.setStyle(new ol.style.Style({
@@ -92,7 +111,7 @@
         }));
     });
 
-    // 为feature2注册自定义事件mousemove的监听
+    // 为feature2注册自定义事件mousein的监听
     feature2.on('mousein', function(event){
         // 修改feature的样式为半径100像素的园，用蓝色填充
         this.setStyle(new ol.style.Style({
@@ -100,6 +119,32 @@
                 radius: 100,
                 fill: new ol.style.Fill({
                     color: 'green'
+                })
+            })
+        }));
+    });
+
+    // 为feature1注册自定义事件mouseout的监听
+    feature1.on('mouseout', function(event){
+        // 修改feature的样式为半径100像素的园，用蓝色填充
+        this.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 100,
+                fill: new ol.style.Fill({
+                    color: 'red'
+                })
+            })
+        }));
+    });
+
+    // 为feature2注册自定义事件mouseout的监听
+    feature2.on('mouseout', function(event){
+        // 修改feature的样式为半径100像素的园，用蓝色填充
+        this.setStyle(new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 100,
+                fill: new ol.style.Fill({
+                    color: 'yellow'
                 })
             })
         }));
