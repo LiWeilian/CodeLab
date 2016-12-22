@@ -4,7 +4,7 @@
         <meta http-equiv=Content-Type content="text/html;charset=utf-8">
         <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
         <meta content=always name=referrer>
-        <title>Interaction Feature Select2</title>
+        <title>Interaction Feature Select With Condition</title>
         <link href="http://localhost:18080/openlayers/v3.19.1/css/ol.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="http://localhost:18080/openlayers/v3.19.1/build/ol.js" charset="utf-8"></script>
     </head>
@@ -47,6 +47,7 @@
             layer.getSource().addFeature(circle);
 
             map.addInteraction(new ol.interaction.Select({
+                condition: ol.events.condition.pointerMove,
                 style: new ol.style.Style({
                     image: new ol.style.Circle({
                         radius: 10,

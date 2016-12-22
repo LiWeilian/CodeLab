@@ -4,13 +4,14 @@
         <meta http-equiv=Content-Type content="text/html;charset=utf-8">
         <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
         <meta content=always name=referrer>
-        <title>Interaction Feature Select2</title>
+        <title>Interaction Feature Unselect</title>
         <link href="http://localhost:18080/openlayers/v3.19.1/css/ol.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="http://localhost:18080/openlayers/v3.19.1/build/ol.js" charset="utf-8"></script>
     </head>
 
     <body>
         <div id="map" style="width: 100%, height: 400px"></div>
+        <input id="btnUnselect" type="button" value="Unselect" onClick="unselectFeature();"></input>
         <script>
             var layer = new ol.layer.Vector({
                 source: new ol.source.Vector(),
@@ -46,7 +47,7 @@
 
             layer.getSource().addFeature(circle);
 
-            map.addInteraction(new ol.interaction.Select({
+            var clickSelect = new ol.interaction.Select({
                 style: new ol.style.Style({
                     image: new ol.style.Circle({
                         radius: 10,
@@ -55,7 +56,12 @@
                         })
                     })
                 })
-            }));
+            });
+            map.addInteraction(clickSelect);
+
+            function unselectFeature(){
+                clickSelect.getFeatures().clear();
+            }
         </script>
     </body>
 

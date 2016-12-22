@@ -4,7 +4,7 @@
         <meta http-equiv=Content-Type content="text/html;charset=utf-8">
         <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
         <meta content=always name=referrer>
-        <title>Interaction Feature Select2</title>
+        <title>Interaction Feature Select With Condition</title>
         <link href="http://localhost:18080/openlayers/v3.19.1/css/ol.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="http://localhost:18080/openlayers/v3.19.1/build/ol.js" charset="utf-8"></script>
     </head>
@@ -12,7 +12,7 @@
     <body>
         <div id="map" style="width: 100%, height: 400px"></div>
         <script>
-            var layer = new ol.layer.Vector({
+            var circleLayer = new ol.layer.Vector({
                 source: new ol.source.Vector(),
                 style: new ol.style.Style({
                     image: new ol.style.Circle({
@@ -23,13 +23,29 @@
                     })
                 })
             });
+
+            var starLayer = new ol.layer.Vector({
+                source: new ol.source.Vector(),
+                style: new ol.style.Style({
+                    image: new ol.style.RegularShape({
+                        points: 5,
+                        radius1: 20,
+                        radius2: 10,
+                        fill: new ol.style.Fill({
+                            color: 'red'
+                        })
+                    })
+                })
+            });
+
             // 创建地图
             var map = new ol.Map({
                 // 设置地图图层
                 layers: [
                     // 创建一个使用Open Street Map地图源的瓦片图层
                     new ol.layer.Tile({source: new ol.source.OSM()}),
-                    layer
+                    circleLayer,
+                    starLayer
                 ],
                 // 让id为map的div作为地图的容器
                 target: 'map',
@@ -44,7 +60,12 @@
                 geometry: new ol.geom.Point(ol.proj.transform([112.5, 23], 'EPSG:4326', 'EPSG:3857'))
             });
 
-            layer.getSource().addFeature(circle);
+            circleLayer.getSource().addFeature(circle);
+
+            var star = new ol.Feature({
+                geometry: new ol.geom.Point(ol.proj.transform([113.5, 23], 'EPSG:4326', 'EPSG:3857'))
+            });
+            starLayer.getSource().addFeature(star);
 
             map.addInteraction(new ol.interaction.Select({
                 style: new ol.style.Style({
@@ -54,7 +75,10 @@
                             color: 'blue'
                         })
                     })
-                })
+                }),
+                filter: function(feature, layer){
+                    return layer == circleLayer;
+                }
             }));
         </script>
     </body>
