@@ -1,0 +1,66 @@
+<!Doctype html>
+<html xmlns=http://www.w3.org/1999/xhtml>
+    <head>
+        <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+        <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+        <meta content=always name=referrer>
+        <title>Controls Custom</title>
+        <link href="http://localhost:18080/openlayers/v3.19.1/css/ol.css" rel="stylesheet" type="text/css" />
+        <style>
+            .share {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                border: 1px;
+                border-color: #333;
+                background-color: #339999;
+                color: #fff;
+                box-shadow: 0px 0px 2px #666;
+                cursor: pointer;
+                padding: 0 4px 0 4px;
+            }
+        </style>
+        <script type="text/javascript" src="http://localhost:18080/openlayers/v3.19.1/build/ol.js" charset="utf-8"></script>
+        <script type="text/javascript" src="http://localhost:18080/jquery/jquery-1.11.3.js"></script>
+        <script>
+            /*
+            $(document).ready(function(){
+                $('#share').click(function(){
+                    alert('分享地图');
+                });
+            });
+            */
+        </script>
+    </head>
+
+    <body>
+        <div id="map" style="width: 100%, height: 400px"></div>
+        <script type="text/javascript">
+            var map = new ol.Map({
+                layers: [
+                    new ol.layer.Tile({
+                        source: new ol.source.OSM()
+                    })
+                ],
+                target: 'map',
+                view: new ol.View({
+                    center: ol.proj.transform(
+                        [113, 23], 'EPSG:4326', 'EPSG:3857'),
+                    zoom: 10
+                })
+            });
+
+            var viewport = map.getViewport();
+            $(viewport).append('<div id="share" class="share">分享地图</div>');
+
+            //document.getElementById('share').onclick = function(){
+            //    alert('分享地图');
+            //}
+
+            $('#share').click(function(){
+                alert('分享地图');
+            });
+        </script>
+    </body>
+
+</html>
