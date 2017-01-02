@@ -1,0 +1,47 @@
+<!Doctype html>
+<html xmlns=http://www.w3.org/1999/xhtml>
+    <head>
+        <meta http-equiv=Content-Type content="text/html;charset=utf-8">
+        <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+        <meta content=always name=referrer>
+        <title>Animation Simple</title>
+        <link href="http://localhost:18080/openlayers/v3.19.1/css/ol.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="http://localhost:18080/openlayers/v3.19.1/build/ol.js" charset="utf-8"></script>
+    </head>
+
+    <body>
+        <div id="map" style="width: 100%, height: 400px"></div>
+        <!--增加两个按钮，一个演示不带动画，一个演示带动画-->
+        <input type="button" value="回到原点-不带动画" onclick="backNoAnim()"></input>
+        <input type="button" value="回到原点-带动画" onclick="backWithAnim()"></input>
+        <script type="text/javascript">
+            var map = new ol.Map({
+                layers: [
+                    new ol.layer.Tile({
+                        source: new ol.source.OSM()
+                    })
+                ],
+                target: 'map',
+                view: new ol.View({
+                    center: ol.proj.transform(
+                        [113, 23], 'EPSG:4326', 'EPSG:3857'),
+                    zoom: 10
+                })
+            });
+
+            function backNoAnim(){
+                map.getView().setCenter(ol.proj.transform([113, 23], 'EPSG:4326', 'EPSG:3857'));
+            }
+
+            function backWithAnim(){
+                var pan = ol.animation.pan({
+                    duration: 200,
+                    source: map.getView().getCenter()
+                });
+                map.beforeRender(pan);
+                map.getView().setCenter(ol.proj.transform([113, 23], 'EPSG:4326', 'EPSG:3857'));
+            }
+        </script>
+    </body>
+
+</html>
