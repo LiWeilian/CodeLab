@@ -1,0 +1,3 @@
+Invalid latitude:113.123459
+Invalid latitude:113.265877
+Invalid latitude:113.569740
