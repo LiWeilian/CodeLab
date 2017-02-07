@@ -8,6 +8,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="368.604" Width="540.116">
     <Grid Margin="0,0,2,2">
-        <c:Button x:Name="button2" Content="xamlButton" Margin="165,139,290,178" Height="19" RenderTransformOrigin="1.492,0.714"/>
+        <c:Button x:Name="button2" Content="xamlButton" Margin="165,139,290,159" RenderTransformOrigin="1.492,0.714"/>
     </Grid>
 </Window>
