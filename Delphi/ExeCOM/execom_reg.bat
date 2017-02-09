@@ -1,0 +1,1 @@
+execom.exe /regserver

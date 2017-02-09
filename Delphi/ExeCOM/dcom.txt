@@ -1,0 +1,3 @@
+gddst-xp-vpn
+runas /user:gddst
+123
