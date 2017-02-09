@@ -7,6 +7,41 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-        <Rectangle x:Name="rectangle" Width="200" Height="120" Fill="Blue" />
+        <Rectangle x:Name="rectangle" Width="200" Height="200">
+            <Rectangle.Fill>
+                <!--
+                <SolidColorBrush Color="GreenYellow"/>
+                -->
+                <!--
+                <LinearGradientBrush>
+                    <LinearGradientBrush.StartPoint>
+                        <Point X="0" Y="0" />
+                    </LinearGradientBrush.StartPoint>
+                    <LinearGradientBrush.EndPoint>
+                        <Point X="1" Y="1" />
+                    </LinearGradientBrush.EndPoint>
+                    <LinearGradientBrush.GradientStops>
+                        <GradientStopCollection>
+                            <GradientStop Offset="0.2" Color="LightBlue" />
+                            <GradientStop Offset="0.7" Color="Blue" />
+                            <GradientStop Offset="1.0" Color="DarkBlue" />
+                        </GradientStopCollection>
+                    </LinearGradientBrush.GradientStops>
+                </LinearGradientBrush>
+                -->
+                <LinearGradientBrush>
+                    <LinearGradientBrush.GradientStops>
+                        <GradientStop Offset="0" Color="White" />
+                        <GradientStop Offset="0.65" Color="Black" />
+                        <GradientStop Offset="0.8" Color="Gray" />
+                    </LinearGradientBrush.GradientStops>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
     </Grid>
+    <!--
+    <Window.Resources>
+        <local:Human x:Key="human" Child="ABC" />
+    </Window.Resources>
+    -->
 </Window>
