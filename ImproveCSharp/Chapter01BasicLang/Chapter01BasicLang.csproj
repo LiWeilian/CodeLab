@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cloneable.cs" />
+    <Compile Include="EnumNoExplicit.cs" />
     <Compile Include="TypeConvert.cs" />
     <Compile Include="OpStringCorrectly.cs" />
     <Compile Include="Program.cs" />

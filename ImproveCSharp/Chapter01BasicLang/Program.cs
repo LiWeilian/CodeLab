@@ -10,11 +10,11 @@ namespace Chapter01BasicLang
     {
         static void Main(string[] args)
         {
-            string s = "192.168.1.1";
-            IP ip = (IP)s;
-            Console.WriteLine(ip.ToString());
-            IP3 ip3 = (IP3)ip;
-            Console.WriteLine(string.Format("{0}: {1}", ip3.Name, ip3.ToString()));
+            Employee mike = new Employee() { IDCode = "NB123", Age = 25, Department = new Department() { Name = "Dep1" } };
+            Employee rose = mike.Clone() as Employee;
+            Console.WriteLine(rose.Department.ToString());
+            mike.Department.Name = "Dep2";
+            Console.WriteLine(rose.Department.ToString());
             Console.ReadLine();
         }
     }
