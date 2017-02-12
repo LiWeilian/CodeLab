@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cloneable.cs" />
+    <Compile Include="Dynamic.cs" />
     <Compile Include="EnumNoExplicit.cs" />
     <Compile Include="TypeConvert.cs" />
     <Compile Include="OpStringCorrectly.cs" />
