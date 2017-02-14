@@ -10,7 +10,7 @@ namespace Chapter01BasicLang
     {
         static void Main(string[] args)
         {
-            CallDynamic();
+            CallOperatorOverloading();
             Console.ReadLine();
         }
 
@@ -33,6 +33,14 @@ namespace Chapter01BasicLang
             dynamic dynamic = new Dynamic();
             int i = dynamic.Add(1, 2);
             Console.WriteLine(i.ToString());
+        }
+
+        static void CallOperatorOverloading()
+        {
+            Vector v1 = new Vector() { X = 1.1, Y = 1.2 };
+            Vector v2 = new Vector() { X = 2.1, Y = 2.2 };
+            Vector v = v1 + v2;
+            Console.WriteLine(string.Format("X:{0}, Y:{1}", v.X, v.Y));
         }
     }
 }
