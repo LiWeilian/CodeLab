@@ -31,10 +31,17 @@ namespace Chapter02CollectionLinq
             watch.Stop();
             Console.WriteLine(string.Format("Resize List: {0}", watch.Elapsed));
         }
+
+        static void CallInitialization()
+        {
+            Initialization init = new Initialization();
+            init.InitializeLinqResult();
+        }
         static void Main(string[] args)
         {
-            ResizeArray();
-            ResizeList();
+            //ResizeArray();
+            //ResizeList();
+            CallInitialization();
             Console.ReadLine();
         }
     }
