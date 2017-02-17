@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("MEFDemo")]
+[assembly: AssemblyTitle("MefDemo2")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MEFDemo")]
+[assembly: AssemblyProduct("MefDemo2")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-[assembly: Guid("12976cc8-4a2e-4b73-a604-9c93d0dbe49f")]
+[assembly: Guid("89a535db-952c-45f7-b5ed-679d6fb27934")]
 
 // 程序集的版本信息由下列四个值组成: 
 //
