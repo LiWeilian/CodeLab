@@ -37,11 +37,18 @@ namespace Chapter02CollectionLinq
             Initialization init = new Initialization();
             init.InitializeLinqResult();
         }
+
+        static void CallMultiThreadCollection()
+        {
+            MultiThreadCollection.Op();            
+        }
+
         static void Main(string[] args)
         {
             //ResizeArray();
             //ResizeList();
-            CallInitialization();
+            //CallInitialization();
+            CallMultiThreadCollection();
             Console.ReadLine();
         }
     }
