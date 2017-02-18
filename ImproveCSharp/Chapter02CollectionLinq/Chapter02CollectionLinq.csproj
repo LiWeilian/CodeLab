@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Initialization.cs" />
     <Compile Include="MultiThreadCollection.cs" />
+    <Compile Include="NoListAsBaseClass.cs" />
     <Compile Include="NoResizeArray.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

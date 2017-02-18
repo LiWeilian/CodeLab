@@ -40,7 +40,13 @@ namespace Chapter02CollectionLinq
 
         static void CallMultiThreadCollection()
         {
-            MultiThreadCollection.Op();            
+            MultiThreadCollection.Op3();            
+        }
+
+        static void CallNoListAsBaseClass()
+        {
+            NoListAsBaseClass.Method1();
+            NoListAsBaseClass.Method2();
         }
 
         static void Main(string[] args)
@@ -48,7 +54,8 @@ namespace Chapter02CollectionLinq
             //ResizeArray();
             //ResizeList();
             //CallInitialization();
-            CallMultiThreadCollection();
+            //CallMultiThreadCollection();
+            CallNoListAsBaseClass();
             Console.ReadLine();
         }
     }
