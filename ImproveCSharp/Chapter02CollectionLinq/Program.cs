@@ -49,13 +49,14 @@ namespace Chapter02CollectionLinq
             NoListAsBaseClass.Method2();
         }
 
+        static void CallUseLambdaInQuery()
+        {
+            UseLambdaInQuery.Method1();
+        }
+
         static void Main(string[] args)
         {
-            //ResizeArray();
-            //ResizeList();
-            //CallInitialization();
-            //CallMultiThreadCollection();
-            CallNoListAsBaseClass();
+            CallUseLambdaInQuery();
             Console.ReadLine();
         }
     }
