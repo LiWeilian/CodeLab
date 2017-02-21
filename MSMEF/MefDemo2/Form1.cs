@@ -20,6 +20,10 @@ namespace MefDemo2
 
         [ImportMany]
         private IEnumerable<IPluginIntf> m_plugins;
+        [ImportMany]
+        private IEnumerable<IMefCommand> m_cmds;
+        [ImportMany]
+        private IEnumerable<IMefTool> m_tools;
         public Form1()
         {
             InitializeComponent();
@@ -36,10 +40,10 @@ namespace MefDemo2
             {
                 m_container.ComposeParts(this);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                MessageBox.Show(ex.Message);
+                //throw;
             }
         }
 
@@ -52,6 +56,24 @@ namespace MefDemo2
                 ToolStripMenuItem submi = new ToolStripMenuItem(plugin.Text);
                 submi.Click += (s, args) => { plugin.Do(); };
                 mi.DropDownItems.Add(submi);
+            }
+
+            ToolStripMenuItem mi2 = new ToolStripMenuItem("Cmd插件");
+            menuStrip1.Items.Add(mi2);
+            foreach (IMefCommand cmd in m_cmds)
+            {
+                ToolStripMenuItem submi = new ToolStripMenuItem(cmd.Text);
+                submi.Click += (s, args) => { cmd.OnClick(); };
+                mi2.DropDownItems.Add(submi);
+            }
+
+            ToolStripMenuItem mi3 = new ToolStripMenuItem("Tool插件");
+            menuStrip1.Items.Add(mi3);
+            foreach (IMefTool tool in m_tools)
+            {
+                ToolStripMenuItem submi = new ToolStripMenuItem(tool.Text);
+                submi.Click += (s, args) => { tool.OnClick(); };
+                mi3.DropDownItems.Add(submi);
             }
         }
 
