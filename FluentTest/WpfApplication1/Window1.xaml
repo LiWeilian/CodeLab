@@ -1,0 +1,36 @@
+﻿<Fluent:RibbonWindow x:Class="WpfApplication1.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApplication1"
+        xmlns:Fluent="clr-namespace:Fluent;assembly=Fluent"
+        mc:Ignorable="d"
+        Title="Window1" Height="300" Width="300"
+                     WindowStyle="None">
+    <Grid>
+        <Fluent:Ribbon  IsQuickAccessToolBarVisible="False" >
+            <Fluent:RibbonTabItem Header="12123" >
+                <Fluent:RibbonGroupBox Header="sdfsdf">
+                    <Fluent:ToggleButton Header="Button1"
+                                         GroupName="Group1" Icon="Chrysanthemum.jpg" />
+                    <Fluent:ToggleButton Header="Button2"
+                                         GroupName="Group1" />
+                    <Fluent:ToggleButton    GroupName="Group1"  Header="Button3"    LargeIcon="bookmark_folder.ico" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="csg">
+                    <Fluent:ToggleButton Header="Button1"
+                                         GroupName="Group1" Icon="Chrysanthemum.jpg" />
+                    <Fluent:ToggleButton Header="Button2"
+                                         GroupName="Group1" />
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+            <Fluent:RibbonTabItem Header="523"/>
+        </Fluent:Ribbon>
+        <Fluent:StatusBar HorizontalAlignment="Stretch"
+                          VerticalAlignment="Bottom"
+                          >
+
+        </Fluent:StatusBar>
+    </Grid>
+</Fluent:RibbonWindow>
