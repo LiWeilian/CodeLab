@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Controls.Ribbon;
+using System.Drawing;
+using System.Windows.Interop;
+using System.Windows.Forms;
 
 namespace MefHost01
 {
@@ -20,9 +23,13 @@ namespace MefHost01
     /// </summary>
     public partial class Window1 : Window
     {
+        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+        public static extern bool DeleteObject(IntPtr hObject);
+
         public Window1()
         {
             InitializeComponent();
+            textBox.Style = this.TryFindResource("RoundCornerTextBoxStyle") as Style;
             InitializeRibbon();
         }
 
@@ -35,11 +42,16 @@ namespace MefHost01
             ribbonGroup.Header = "Group 1";
             RibbonButton rbtn = new RibbonButton();
             rbtn.Label = "Button01";
+            Bitmap bmp = new Bitmap(string.Format("{0}\\images\\3DFlyAlong32.png", System.Windows.Forms.Application.StartupPath));
+            IntPtr ptr = bmp.GetHbitmap();
+            rbtn.LargeImageSource = Imaging.CreateBitmapSourceFromHBitmap(ptr, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
             ribbonGroup.Items.Add(rbtn);
             ribbonTab.Items.Add(ribbonGroup);
             ribbon.Items.Add(ribbonTab);
 
             mainGrid.Children.Add(ribbon);
+
+            DeleteObject(ptr);
         }
     }
 }

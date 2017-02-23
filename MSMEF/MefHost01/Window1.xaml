@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         Title="Window1" Height="300" Width="300">
     <Grid x:Name="mainGrid">
-        
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="59,193,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" Style="{DynamicResource TextBoxStyle1}"/>
+
 
     </Grid>
 </Window>

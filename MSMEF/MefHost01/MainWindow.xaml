@@ -10,7 +10,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <ribbon:Ribbon x:Name="Ribbon">
+        <ribbon:Ribbon x:Name="Ribbon" TabIndex="2">
             <ribbon:Ribbon.ApplicationMenu>
                 <ribbon:RibbonApplicationMenu>
                     <ribbon:RibbonApplicationMenuItem Header="Hello _Ribbon"
@@ -30,6 +30,32 @@
                                          Label="Button3" />
                     <ribbon:RibbonButton x:Name="Button4"
                                          Label="Button4" />
+
+                </ribbon:RibbonGroup>
+
+            </ribbon:RibbonTab>
+            <ribbon:RibbonTab x:Name="ManageTab" 
+                              Header="Manage">
+                <ribbon:RibbonGroup x:Name="Group2" 
+                                    Header="Group2">
+                    <ribbon:RibbonButton x:Name="mbtn01"
+                                         Label="Button1" />
+
+                    <ribbon:RibbonButton x:Name="mbtn02"
+                                         Label="Button2" />
+                    <ribbon:RibbonButton x:Name="mbtn03"
+                                         Label="Button3" />
+                    <ribbon:RibbonButton x:Name="mbtn04"
+                                         Label="Button4" />
+
+                </ribbon:RibbonGroup>
+
+            </ribbon:RibbonTab>
+            <ribbon:RibbonTab x:Name="ControlTab" 
+                              Header="Control">
+                <ribbon:RibbonGroup x:Name="Group3" 
+                                    Header="Group3">
+                    <ribbon:RibbonTwoLineText x:Name="tlt01" />
 
                 </ribbon:RibbonGroup>
 
