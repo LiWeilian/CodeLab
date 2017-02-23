@@ -7,9 +7,10 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="29.245" Margin="51.66,27.717,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="155.661" Style="{DynamicResource RoundCornerTextBoxStyle}"/>
-        <TextBox x:Name="textBox1" HorizontalAlignment="Left" Height="34.905" Margin="51.66,72.057,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="155.661" />
+        <TextBox x:Name="textBox" Margin="225.245,144.698,136.094,145.057" TextWrapping="Wrap" Text="TextBox" Style="{DynamicResource RoundCornerTextBoxStyle}"/>
+        <TextBox x:Name="textBox1" Height="34.905" Margin="225.245,0,136.094,70.282" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Bottom" />
         <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="51.66,138.094,0,145.057" Width="155.661" Style="{DynamicResource RoundCornerButtonStyle}"/>
         <Slider x:Name="slider" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="51.66,0,0,74" Width="155.661"/>
+        <Ribbon x:Name="ribbon" Height="87.735" Margin="51.66,22.057,73.83,0" VerticalAlignment="Top" Style="{DynamicResource RoundCornerRibbonControlStyle}"/>
     </Grid>
 </Window>
