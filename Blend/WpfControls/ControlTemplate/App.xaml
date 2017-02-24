@@ -161,9 +161,6 @@
                     <ContentControl x:Name="windowButtonPlaceHolder" DockPanel.Dock="Right" Focusable="False" IsHitTestVisible="False" Margin="3,0,0,0" Width="{Binding (0)}">
                         <ContentControl.Visibility>
                             <TemplateBinding Property="IsHostedInRibbonWindow">
-                                <TemplateBinding.Converter>
-                                    <BooleanToVisibilityConverter/>
-                                </TemplateBinding.Converter>
                             </TemplateBinding>
                         </ContentControl.Visibility>
                     </ContentControl>
