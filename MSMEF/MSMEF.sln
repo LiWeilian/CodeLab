@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MefTool01", "MefTool01\MefT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MefHost01", "MefHost01\MefHost01.csproj", "{077FAEFF-7EE4-4351-8321-DD310C3616DC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MefHost02", "MefHost02\MefHost02.csproj", "{FA5BA5AF-D0B5-4A4C-A371-4B354D05617C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfLayout01", "WpfLayout01\WpfLayout01.csproj", "{B3D3C74A-8762-4AC2-9352-C184542FFDA7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{077FAEFF-7EE4-4351-8321-DD310C3616DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{077FAEFF-7EE4-4351-8321-DD310C3616DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{077FAEFF-7EE4-4351-8321-DD310C3616DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA5BA5AF-D0B5-4A4C-A371-4B354D05617C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA5BA5AF-D0B5-4A4C-A371-4B354D05617C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA5BA5AF-D0B5-4A4C-A371-4B354D05617C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA5BA5AF-D0B5-4A4C-A371-4B354D05617C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3D3C74A-8762-4AC2-9352-C184542FFDA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3D3C74A-8762-4AC2-9352-C184542FFDA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3D3C74A-8762-4AC2-9352-C184542FFDA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3D3C74A-8762-4AC2-9352-C184542FFDA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
