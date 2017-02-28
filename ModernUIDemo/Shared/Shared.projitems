@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>ad98dcc4-c0a1-4c93-a0af-c2266474f1e9</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Assets\Button.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\Calendar.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\CheckBox.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\ComboBox.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\ContextMenu.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\Converters.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\DataGrid.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\DatePicker.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\GridSplitter.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\Hyperlink.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\Label.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\ListBox.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\ListView.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\MenuItem.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\ModernProgressRingStyles.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\ModernUI.Dark.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\ModernUI.Light.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\ModernUI.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\PasswordBox.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\ProgressBar.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\RadioButton.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\ScrollBar.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\Slider.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\TextBlock.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\TextBox.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\ToolTip.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\TreeView.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)SharedClass.cs" />
+  </ItemGroup>
+</Project>
