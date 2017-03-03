@@ -120,9 +120,13 @@ namespace GDDST.GIS.PluginEngine
     public interface IDsCommand : IDsPlugin
     {
         /// <summary>
-        /// 图标
+        /// 大图标
         /// </summary>
-        Bitmap Bitmap { get; }
+        Bitmap LargeBitmap { get; }
+        /// <summary>
+        /// 小图标
+        /// </summary>
+        Bitmap SmallBitmap { get; }
 
         /// <summary>
         /// 标题
@@ -181,9 +185,13 @@ namespace GDDST.GIS.PluginEngine
     public interface IDsTool : IDsPlugin
     {
         /// <summary>
+        /// 大图标
+        /// </summary>
+        Bitmap LargeBitmap { get; }
+        /// <summary>
         /// 图标
         /// </summary>
-        Bitmap Bitmap { get; }
+        Bitmap SmallBitmap { get; }
 
         /// <summary>
         /// 标题

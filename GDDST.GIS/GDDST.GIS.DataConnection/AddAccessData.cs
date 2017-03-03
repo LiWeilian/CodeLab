@@ -21,9 +21,9 @@ namespace GDDST.GIS.DataConnection
             base.Name = "AddAccessData";
             base.Checked = false;
             base.Enabled = true;
-            base.m_bitmapName = "AddAccessData.ico";
+            base.m_bitmapNameSmall = "AddAccessData_16.ico";
 
-            base.LoadBitmap();
+            base.LoadSmallBitmap();
         }
     }
 }

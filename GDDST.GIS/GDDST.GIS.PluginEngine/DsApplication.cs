@@ -120,6 +120,19 @@ namespace GDDST.GIS.PluginEngine
 
         public Window MainWindow { get; set; }
 
+        public IDsUIStyle UIStyle
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         #endregion
 
         #region

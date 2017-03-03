@@ -22,9 +22,9 @@ namespace GDDST.GIS.MapNavigation
             base.Checked = false;
             base.Deactivate = false;
             base.Enabled = true;
-            base.m_bitmapName = "Pan.ico";
+            base.m_bitmapNameSmall = "MapPan_16.ico";
 
-            base.LoadBitmap();
+            base.LoadSmallBitmap();
         }
     }
 }

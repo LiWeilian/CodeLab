@@ -22,9 +22,9 @@ namespace GDDST.GIS.MapNavigation
             base.Checked = false;
             base.Deactivate = false;
             base.Enabled = true;
-            base.m_bitmapName = "ZoomOut.ico";
+            base.m_bitmapNameSmall = "MapZoomOut_16.ico";
 
-            base.LoadBitmap();
+            base.LoadSmallBitmap();
         }
     }
 }

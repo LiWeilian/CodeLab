@@ -110,5 +110,10 @@ namespace GDDST.GIS.PluginEngine
         /// 将当前工具重置为默认工具
         /// </summary>
         void ResetCurrentToolToDefaultTool();
+
+        /// <summary>
+        /// 界面样式
+        /// </summary>
+        IDsUIStyle UIStyle { get; set; }
     }
 }

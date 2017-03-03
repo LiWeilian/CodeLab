@@ -10,30 +10,47 @@ namespace GDDST.GIS.PluginEngine
     public abstract class DsBaseTool : IDsTool
     {
         protected IDsApplication m_app;
-        protected string m_bitmapName = string.Empty;
+        protected string m_bitmapNameSmall = string.Empty;
+        protected string m_bitmapNameLarge = string.Empty;
         /// <summary>
         /// 加载位图
         /// </summary>
-        protected void LoadBitmap()
+        protected void LoadSmallBitmap()
         {
-            string path = AppDomain.CurrentDomain.BaseDirectory + "\\..\\images\\" + this.m_bitmapName;
+            string path = AppDomain.CurrentDomain.BaseDirectory + "\\..\\images\\" + this.m_bitmapNameSmall;
             try
             {
-                this.Bitmap = new System.Drawing.Bitmap(path);
+                this.SmallBitmap = new System.Drawing.Bitmap(path);
             }
             catch (Exception ex)
             {
-                this.Bitmap = null;
+                this.SmallBitmap = null;
             }
         }
 
+        protected void LoadLargeBitmap()
+        {
+            string path = AppDomain.CurrentDomain.BaseDirectory + "\\..\\images\\" + this.m_bitmapNameLarge;
+            try
+            {
+                this.LargeBitmap = new System.Drawing.Bitmap(path);
+            }
+            catch (Exception)
+            {
+                this.LargeBitmap = null;
+            }
+        }
 
         #region IDsTool 成员
+        /// <summary>
+        /// 图标
+        /// </summary>
+        public virtual Bitmap LargeBitmap { get; protected set; }
 
         /// <summary>
         /// 图标
         /// </summary>
-        public virtual System.Drawing.Bitmap Bitmap { get; protected set; }
+        public virtual System.Drawing.Bitmap SmallBitmap { get; protected set; }
 
         /// <summary>
         /// 标题

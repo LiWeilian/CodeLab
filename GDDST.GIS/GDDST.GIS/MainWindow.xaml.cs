@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Drawing;
+using System.Windows.Interop;
 using System.Windows.Controls.Ribbon;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
@@ -34,6 +36,11 @@ namespace GDDST.GIS
         private IEnumerable<IDsTool> m_tools;
         [ImportMany]
         private IEnumerable<IDsCommand> m_commands;
+        #endregion
+
+        #region
+        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+        public static extern bool DeleteObject(IntPtr hObject);
         #endregion
 
         public MainWindow()
@@ -59,6 +66,96 @@ namespace GDDST.GIS
                 //throw;
             }
         }
+
+        private BitmapSource CreateBitmapImageSource(string imageFileName)
+        {
+            IntPtr ptr = IntPtr.Zero;
+            try
+            {
+                Bitmap bmp = new Bitmap(string.Format("{0}\\images\\{1}", AppDomain.CurrentDomain.BaseDirectory, imageFileName));
+                ptr = bmp.GetHbitmap();
+                return Imaging.CreateBitmapSourceFromHBitmap(ptr, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            finally
+            {
+                if (ptr != IntPtr.Zero)
+                {
+                    DeleteObject(ptr);
+                }
+            }
+            
+        }
+        private BitmapSource CreateBitmapImageSource(Bitmap bitmap)
+        {
+            if (bitmap == null)
+            {
+                return null;
+            } else
+            {
+                IntPtr ptr = IntPtr.Zero;
+                try
+                {
+                    ptr = bitmap.GetHbitmap();
+                    return Imaging.CreateBitmapSourceFromHBitmap(ptr, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+                finally
+                {
+                    if (ptr != IntPtr.Zero)
+                    {
+                        DeleteObject(ptr);
+                    }
+                }
+            }
+        }
+        private RibbonTab CreateTestUITab()
+        {
+            RibbonTab testUITab = new RibbonTab() { Header = "测试Ribbon控件" };
+            RibbonGroup testUIGrp = new RibbonGroup() { Header = "测试Ribbon控件1" };
+            testUITab.Items.Add(testUIGrp);
+
+            RibbonTextBox txtbox = new RibbonTextBox();
+            testUIGrp.Items.Add(txtbox);
+
+            RibbonComboBox combobox = new RibbonComboBox();
+            combobox.Items.Add("Item0");
+            combobox.Items.Add("Item1");
+            combobox.Items.Add("Item2");
+            testUIGrp.Items.Add(combobox);
+
+
+            RibbonGroup testUIGrp2 = new RibbonGroup() { Header = "测试Ribbon控件2" };
+            testUITab.Items.Add(testUIGrp2);
+
+            RibbonCheckBox chkbox = new RibbonCheckBox();
+            chkbox.Label = "选项1";
+            testUIGrp2.Items.Add(chkbox);
+            chkbox = new RibbonCheckBox();
+            chkbox.Label = "选项2";
+            testUIGrp2.Items.Add(chkbox);
+            chkbox = new RibbonCheckBox();
+            chkbox.Label = "选项3";
+            testUIGrp2.Items.Add(chkbox);
+
+
+            return testUITab;
+        }
+
+        private RibbonTab CreateTestStyleTab()
+        {
+            RibbonTab testStyleTab = new RibbonTab() { Header = "测试样式设置" };
+            RibbonGroup testStyleGrp = new RibbonGroup() { Header = "测试样式设置" };
+            testStyleTab.Items.Add(testStyleGrp);
+
+            return testStyleTab;
+        }
         private void InitializeUI()
         {
             Ribbon mainRibbon = new Ribbon();
@@ -79,11 +176,13 @@ namespace GDDST.GIS
                     case "加载数据":
                         rbtn = new RibbonButton();
                         rbtn.Label = tool.Caption;
+                        rbtn.SmallImageSource = CreateBitmapImageSource(tool.SmallBitmap);
                         dataConnGrp.Items.Add(rbtn);
                         break;
                     case "视图操作":
                         rbtn = new RibbonButton();
                         rbtn.Label = tool.Caption;
+                        rbtn.SmallImageSource = CreateBitmapImageSource(tool.SmallBitmap);
                         mapNavGrp.Items.Add(rbtn);
                         break;
                     default:
@@ -99,11 +198,19 @@ namespace GDDST.GIS
                     case "加载数据":
                         rbtn = new RibbonButton();
                         rbtn.Label = cmd.Caption;
+                        rbtn.SmallImageSource = CreateBitmapImageSource(cmd.SmallBitmap);
                         dataConnGrp.Items.Add(rbtn);
                         break;
                     case "视图操作":
                         rbtn = new RibbonButton();
                         rbtn.Label = cmd.Caption;
+                        if (cmd.LargeBitmap != null)
+                        {
+                            rbtn.LargeImageSource = CreateBitmapImageSource(cmd.LargeBitmap);
+                        } else
+                        {
+                            rbtn.SmallImageSource = CreateBitmapImageSource(cmd.SmallBitmap);
+                        }
                         mapNavGrp.Items.Add(rbtn);
                         break;
                     default:
@@ -113,6 +220,11 @@ namespace GDDST.GIS
 
             mainRibbon.Items.Add(dataConnTab);
             mainRibbon.Items.Add(mapNavTab);
+
+            mainRibbon.Items.Add(CreateTestUITab());
+
+            mainRibbon.SetValue(Grid.RowProperty, 2);
+            mainRibbon.SetValue(Grid.ColumnProperty, 2);
 
             mainGrid.Children.Add(mainRibbon);
         }
