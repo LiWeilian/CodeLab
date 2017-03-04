@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
 using System.Drawing;
 using System.Windows.Interop;
 using System.Windows.Controls.Ribbon;
@@ -72,7 +73,7 @@ namespace GDDST.GIS
             IntPtr ptr = IntPtr.Zero;
             try
             {
-                Bitmap bmp = new Bitmap(string.Format("{0}\\images\\{1}", AppDomain.CurrentDomain.BaseDirectory, imageFileName));
+                Bitmap bmp = new Bitmap(string.Format("{0}\\..\\images\\{1}", AppDomain.CurrentDomain.BaseDirectory, imageFileName));
                 ptr = bmp.GetHbitmap();
                 return Imaging.CreateBitmapSourceFromHBitmap(ptr, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
             }
@@ -121,10 +122,12 @@ namespace GDDST.GIS
             RibbonGroup testUIGrp = new RibbonGroup() { Header = "测试Ribbon控件1" };
             testUITab.Items.Add(testUIGrp);
 
-            RibbonTextBox txtbox = new RibbonTextBox();
+            TextBox txtbox = new TextBox();
+            txtbox.Width = 100;
             testUIGrp.Items.Add(txtbox);
 
-            RibbonComboBox combobox = new RibbonComboBox();
+            ComboBox combobox = new ComboBox();
+            combobox.Width = txtbox.Width;
             combobox.Items.Add("Item0");
             combobox.Items.Add("Item1");
             combobox.Items.Add("Item2");
@@ -153,6 +156,27 @@ namespace GDDST.GIS
             RibbonTab testStyleTab = new RibbonTab() { Header = "测试样式设置" };
             RibbonGroup testStyleGrp = new RibbonGroup() { Header = "测试样式设置" };
             testStyleTab.Items.Add(testStyleGrp);
+
+            ComboBox cbStyles = new ComboBox();
+            //cbStyles.IsEditable = true;
+            cbStyles.Width = 100;
+            cbStyles.Items.Add("Black");
+            cbStyles.Items.Add("Blue");
+            cbStyles.Items.Add("Gray");
+            cbStyles.SelectionChanged += delegate (object sender, SelectionChangedEventArgs e)
+            {
+                string style = cbStyles.SelectedItem.ToString();
+                string styleFileName = string.Format("{0}..\\skins\\{1}.xaml", AppDomain.CurrentDomain.BaseDirectory, style);
+                if (File.Exists(styleFileName))
+                {
+                    ResourceDictionary rd = new ResourceDictionary();
+                    rd.Source = new Uri(styleFileName, UriKind.Absolute);//"H:\\GitHub\\CodeLab\\GDDST.GIS\\output\\skins\\Black.xaml"
+                    App.Current.Resources = rd;
+                }
+            };
+            testStyleGrp.Items.Add(cbStyles);
+
+            
 
             return testStyleTab;
         }
@@ -223,8 +247,10 @@ namespace GDDST.GIS
 
             mainRibbon.Items.Add(CreateTestUITab());
 
-            mainRibbon.SetValue(Grid.RowProperty, 2);
-            mainRibbon.SetValue(Grid.ColumnProperty, 2);
+            mainRibbon.Items.Add(CreateTestStyleTab());
+
+            mainRibbon.SetValue(Grid.RowProperty, 0);
+            mainRibbon.SetValue(Grid.ColumnProperty, 0);
 
             mainGrid.Children.Add(mainRibbon);
         }

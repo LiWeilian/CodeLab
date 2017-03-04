@@ -18,7 +18,7 @@ namespace GDDST.GIS.PluginEngine
         /// </summary>
         protected void LoadSmallBitmap()
         {
-            string path = AppDomain.CurrentDomain.BaseDirectory + "\\..\\images\\" + this.m_bitmapNameSmall;
+            string path = AppDomain.CurrentDomain.BaseDirectory + "..\\images\\" + this.m_bitmapNameSmall;
             try
             {
                 this.SmallBitmap = new System.Drawing.Bitmap(path);
@@ -30,7 +30,7 @@ namespace GDDST.GIS.PluginEngine
         }
         protected void LoadLargeBitmap()
         {
-            string path = AppDomain.CurrentDomain.BaseDirectory + "\\..\\images\\" + this.m_bitmapNameLarge;
+            string path = AppDomain.CurrentDomain.BaseDirectory + "..\\images\\" + this.m_bitmapNameLarge;
             try
             {
                 this.LargeBitmap = new System.Drawing.Bitmap(path);
