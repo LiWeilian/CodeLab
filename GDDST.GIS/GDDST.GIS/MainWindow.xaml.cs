@@ -19,6 +19,9 @@ using System.Windows.Controls.Ribbon;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 
+using ESRI.ArcGIS.Controls;
+using ESRI.ArcGIS.esriSystem;
+
 using GDDST.GIS.PluginEngine;
 
 namespace GDDST.GIS
@@ -30,6 +33,8 @@ namespace GDDST.GIS
     {
         [Import]
         private IDsApplication m_application;
+        [Import]
+        private IDsUIStyle m_UIStyle;
 
         #region
         private CompositionContainer m_container;
@@ -46,9 +51,17 @@ namespace GDDST.GIS
 
         public MainWindow()
         {
+            InitializeEsri();
             InitializeComponent();
             InitializeComponentModel();
             InitializeUI();
+        }
+
+        private void InitializeEsri()
+        {
+            ESRI.ArcGIS.RuntimeManager.Bind(ESRI.ArcGIS.ProductCode.EngineOrDesktop);
+            IAoInitialize aoi = new AoInitializeClass();
+            aoi.Initialize(esriLicenseProductCode.esriLicenseProductCodeEngineGeoDB);
         }
 
         private void InitializeComponentModel()
@@ -151,6 +164,49 @@ namespace GDDST.GIS
             return testUITab;
         }
 
+        private AppSkin CreateMainStyle(string name)
+        {
+            string styleFileName = string.Format("{0}..\\skins\\{1}.xaml", AppDomain.CurrentDomain.BaseDirectory, name);
+            if (File.Exists(styleFileName))
+            {
+                try
+                {
+                    ResourceDictionary rd = new ResourceDictionary();
+                    rd.Source = new Uri(styleFileName, UriKind.Absolute);//"H:\\GitHub\\CodeLab\\GDDST.GIS\\output\\skins\\Black.xaml"
+                    AppSkin ms = new AppSkin() { Name = name, ResrcDict = rd};
+                    return ms;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        private List<AppSkin> GetAppSkins()
+        {
+            List<AppSkin> appSkins = new List<AppSkin>();
+
+            string[] filenames = Directory.GetFiles(string.Format("{0}..\\skins\\", AppDomain.CurrentDomain.BaseDirectory), "*.xaml");
+            foreach (string filename in filenames)
+            {
+                string name = System.IO.Path.GetFileNameWithoutExtension(filename);
+                try
+                {
+                    ResourceDictionary rd = new ResourceDictionary();
+                    rd.Source = new Uri(filename, UriKind.Absolute);
+                    AppSkin appSkin = new AppSkin() { Name = name, ResrcDict = rd };
+                    appSkins.Add(appSkin);
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            return appSkins;
+        }
+
         private RibbonTab CreateTestStyleTab()
         {
             RibbonTab testStyleTab = new RibbonTab() { Header = "测试样式设置" };
@@ -160,28 +216,26 @@ namespace GDDST.GIS
             ComboBox cbStyles = new ComboBox();
             //cbStyles.IsEditable = true;
             cbStyles.Width = 100;
-            cbStyles.Items.Add("Black");
-            cbStyles.Items.Add("Blue");
-            cbStyles.Items.Add("Gray");
+            cbStyles.DisplayMemberPath = "Name";
+            cbStyles.SelectedValuePath = "ResrcDict";
+
+            cbStyles.ItemsSource = GetAppSkins();
+
+            //cbStyles.Items.Add("Black");
+            //cbStyles.Items.Add("Blue");
+            //cbStyles.Items.Add("Gray");
             cbStyles.SelectionChanged += delegate (object sender, SelectionChangedEventArgs e)
             {
-                string style = cbStyles.SelectedItem.ToString();
-                string styleFileName = string.Format("{0}..\\skins\\{1}.xaml", AppDomain.CurrentDomain.BaseDirectory, style);
-                if (File.Exists(styleFileName))
-                {
-                    ResourceDictionary rd = new ResourceDictionary();
-                    rd.Source = new Uri(styleFileName, UriKind.Absolute);//"H:\\GitHub\\CodeLab\\GDDST.GIS\\output\\skins\\Black.xaml"
-                    App.Current.Resources = rd;
-                }
+                App.Current.Resources = (cbStyles.SelectedItem as AppSkin).ResrcDict;
             };
             testStyleGrp.Items.Add(cbStyles);
 
-            
 
             return testStyleTab;
         }
         private void InitializeUI()
         {
+            #region Ribbon
             Ribbon mainRibbon = new Ribbon();
 
             RibbonTab dataConnTab = new RibbonTab() { Header = "加载数据" };
@@ -251,8 +305,32 @@ namespace GDDST.GIS
 
             mainRibbon.SetValue(Grid.RowProperty, 0);
             mainRibbon.SetValue(Grid.ColumnProperty, 0);
+            mainRibbon.SetValue(Grid.ColumnSpanProperty, 3);
 
             mainGrid.Children.Add(mainRibbon);
+
+            #endregion
+
+            #region Map Controls
+            
+            AxMapControl mapCtrl = new AxMapControl();
+            mapCtrl.BeginInit();
+            mapCtrl.Dock = System.Windows.Forms.DockStyle.Fill;
+            
+            mapHost.Child = mapCtrl;
+            mapCtrl.OnMouseDown += delegate (object sender, IMapControlEvents2_OnMouseDownEvent e) {
+                MessageBox.Show(string.Format("{0},{1}", e.x, e.y));
+            };
+            mapCtrl.EndInit();
+
+            AxTOCControl tocCtrl = new AxTOCControl();
+            tocCtrl.BeginInit();
+            tocCtrl.Dock = System.Windows.Forms.DockStyle.Fill;
+            tocHost.Child = tocCtrl;
+            tocCtrl.EndInit();
+            tocCtrl.SetBuddyControl(mapCtrl);
+            
+            #endregion
         }
     }
 }

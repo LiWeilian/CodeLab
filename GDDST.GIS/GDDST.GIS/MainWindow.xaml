@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:esri="clr-namespace:ESRI.ArcGIS.Controls;assembly=ESRI.ArcGIS.AxControls"
         xmlns:local="clr-namespace:GDDST.GIS"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525"
@@ -10,14 +11,21 @@
         WindowState="Maximized">
     <Grid x:Name="mainGrid">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="50" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+        <StatusBar HorizontalAlignment="Left" Height="18" Margin="0,0,0,0" VerticalAlignment="Top" Width="100" Grid.Row="2"/>
+        <WindowsFormsHost x:Name="tocHost" HorizontalAlignment="Stretch" Margin="5,5,5,5" Grid.Row="1" Grid.Column="0" VerticalAlignment="Stretch">
+            <!--<esri:AxTOCControl x:Name="tocCtrl" Dock="Fill"/>-->
+        </WindowsFormsHost>
+        <WindowsFormsHost x:Name="mapHost" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,5,5,5" Grid.Row="1" VerticalAlignment="Stretch">
+            <!--<esri:AxMapControl x:Name="mapCtrl" Dock="Fill"/>-->
+        </WindowsFormsHost>
     </Grid>
 </Window>
