@@ -164,6 +164,18 @@ namespace GDDST.GIS
             return testUITab;
         }
 
+        private RibbonTab CreateUserControlTab()
+        {
+            RibbonTab userCtrlTab = new RibbonTab() { Header = "测试用户自定义控件" };
+            RibbonGroup userCtrlGrp = new RibbonGroup() { Header = "测试用户自定义控件1" };
+            userCtrlTab.Items.Add(userCtrlGrp);
+
+            QueryPanel qp = new QueryPanel();
+            userCtrlGrp.Items.Add(qp);
+
+            return userCtrlTab;
+        }
+
         private AppSkin CreateMainStyle(string name)
         {
             string styleFileName = string.Format("{0}..\\skins\\{1}.xaml", AppDomain.CurrentDomain.BaseDirectory, name);
@@ -302,6 +314,8 @@ namespace GDDST.GIS
             mainRibbon.Items.Add(CreateTestUITab());
 
             mainRibbon.Items.Add(CreateTestStyleTab());
+
+            mainRibbon.Items.Add(CreateUserControlTab());
 
             mainRibbon.SetValue(Grid.RowProperty, 0);
             mainRibbon.SetValue(Grid.ColumnProperty, 0);
