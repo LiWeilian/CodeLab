@@ -35,6 +35,8 @@ namespace GDDST.GIS
         private IDsApplication m_application;
         [Import]
         private IDsUIStyle m_UIStyle;
+        [Import]
+        private IDsMapControl m_mapCtrl;
 
         #region
         private CompositionContainer m_container;
@@ -326,7 +328,7 @@ namespace GDDST.GIS
             #endregion
 
             #region Map Controls
-            
+            /*
             AxMapControl mapCtrl = new AxMapControl();
             mapCtrl.BeginInit();
             mapCtrl.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -343,7 +345,31 @@ namespace GDDST.GIS
             tocHost.Child = tocCtrl;
             tocCtrl.EndInit();
             tocCtrl.SetBuddyControl(mapCtrl);
-            
+            */
+            if (m_mapCtrl != null)
+            {
+                (m_mapCtrl.DsMapControl as GDDST.GIS.Controls.UCMapControl).SetValue(Grid.RowProperty, 1);
+                (m_mapCtrl.DsMapControl as GDDST.GIS.Controls.UCMapControl).SetValue(Grid.ColumnProperty, 1);
+
+                //MessageBox.Show(m_mapCtrl.DsMapControl.GetValue(Grid.RowProperty).ToString());
+
+                mainGrid.Children.Add((m_mapCtrl.DsMapControl as GDDST.GIS.Controls.UCMapControl));
+                
+
+
+                //GDDST.GIS.Controls.UCMapControl ucMapCtrl = new Controls.UCMapControl();
+                //ucMapCtrl.SetValue(Grid.RowProperty, 1);
+                //ucMapCtrl.SetValue(Grid.ColumnProperty, 1);
+
+                //mainGrid.Children.Add(ucMapCtrl);
+
+                /*
+                QueryPanel qp = new QueryPanel();
+                qp.SetValue(Grid.RowProperty, 1);
+                qp.SetValue(Grid.ColumnProperty, 1);
+                mainGrid.Children.Add(qp);
+                */
+            }
             #endregion
         }
     }

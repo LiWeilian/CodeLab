@@ -49,6 +49,7 @@
     <Compile Include="DsBaseCommand.cs" />
     <Compile Include="DsBaseTool.cs" />
     <Compile Include="IDsApplication.cs" />
+    <Compile Include="IDsMapControl.cs" />
     <Compile Include="IDsPlugin.cs" />
     <Compile Include="IDsUIStyle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
