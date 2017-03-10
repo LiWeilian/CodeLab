@@ -13,7 +13,19 @@ namespace GDDST.GIS.MapQuery
     {
         public override void OnCreate(IDsApplication hook)
         {
-            throw new NotImplementedException();
+            base.m_app = hook;
+            base.Caption = "信息查看";
+            base.Category = "地图查询";
+            base.Message = "当前工具：信息查看";
+            base.Tooltip = "信息查看";
+            base.Name = "Identify";
+            base.Checked = false;
+            base.Deactivate = false;
+            base.Enabled = true;
+            base.m_bitmapNameSmall = "Identify_16.ico";
+
+            base.LoadLargeBitmap();
+            base.LoadSmallBitmap();
         }
     }
 }

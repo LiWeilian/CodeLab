@@ -19,9 +19,6 @@ using System.Windows.Controls.Ribbon;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 
-using ESRI.ArcGIS.Controls;
-using ESRI.ArcGIS.esriSystem;
-
 using GDDST.GIS.PluginEngine;
 
 namespace GDDST.GIS
@@ -37,33 +34,60 @@ namespace GDDST.GIS
         private IDsUIStyle m_UIStyle;
         [Import]
         private IDsMapControl m_mapCtrl;
+        [Import]
+        private IDsGISControls m_gisCtrls;
 
-        #region
+        #region GIS初始化组件
+        [ImportMany]
+        private IEnumerable<IDsGISInitialize> m_gisInitList;
+        #endregion
+
+        #region 插件容器
         private CompositionContainer m_container;
         [ImportMany]
         private IEnumerable<IDsTool> m_tools;
         [ImportMany]
         private IEnumerable<IDsCommand> m_commands;
+        //[ImportMany]
+        //private IEnumerable<IDsPanel> m_pluginPanels;
         #endregion
 
-        #region
+        #region 指针操作
         [System.Runtime.InteropServices.DllImport("gdi32.dll")]
         public static extern bool DeleteObject(IntPtr hObject);
         #endregion
 
         public MainWindow()
         {
-            InitializeEsri();
             InitializeComponent();
+            //使用插件前先调用此方法
             InitializeComponentModel();
+
+            InitializeGISComponents();
+
             InitializeUI();
         }
 
-        private void InitializeEsri()
+        private void InitializeGISComponents()
         {
-            ESRI.ArcGIS.RuntimeManager.Bind(ESRI.ArcGIS.ProductCode.EngineOrDesktop);
-            IAoInitialize aoi = new AoInitializeClass();
-            aoi.Initialize(esriLicenseProductCode.esriLicenseProductCodeEngineGeoDB);
+            if (m_gisInitList != null)
+            {
+                foreach (IDsGISInitialize gisInit in m_gisInitList)
+                {
+                    gisInit.GISInitialize();
+                }
+            }
+        }
+
+        private void ShutdownGISComponents()
+        {
+            if (m_gisInitList != null)
+            {
+                foreach (IDsGISInitialize gisInit in m_gisInitList)
+                {
+                    gisInit.GISShutdown();
+                }
+            }
         }
 
         private void InitializeComponentModel()
@@ -247,6 +271,25 @@ namespace GDDST.GIS
 
             return testStyleTab;
         }
+
+        private RibbonTab CreatePluginPanelTab()
+        {
+            
+            RibbonTab pluginPanelTab = new RibbonTab() { Header = "地图查询" };
+            /*
+            foreach (IDsPanel pluginPanel in m_pluginPanels)
+            {
+                RibbonGroup pluginPanelGrp = new RibbonGroup() { Header = "测试面板插件" };
+                pluginPanelTab.Items.Add(pluginPanelGrp);
+
+                pluginPanel.OnCreate(m_application);
+                pluginPanel.OnActivate();
+
+                pluginPanelGrp.Items.Add(pluginPanel.PluginPanel);
+            }
+            */
+            return pluginPanelTab;
+        }
         private void InitializeUI()
         {
             #region Ribbon
@@ -319,6 +362,8 @@ namespace GDDST.GIS
 
             mainRibbon.Items.Add(CreateUserControlTab());
 
+            //mainRibbon.Items.Add(CreatePluginPanelTab());
+
             mainRibbon.SetValue(Grid.RowProperty, 0);
             mainRibbon.SetValue(Grid.ColumnProperty, 0);
             mainRibbon.SetValue(Grid.ColumnSpanProperty, 3);
@@ -327,7 +372,7 @@ namespace GDDST.GIS
 
             #endregion
 
-            #region Map Controls
+            #region GIS Controls
             /*
             AxMapControl mapCtrl = new AxMapControl();
             mapCtrl.BeginInit();
@@ -346,31 +391,34 @@ namespace GDDST.GIS
             tocCtrl.EndInit();
             tocCtrl.SetBuddyControl(mapCtrl);
             */
+            /*
             if (m_mapCtrl != null)
             {
+                // Not OK 只能放置在0，0位置
                 (m_mapCtrl.DsMapControl as GDDST.GIS.Controls.UCMapControl).SetValue(Grid.RowProperty, 1);
                 (m_mapCtrl.DsMapControl as GDDST.GIS.Controls.UCMapControl).SetValue(Grid.ColumnProperty, 1);
-
-                //MessageBox.Show(m_mapCtrl.DsMapControl.GetValue(Grid.RowProperty).ToString());
-
-                mainGrid.Children.Add((m_mapCtrl.DsMapControl as GDDST.GIS.Controls.UCMapControl));
                 
+                mainGrid.Children.Add((m_mapCtrl.DsMapControl as GDDST.GIS.Controls.UCMapControl));
+                //
+
+                //OK
+                //mainGrid.Children.Add(m_mapCtrl.CreateMapControl(1, 1));
 
 
-                //GDDST.GIS.Controls.UCMapControl ucMapCtrl = new Controls.UCMapControl();
-                //ucMapCtrl.SetValue(Grid.RowProperty, 1);
-                //ucMapCtrl.SetValue(Grid.ColumnProperty, 1);
+                //OK
+                //mapCtrlGrid.Children.Add(m_mapCtrl.DsMapControl);    
 
-                //mainGrid.Children.Add(ucMapCtrl);
+            }
+            */
 
-                /*
-                QueryPanel qp = new QueryPanel();
-                qp.SetValue(Grid.RowProperty, 1);
-                qp.SetValue(Grid.ColumnProperty, 1);
-                mainGrid.Children.Add(qp);
-                */
+            if (m_gisCtrls != null)
+            {
+                m_gisCtrls.InitializeControls();
+                mapCtrlGrid.Children.Add(m_gisCtrls.MapControl);
+                legendCtrlGrid.Children.Add(m_gisCtrls.LegendControl);
             }
             #endregion
+
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace GDDST.GIS.PluginEngine
 {
@@ -491,6 +492,11 @@ namespace GDDST.GIS.PluginEngine
         /// 插件激活状态
         /// </summary>
         bool Deactivate { get; set; }
+    }
+
+    public interface IDsPanel : IDsPlugin
+    {
+        UserControl PluginPanel { get; }
     }
 
     /*

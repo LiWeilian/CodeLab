@@ -93,12 +93,6 @@ namespace GDDST.GIS.PluginEngine
         public virtual string Name { get; protected set; }
 
         /// <summary>
-        /// 创建时触发的方法
-        /// </summary>
-        /// <param name="hook">主应用程序对象</param>
-        public abstract void OnCreate(IDsApplication hook);
-
-        /// <summary>
         /// 提示文字
         /// </summary>
         public virtual string Tooltip { get; protected set; }
@@ -348,6 +342,12 @@ namespace GDDST.GIS.PluginEngine
         {
             this.Checked = false;
         }
+
+        /// <summary>
+        /// 创建时触发的方法
+        /// </summary>
+        /// <param name="hook">主应用程序对象</param>
+        public abstract void OnCreate(IDsApplication hook);
 
         /// <summary>
         /// 插件销毁
