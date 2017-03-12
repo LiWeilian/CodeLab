@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.Composition;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace GDDST.GIS.PluginEngine
 {
@@ -132,6 +133,10 @@ namespace GDDST.GIS.PluginEngine
                 throw new NotImplementedException();
             }
         }
+
+        public UserControl MapControl { get; set; }
+
+        public UserControl LegendControl { get; set; }
 
         #endregion
 

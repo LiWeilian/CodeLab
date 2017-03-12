@@ -11,7 +11,7 @@ using GDDST.GIS.PluginEngine;
 
 namespace GDDST.GIS.MapQuery
 {
-    //[Export(typeof(IDsPanel))]
+    [Export(typeof(IDsPanel))]
     class MapQueryByAttr : DsBasePanel
     {
         public override UserControl PluginPanel
@@ -34,6 +34,9 @@ namespace GDDST.GIS.MapQuery
         public override void OnActivate()
         {
             base.PluginPanel = new UCMapQueryByAttr();
+
+            (base.PluginPanel as UCMapQueryByAttr).cbLayers.Items.Add(DateTime.Now.ToString());
+
             base.OnActivate();
         }
     }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace GDDST.GIS.PluginEngine
 {
@@ -115,5 +116,15 @@ namespace GDDST.GIS.PluginEngine
         /// 界面样式
         /// </summary>
         IDsUIStyle UIStyle { get; set; }
+
+        /// <summary>
+        /// 地图控件
+        /// </summary>
+        UserControl MapControl { get; set; }
+
+        /// <summary>
+        /// 图例控件
+        /// </summary>
+        UserControl LegendControl { get; set; }
     }
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="GBK" ?>
+<GDDST.GIS>
+	<MainRibbon>
+		<RibbonTab header="加载数据">
+			<RibbonGroup header="加载本地数据">
+				<Component namespace="GDDST.GIS.DataConnection.AddAccessData" label="加载Access数据" />
+			</RibbonGroup>
+		</RibbonTab>
+		<RibbonTab header="查询统计">
+			<RibbonGroup header="查询">
+				<Component namespace="GDDST.GIS.MapQuery.MapQueryByAttr" label="属性查询" />
+			</RibbonGroup>
+		</RibbonTab>
+	</MainRibbon>
+	<GISControls>
+		<Component namespace="GDDST.GIS.EsriControls.EsriControls" />
+	</GISControls>
+</GDDST.GIS>

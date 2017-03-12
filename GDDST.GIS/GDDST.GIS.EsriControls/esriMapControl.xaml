@@ -8,7 +8,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid x:Name="mapCtrlGrid" Margin="0,0,0,0">
-
+        <WindowsFormsHost x:Name="navHost" Margin="10,10, 0, 0" Height="30" Width="300" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <ElementHost>
+                <Button x:Name="btnZOom" Content="ZoomIn" HorizontalAlignment="Left" Height="29" Margin="0,0,0,0" VerticalAlignment="Top" Width="85"/>
+            </ElementHost>
+        </WindowsFormsHost>
         <WindowsFormsHost x:Name="mapHost" HorizontalAlignment="Stretch" Margin="5,5,5,5" VerticalAlignment="Stretch">
             <esri:AxMapControl x:Name="mapCtrl" Dock="Fill"/>
         </WindowsFormsHost>

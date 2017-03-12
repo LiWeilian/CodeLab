@@ -20,6 +20,7 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 
 using GDDST.GIS.PluginEngine;
+using GDDST.GIS.ui;
 
 namespace GDDST.GIS
 {
@@ -48,8 +49,8 @@ namespace GDDST.GIS
         private IEnumerable<IDsTool> m_tools;
         [ImportMany]
         private IEnumerable<IDsCommand> m_commands;
-        //[ImportMany]
-        //private IEnumerable<IDsPanel> m_pluginPanels;
+        [ImportMany]
+        private IEnumerable<IDsPanel> m_pluginPanels;
         #endregion
 
         #region 指针操作
@@ -290,9 +291,108 @@ namespace GDDST.GIS
             */
             return pluginPanelTab;
         }
+
+        private IDsPlugin GetPluginByNameSapce(string nameSpace)
+        {
+            if (m_commands != null)
+            {
+                IEnumerable<IDsCommand> cmds = m_commands.Where(c => c.ToString() == nameSpace);
+                if (cmds != null && cmds.Count() > 0)
+                {
+                    return cmds.First();
+                }
+            }
+            if (m_tools != null)
+            {
+                IEnumerable<IDsTool> tools = m_tools.Where(c => c.ToString() == nameSpace);
+                if (tools != null && tools.Count() > 0)
+                {
+                    return tools.First();
+                }
+            }
+            if (m_pluginPanels != null)
+            {
+                IEnumerable<IDsPanel> pnls = m_pluginPanels.Where(c => c.ToString() == nameSpace);
+                if (pnls != null && pnls.Count() > 0)
+                {
+                    return pnls.First();
+                }
+            }
+
+            return null;
+        }
+
         private void InitializeUI()
         {
+            #region 根据XML配置文件生成Ribbon
+            MainRibbonConfigXML mainRibbonCfg = new MainRibbonConfigXML();
+            MainRibbonDef mainRibbonDef = mainRibbonCfg.CreateMainRibbonDef();
+
+            Ribbon mainRibbon = new Ribbon();
+
+            mainRibbon.SetValue(Grid.RowProperty, 0);
+            mainRibbon.SetValue(Grid.ColumnProperty, 0);
+            mainRibbon.SetValue(Grid.ColumnSpanProperty, 3);
+
+            foreach (MainRibbonTabDef tabDef in mainRibbonDef.RibbonTabs)
+            {
+                RibbonTab ribbonTab = new RibbonTab() { Header = tabDef.Header };
+                mainRibbon.Items.Add(ribbonTab);
+
+                foreach (MainRibbonGroupDef groupDef in tabDef.RibbonGroups)
+                {
+                    RibbonGroup ribbonGroup = new RibbonGroup() { Header = groupDef.Header };
+                    ribbonTab.Items.Add(ribbonGroup);
+
+                    foreach (MainRibbonComponentDef comDef in groupDef.RibbonComponents)
+                    {
+                        IDsPlugin plugin = GetPluginByNameSapce(comDef.NameSpace);
+                        if (plugin != null)
+                        {
+                            if (plugin is IDsCommand)
+                            {
+                                IDsCommand cmd = plugin as IDsCommand;
+                                cmd.OnCreate(m_application);
+                                cmd.OnActivate();
+
+                                RibbonButton rbtn = new RibbonButton();
+                                rbtn.Label = comDef.Label;
+                                rbtn.Tag = cmd;
+                                rbtn.SmallImageSource = CreateBitmapImageSource(cmd.SmallBitmap);
+
+                                ribbonGroup.Items.Add(rbtn);
+                            }
+                            else if (plugin is IDsTool)
+                            {
+                                IDsTool tool = plugin as IDsTool;
+                                tool.OnCreate(m_application);
+                                tool.OnActivate();
+
+                                RibbonButton rbtn = new RibbonButton();
+                                rbtn.Label = comDef.Label;
+                                rbtn.Tag = tool;
+                                rbtn.SmallImageSource = CreateBitmapImageSource(tool.SmallBitmap);
+
+                                ribbonGroup.Items.Add(rbtn);
+                            }
+                            else if (plugin is IDsPanel)
+                            {
+                                IDsPanel pluginPnl = plugin as IDsPanel;
+                                pluginPnl.OnCreate(m_application);
+                                pluginPnl.OnActivate();
+
+                                ribbonGroup.Items.Add(pluginPnl.PluginPanel);
+                            }
+                        }
+                    }
+                }
+            }
+
+            mainGrid.Children.Add(mainRibbon);
+            #endregion
+
             #region Ribbon
+            /*
             Ribbon mainRibbon = new Ribbon();
 
             RibbonTab dataConnTab = new RibbonTab() { Header = "加载数据" };
@@ -369,7 +469,7 @@ namespace GDDST.GIS
             mainRibbon.SetValue(Grid.ColumnSpanProperty, 3);
 
             mainGrid.Children.Add(mainRibbon);
-
+            */
             #endregion
 
             #region GIS Controls
@@ -413,7 +513,11 @@ namespace GDDST.GIS
 
             if (m_gisCtrls != null)
             {
-                m_gisCtrls.InitializeControls();
+                m_gisCtrls.InitializeControls(m_application);
+
+                m_application.MapControl = m_gisCtrls.MapControl;
+                m_application.LegendControl = m_gisCtrls.LegendControl;
+
                 mapCtrlGrid.Children.Add(m_gisCtrls.MapControl);
                 legendCtrlGrid.Children.Add(m_gisCtrls.LegendControl);
             }

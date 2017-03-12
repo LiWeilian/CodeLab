@@ -15,13 +15,9 @@ namespace GDDST.GIS.EsriControls
     [Export(typeof(IDsGISControls))]
     public class EsriControls : IDsGISControls
     {
+        private IDsApplication m_app = null;
         private UserControl m_mapCtrl = null;
         private UserControl m_legendCtrl = null;
-
-        public EsriControls()
-        {
-            
-        }
 
         public UserControl LegendControl
         {
@@ -39,8 +35,9 @@ namespace GDDST.GIS.EsriControls
             }
         }
 
-        public void InitializeControls()
+        public void InitializeControls(IDsApplication hook)
         {
+            m_app = hook;
             m_mapCtrl = new esriMapControl();
             m_legendCtrl = new esriTOCControl();
             (m_legendCtrl as esriTOCControl).tocCtrl.SetBuddyControl((m_mapCtrl as esriMapControl).mapCtrl);

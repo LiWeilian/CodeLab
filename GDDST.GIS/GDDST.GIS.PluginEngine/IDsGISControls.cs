@@ -9,7 +9,7 @@ namespace GDDST.GIS.PluginEngine
 {
     public interface IDsGISControls
     {
-        void InitializeControls();
+        void InitializeControls(IDsApplication hook);
         UserControl MapControl { get; }
         UserControl LegendControl { get; }
     }

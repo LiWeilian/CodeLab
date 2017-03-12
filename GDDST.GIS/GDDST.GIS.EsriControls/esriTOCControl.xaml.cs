@@ -25,7 +25,12 @@ namespace GDDST.GIS.EsriControls
         public esriTOCControl()
         {
             InitializeComponent();
-            
+            this.tocCtrl.OnMouseDown += TocCtrl_OnMouseDown;
+        }
+
+        private void TocCtrl_OnMouseDown(object sender, ITOCControlEvents_OnMouseDownEvent e)
+        {
+            MessageBox.Show(e.ToString());
         }
     }
 }
