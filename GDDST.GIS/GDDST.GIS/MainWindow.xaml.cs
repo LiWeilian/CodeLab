@@ -353,12 +353,16 @@ namespace GDDST.GIS
                             {
                                 IDsCommand cmd = plugin as IDsCommand;
                                 cmd.OnCreate(m_application);
-                                cmd.OnActivate();
 
                                 RibbonButton rbtn = new RibbonButton();
                                 rbtn.Label = comDef.Label;
                                 rbtn.Tag = cmd;
                                 rbtn.SmallImageSource = CreateBitmapImageSource(cmd.SmallBitmap);
+
+                                rbtn.Click += delegate (object sender, RoutedEventArgs e)
+                                {
+                                    (rbtn.Tag as IDsCommand).OnActivate();
+                                };
 
                                 ribbonGroup.Items.Add(rbtn);
                             }
@@ -366,12 +370,15 @@ namespace GDDST.GIS
                             {
                                 IDsTool tool = plugin as IDsTool;
                                 tool.OnCreate(m_application);
-                                tool.OnActivate();
 
                                 RibbonButton rbtn = new RibbonButton();
                                 rbtn.Label = comDef.Label;
                                 rbtn.Tag = tool;
                                 rbtn.SmallImageSource = CreateBitmapImageSource(tool.SmallBitmap);
+                                rbtn.Click += delegate (object sender, RoutedEventArgs e)
+                                {
+                                    (rbtn.Tag as IDsTool).OnActivate();
+                                };
 
                                 ribbonGroup.Items.Add(rbtn);
                             }
@@ -379,7 +386,6 @@ namespace GDDST.GIS
                             {
                                 IDsPanel pluginPnl = plugin as IDsPanel;
                                 pluginPnl.OnCreate(m_application);
-                                pluginPnl.OnActivate();
 
                                 ribbonGroup.Items.Add(pluginPnl.PluginPanel);
                             }
@@ -515,8 +521,8 @@ namespace GDDST.GIS
             {
                 m_gisCtrls.InitializeControls(m_application);
 
-                m_application.MapControl = m_gisCtrls.MapControl;
-                m_application.LegendControl = m_gisCtrls.LegendControl;
+                m_application.MapControl = m_gisCtrls.MapControlCore;
+                m_application.LegendControl = m_gisCtrls.LegendControlCore;
 
                 mapCtrlGrid.Children.Add(m_gisCtrls.MapControl);
                 legendCtrlGrid.Children.Add(m_gisCtrls.LegendControl);

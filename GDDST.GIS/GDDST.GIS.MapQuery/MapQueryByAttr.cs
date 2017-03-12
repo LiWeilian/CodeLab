@@ -33,11 +33,11 @@ namespace GDDST.GIS.MapQuery
 
         public override void OnActivate()
         {
+            base.OnActivate();
+
             base.PluginPanel = new UCMapQueryByAttr();
 
             (base.PluginPanel as UCMapQueryByAttr).cbLayers.Items.Add(DateTime.Now.ToString());
-
-            base.OnActivate();
         }
     }
 }

@@ -26,12 +26,6 @@ namespace GDDST.GIS.EsriControls
         public esriMapControl()
         {
             InitializeComponent();
-            mapCtrl.OnMouseDown += MapCtrl_OnMouseDown;
-        }
-
-        private void MapCtrl_OnMouseDown(object sender, IMapControlEvents2_OnMouseDownEvent e)
-        {
-            MessageBox.Show(e.ToString());
         }
     }
 }

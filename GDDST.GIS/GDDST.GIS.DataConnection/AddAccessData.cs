@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.ComponentModel.Composition;
 using GDDST.GIS.PluginEngine;
 
@@ -24,6 +25,18 @@ namespace GDDST.GIS.DataConnection
             base.m_bitmapNameSmall = "AddAccessData_16.ico";
 
             base.LoadSmallBitmap();
+        }
+
+        public override void OnActivate()
+        {
+            base.OnActivate();
+
+            OpenFileDialog openDlg = new OpenFileDialog();
+            openDlg.Filter = "个人地理数据库(*.mdb)|*.mdb";
+            if (openDlg.ShowDialog() == DialogResult.OK)
+            {
+                System.Windows.Forms.Application.DoEvents();
+            }
         }
     }
 }

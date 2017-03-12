@@ -120,11 +120,11 @@ namespace GDDST.GIS.PluginEngine
         /// <summary>
         /// 地图控件
         /// </summary>
-        UserControl MapControl { get; set; }
+        object MapControl { get; set; }
 
         /// <summary>
         /// 图例控件
         /// </summary>
-        UserControl LegendControl { get; set; }
+        object LegendControl { get; set; }
     }
 }

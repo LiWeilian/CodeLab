@@ -134,9 +134,9 @@ namespace GDDST.GIS.PluginEngine
             }
         }
 
-        public UserControl MapControl { get; set; }
+        public object MapControl { get; set; }
 
-        public UserControl LegendControl { get; set; }
+        public object LegendControl { get; set; }
 
         #endregion
 

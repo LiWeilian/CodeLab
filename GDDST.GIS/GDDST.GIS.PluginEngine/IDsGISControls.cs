@@ -11,6 +11,8 @@ namespace GDDST.GIS.PluginEngine
     {
         void InitializeControls(IDsApplication hook);
         UserControl MapControl { get; }
+        object MapControlCore { get; }
         UserControl LegendControl { get; }
+        object LegendControlCore { get; }
     }
 }

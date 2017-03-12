@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="GBK" ?>
 <GDDST.GIS>
-	<MainRibbon>
+	<MainRibbon>	
+		<RibbonTab header="Home">
+			<RibbonGroup header="Home">
+				<Component namespace="GDDST.GIS.PluginEngine.DefaultTool" label="默认工具" />
+			</RibbonGroup>
+		</RibbonTab>
 		<RibbonTab header="加载数据">
 			<RibbonGroup header="加载本地数据">
-				<Component namespace="GDDST.GIS.DataConnection.AddAccessData" label="加载Access数据" />
+				<Component namespace="GDDST.GIS.EsriDataConnection.AddAccessData" label="加载Access数据" />
 			</RibbonGroup>
 		</RibbonTab>
 		<RibbonTab header="查询统计">
