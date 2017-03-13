@@ -55,8 +55,8 @@ namespace GDDST.GIS.EsriControls
         public void InitializeControls(IDsApplication hook)
         {
             m_app = hook;
-            m_mapCtrl = new esriMapControl();
-            m_legendCtrl = new esriTOCControl();
+            m_mapCtrl = new esriMapControl(hook);
+            m_legendCtrl = new esriTOCControl(hook);
 
             AxMapControl axMapCtrl = (m_mapCtrl as esriMapControl).mapCtrl;
             AxTOCControl axTocCtrl = (m_legendCtrl as esriTOCControl).tocCtrl;

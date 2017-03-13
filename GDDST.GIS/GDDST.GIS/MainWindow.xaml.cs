@@ -394,6 +394,8 @@ namespace GDDST.GIS
                 }
             }
 
+            mainRibbon.Items.Add(CreateTestStyleTab());
+
             mainGrid.Children.Add(mainRibbon);
             #endregion
 

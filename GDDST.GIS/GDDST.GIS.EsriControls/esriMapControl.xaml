@@ -8,11 +8,23 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid x:Name="mapCtrlGrid" Margin="0,0,0,0">
-        <WindowsFormsHost x:Name="navHost" Margin="10,10, 0, 0" Height="30" Width="300" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <WindowsFormsHost x:Name="navHost" Margin="10,10, 0, 0" Height="32" Width="263" HorizontalAlignment="Left" VerticalAlignment="Top" Background="LightGray">
             <ElementHost>
-                <Button x:Name="btnZOom" Content="ZoomIn" HorizontalAlignment="Left" Height="29" Margin="0,0,0,0" VerticalAlignment="Top" Width="85"/>
+                <Grid x:Name="gridZoomIn" Height="32" Width="32" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="32" />
+                        <ColumnDefinition Width="32" />
+                        <ColumnDefinition Width="32" />
+                    </Grid.ColumnDefinitions>
+                    <Image x:Name="imgZoomIn" Source="images\EsriMapZoomIn_32.png" Stretch="Fill"  Margin="0,0,0,0" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                </Grid>
+                
             </ElementHost>
         </WindowsFormsHost>
+
         <WindowsFormsHost x:Name="mapHost" HorizontalAlignment="Stretch" Margin="5,5,5,5" VerticalAlignment="Stretch">
             <esri:AxMapControl x:Name="mapCtrl" Dock="Fill"/>
         </WindowsFormsHost>

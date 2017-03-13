@@ -15,6 +15,8 @@ using System.Windows.Shapes;
 
 using ESRI.ArcGIS.Controls;
 
+using GDDST.GIS.PluginEngine;
+
 namespace GDDST.GIS.EsriControls
 {
     /// <summary>
@@ -22,9 +24,11 @@ namespace GDDST.GIS.EsriControls
     /// </summary>
     public partial class esriTOCControl : UserControl
     {
-        public esriTOCControl()
+        private IDsApplication m_app = null;
+        public esriTOCControl(IDsApplication hook)
         {
             InitializeComponent();
+            m_app = hook;
         }
     }
 }
