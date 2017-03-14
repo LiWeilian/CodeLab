@@ -12,22 +12,22 @@ using GDDST.GIS.PluginEngine;
 namespace GDDST.GIS.EsriControls
 {
     [Export(typeof(IDsTool))]
-    public class EsriMapZoomIn : DsBaseTool
+    public class EsriMapZoomOut : DsBaseTool
     {
         private IMapControlDefault m_mapCtrl = null;
         public override void OnCreate(IDsApplication hook)
         {
             base.m_app = hook;
-            base.Caption = "地图放大";
+            base.Caption = "地图缩小";
             base.Category = "视图操作";
-            base.Message = "当前工具：地图放大";
-            base.Tooltip = "地图放大";
-            base.Name = "EsriMapZoomIn";
+            base.Message = "当前工具：地图缩小";
+            base.Tooltip = "地图缩小";
+            base.Name = "EsriMapZoomOut";
             base.Checked = false;
             base.Deactivate = false;
             base.Enabled = true;
-            base.m_bitmapNameSmall = "EsriMapZoomIn_16.ico";
-            base.m_bitmapNameLarge = "EsriMapZoomIn_32.png";
+            base.m_bitmapNameSmall = "EsriMapZoomOut_16.ico";
+            base.m_bitmapNameLarge = "EsriMapZoomOut_32.png";
 
             base.LoadSmallBitmap();
             base.LoadLargeBitmap();
@@ -43,7 +43,7 @@ namespace GDDST.GIS.EsriControls
             base.OnActivate();
             if (m_mapCtrl != null)
             {
-                m_mapCtrl.MousePointer = esriControlsMousePointer.esriPointerZoomIn;
+                m_mapCtrl.MousePointer = esriControlsMousePointer.esriPointerZoomOut;
             }
         }
 
@@ -53,7 +53,7 @@ namespace GDDST.GIS.EsriControls
 
             if (m_mapCtrl != null && button == 1)
             {
-                GDDST.GIS.EsriUtils.ViewAgent.ZoomIn(m_mapCtrl.ActiveView, mapX, mapY);
+                GDDST.GIS.EsriUtils.ViewAgent.ZoomOut(m_mapCtrl.ActiveView, mapX, mapY);
             }
         }
     }

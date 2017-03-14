@@ -62,19 +62,6 @@ namespace GDDST.GIS.EsriControls
             AxTOCControl axTocCtrl = (m_legendCtrl as esriTOCControl).tocCtrl;
 
             axTocCtrl.SetBuddyControl(axMapCtrl);
-
-            axMapCtrl.OnMouseDown += AxMapCtrl_OnMouseDown;
-        }
-
-        private void AxMapCtrl_OnMouseDown(object sender, IMapControlEvents2_OnMouseDownEvent e)
-        {
-            if (m_app.CurrentTool != null)
-            {
-                m_app.CurrentTool.OnMapControlMouseDown(e.button, e.shift, e.x, e.y, e.mapX, e.mapY);
-            } else
-            {
-                MessageBox.Show(string.Format("{0}, {1}", e.mapX, e.mapY));
-            }
-        }
+        }        
     }
 }

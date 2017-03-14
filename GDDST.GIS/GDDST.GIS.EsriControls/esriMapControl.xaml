@@ -8,20 +8,28 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid x:Name="mapCtrlGrid" Margin="0,0,0,0">
-        <WindowsFormsHost x:Name="navHost" Margin="10,10, 0, 0" Height="32" Width="263" HorizontalAlignment="Left" VerticalAlignment="Top" Background="LightGray">
+        <WindowsFormsHost x:Name="navHost" Margin="20,20, 0, 0" Height="40" Width="300" HorizontalAlignment="Left" VerticalAlignment="Top" Background="LightGray">
             <ElementHost>
-                <Grid x:Name="gridZoomIn" Height="32" Width="32" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="32" />
-                        <ColumnDefinition Width="32" />
-                        <ColumnDefinition Width="32" />
-                    </Grid.ColumnDefinitions>
-                    <Image x:Name="imgZoomIn" Source="images\EsriMapZoomIn_32.png" Stretch="Fill"  Margin="0,0,0,0" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                </Grid>
-                
+                <ToolBar x:Name="toolBar" ToolBarTray.IsLocked="True" Background="LightGray" Loaded="ToolBar_Loaded">
+                    <Button x:Name="btnZoomIn">
+                        <Image x:Name="imgZoomIn" />
+                    </Button>
+                    <Button x:Name="btnZoomOut">
+                        <Image x:Name="imgZoomOut" />
+                    </Button>
+                    <Button x:Name="btnPriorView">
+                        <Image x:Name="imgPriorView" />
+                    </Button>
+                    <Button x:Name="btnNextView">
+                        <Image x:Name="imgNextView" />
+                    </Button>
+                    <Button x:Name="btnPan">
+                        <Image x:Name="imgPan" />
+                    </Button>
+                    <Button x:Name="btnFullExtent">
+                        <Image x:Name="imgFullExtent" />
+                    </Button>
+                </ToolBar>
             </ElementHost>
         </WindowsFormsHost>
 

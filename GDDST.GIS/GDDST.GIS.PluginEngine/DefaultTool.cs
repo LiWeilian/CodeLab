@@ -25,5 +25,11 @@ namespace GDDST.GIS.PluginEngine
 
             base.LoadSmallBitmap();
         }
+
+        public override void OnActivate()
+        {
+            base.OnActivate();
+
+        }
     }
 }

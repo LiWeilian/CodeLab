@@ -12,22 +12,22 @@ using GDDST.GIS.PluginEngine;
 namespace GDDST.GIS.EsriControls
 {
     [Export(typeof(IDsTool))]
-    public class EsriMapZoomIn : DsBaseTool
+    public class EsriMapPan : DsBaseTool
     {
         private IMapControlDefault m_mapCtrl = null;
         public override void OnCreate(IDsApplication hook)
         {
             base.m_app = hook;
-            base.Caption = "地图放大";
+            base.Caption = "地图平移";
             base.Category = "视图操作";
-            base.Message = "当前工具：地图放大";
-            base.Tooltip = "地图放大";
-            base.Name = "EsriMapZoomIn";
+            base.Message = "当前工具：地图平移";
+            base.Tooltip = "地图平移";
+            base.Name = "EsriMapPan";
             base.Checked = false;
             base.Deactivate = false;
             base.Enabled = true;
-            base.m_bitmapNameSmall = "EsriMapZoomIn_16.ico";
-            base.m_bitmapNameLarge = "EsriMapZoomIn_32.png";
+            base.m_bitmapNameSmall = "EsriMapPan_16.ico";
+            base.m_bitmapNameLarge = "EsriMapPan_32.png";
 
             base.LoadSmallBitmap();
             base.LoadLargeBitmap();
@@ -41,9 +41,10 @@ namespace GDDST.GIS.EsriControls
         public override void OnActivate()
         {
             base.OnActivate();
+
             if (m_mapCtrl != null)
             {
-                m_mapCtrl.MousePointer = esriControlsMousePointer.esriPointerZoomIn;
+                m_mapCtrl.MousePointer = esriControlsMousePointer.esriPointerPan;
             }
         }
 
@@ -53,7 +54,20 @@ namespace GDDST.GIS.EsriControls
 
             if (m_mapCtrl != null && button == 1)
             {
-                GDDST.GIS.EsriUtils.ViewAgent.ZoomIn(m_mapCtrl.ActiveView, mapX, mapY);
+                esriControlsMousePointer tempPointer = m_mapCtrl.MousePointer;
+                m_mapCtrl.MousePointer = esriControlsMousePointer.esriPointerPanning;
+                GDDST.GIS.EsriUtils.ViewAgent.Pan(m_mapCtrl.ActiveView);
+                m_mapCtrl.MousePointer = tempPointer;
+            }
+        }
+
+        public override void OnMapControlMouseUp(int button, int shift, int x, int y, double mapX, double mapY)
+        {
+            base.OnMapControlMouseUp(button, shift, x, y, mapX, mapY);
+
+            if (m_mapCtrl != null)
+            {
+                m_mapCtrl.MousePointer = esriControlsMousePointer.esriPointerPan;
             }
         }
     }

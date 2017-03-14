@@ -33,6 +33,15 @@
     <Reference Include="ESRI.ArcGIS.AxControls, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
+    <Reference Include="ESRI.ArcGIS.Carto, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Controls, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Geometry, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="ESRI.ArcGIS.System, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>False</Private>
@@ -63,13 +72,26 @@
     <Compile Include="esriMapControl.xaml.cs">
       <DependentUpon>esriMapControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EsriMapFullExtent.cs" />
+    <Compile Include="EsriMapNextView.cs" />
+    <Compile Include="EsriMapPan.cs" />
+    <Compile Include="EsriMapPriorView.cs" />
     <Compile Include="EsriMapZoomIn.cs" />
     <Compile Include="esriTOCControl.xaml.cs">
       <DependentUpon>esriTOCControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EsriMapZoomOut.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GDDST.GIS.dsSystem\GDDST.GIS.dsSystem.csproj">
+      <Project>{73bd1974-2d6d-481e-941b-44501d30a750}</Project>
+      <Name>GDDST.GIS.dsSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GDDST.GIS.EsriUtils\GDDST.GIS.EsriUtils.csproj">
+      <Project>{1f41cad8-d725-456e-8960-8405faeecbd2}</Project>
+      <Name>GDDST.GIS.EsriUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GDDST.GIS.PluginEngine\GDDST.GIS.PluginEngine.csproj">
       <Project>{e915e0fe-7841-468b-b7c2-a65406a096cb}</Project>
       <Name>GDDST.GIS.PluginEngine</Name>
@@ -84,9 +106,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="images\EsriMapZoomIn_32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
