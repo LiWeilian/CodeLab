@@ -67,6 +67,18 @@ namespace GDDST.GIS.ui
 
                             ribbonCom.NameSpace = ribbonComNode.Attributes["namespace"] != null ? ribbonComNode.Attributes["namespace"].Value : string.Empty;
                             ribbonCom.Label = ribbonComNode.Attributes["label"] != null ? ribbonComNode.Attributes["label"].Value : string.Empty;
+                            ribbonCom.ImageType = ribbonComNode.Attributes["imagetype"] != null
+                                && (ribbonComNode.Attributes["imagetype"].Value == "large") ? ImageType.itLarge : ImageType.itSmall;
+                            int width = 0;
+                            string sWidth = ribbonComNode.Attributes["width"] != null 
+                                ? ribbonComNode.Attributes["width"].Value : string.Empty;
+                            if (int.TryParse(sWidth, out width) && width > 0)
+                            {
+                                ribbonCom.width = width;
+                            } else
+                            {
+                                ribbonCom.width = 0;
+                            }                            
 
                             ribbonGroup.RibbonComponents.Add(ribbonCom);
                         }

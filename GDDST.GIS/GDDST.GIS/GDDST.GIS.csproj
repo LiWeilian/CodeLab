@@ -87,8 +87,10 @@
     <Compile Include="QueryPanel.xaml.cs">
       <DependentUpon>QueryPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ui\GISControlsConfigXML.cs" />
+    <Compile Include="ui\GISControlsDef.cs" />
     <Compile Include="ui\MainRibbonConfigXML.cs" />
-    <Compile Include="ui\MainRibbonDefXML.cs" />
+    <Compile Include="ui\MainRibbonDef.cs" />
     <Compile Include="Window1.xaml.cs">
       <DependentUpon>Window1.xaml</DependentUpon>
     </Compile>
@@ -141,6 +143,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GDDST.GIS.dsSystem\GDDST.GIS.dsSystem.csproj">
+      <Project>{73bd1974-2d6d-481e-941b-44501d30a750}</Project>
+      <Name>GDDST.GIS.dsSystem</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GDDST.GIS.PluginEngine\GDDST.GIS.PluginEngine.csproj">
       <Project>{e915e0fe-7841-468b-b7c2-a65406a096cb}</Project>
       <Name>GDDST.GIS.PluginEngine</Name>

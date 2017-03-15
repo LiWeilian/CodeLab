@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GDDST.GIS.ui
 {
-    public class MainRibbonDef
+    class MainRibbonDef
     {
         public List<MainRibbonTabDef> RibbonTabs { get; private set; }
 
@@ -16,7 +16,7 @@ namespace GDDST.GIS.ui
         }
     }
 
-    public class MainRibbonTabDef
+    class MainRibbonTabDef
     {
         public string Header { get; set; }
         public List<MainRibbonGroupDef> RibbonGroups { get; private set; }
@@ -27,7 +27,7 @@ namespace GDDST.GIS.ui
         }
     }
 
-    public class MainRibbonGroupDef
+    class MainRibbonGroupDef
     {
         public string Header { get; set; }
         public List<MainRibbonComponentDef> RibbonComponents { get; }
@@ -38,10 +38,18 @@ namespace GDDST.GIS.ui
         }
     }
 
-    public class MainRibbonComponentDef
+    enum ImageType
+    {
+        itSmall,
+        itLarge
+    }
+
+    class MainRibbonComponentDef
     {
         public string NameSpace { get; set; }
         public string Label { get; set; }
+        public ImageType ImageType { get; set; }
+        public int width { get; set; }
         
     }
 }

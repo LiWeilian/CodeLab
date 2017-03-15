@@ -1,0 +1,14 @@
+﻿<UserControl x:Class="GDDST.GIS.EsriDataQuery.esriMapQueryUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GDDST.GIS.EsriDataQuery"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="300">
+    <Grid Margin="0,0,0,0" Height="80" Width="300">
+        <ContentControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <ComboBox x:Name="cbLayers" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="120"/>
+        </ContentControl>
+    </Grid>
+</UserControl>

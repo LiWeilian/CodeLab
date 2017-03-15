@@ -40,8 +40,10 @@ namespace GDDST.GIS.EsriDataConnection
             base.Checked = false;
             base.Enabled = true;
             base.m_bitmapNameSmall = "AddAccessData_16.ico";
+            base.m_bitmapNameLarge = "AddAccessData_32.png";
 
             base.LoadSmallBitmap();
+            base.LoadLargeBitmap();
         }
 
         public override void OnActivate()

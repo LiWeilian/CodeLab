@@ -62,6 +62,6 @@ namespace GDDST.GIS.EsriControls
             AxTOCControl axTocCtrl = (m_legendCtrl as esriTOCControl).tocCtrl;
 
             axTocCtrl.SetBuddyControl(axMapCtrl);
-        }        
+        }
     }
 }

@@ -20,6 +20,7 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 
 using GDDST.GIS.PluginEngine;
+using GDDST.GIS.dsSystem;
 using GDDST.GIS.ui;
 
 namespace GDDST.GIS
@@ -33,10 +34,7 @@ namespace GDDST.GIS
         private IDsApplication m_application;
         [Import]
         private IDsUIStyle m_UIStyle;
-        [Import]
-        private IDsMapControl m_mapCtrl;
-        [Import]
-        private IDsGISControls m_gisCtrls;
+        
 
         #region GIS初始化组件
         [ImportMany]
@@ -51,22 +49,30 @@ namespace GDDST.GIS
         private IEnumerable<IDsCommand> m_commands;
         [ImportMany]
         private IEnumerable<IDsPanel> m_pluginPanels;
-        #endregion
-
-        #region 指针操作
-        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
-        public static extern bool DeleteObject(IntPtr hObject);
+        [ImportMany]
+        private IEnumerable<IDsGISControls> m_gisCtrls;
         #endregion
 
         public MainWindow()
         {
             InitializeComponent();
+            InitializeSystemSettinigs();
             //使用插件前先调用此方法
             InitializeComponentModel();
 
             InitializeGISComponents();
 
             InitializeUI();
+        }
+                
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            ShutdownGISComponents();
+        }
+
+        private void InitializeSystemSettinigs()
+        {
+            App.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
         }
 
         private void InitializeGISComponents()
@@ -106,6 +112,31 @@ namespace GDDST.GIS
                 MessageBox.Show(ex.Message);
                 //throw;
             }
+
+            #region
+            if (m_tools != null)
+            {
+                foreach (IDsTool tool in m_tools)
+                {
+                    m_application.Plugins.Add(tool);
+                }
+            }
+            if (m_commands != null)
+            {
+                foreach (IDsCommand cmd in m_commands)
+                {
+                    m_application.Plugins.Add(cmd);
+                }
+            }
+
+            if (m_pluginPanels != null)
+            {
+                foreach (IDsPanel pnl in m_pluginPanels)
+                {
+                    m_application.Plugins.Add(pnl);
+                }
+            }
+            #endregion
         }
 
         private BitmapSource CreateBitmapImageSource(string imageFileName)
@@ -125,7 +156,7 @@ namespace GDDST.GIS
             {
                 if (ptr != IntPtr.Zero)
                 {
-                    DeleteObject(ptr);
+                    dsSystem.Win32.DeleteObject(ptr);
                 }
             }
             
@@ -151,7 +182,7 @@ namespace GDDST.GIS
                 {
                     if (ptr != IntPtr.Zero)
                     {
-                        DeleteObject(ptr);
+                        dsSystem.Win32.DeleteObject(ptr);
                     }
                 }
             }
@@ -330,6 +361,8 @@ namespace GDDST.GIS
 
             Ribbon mainRibbon = new Ribbon();
 
+            //mainRibbon.Height = 200;
+            
             mainRibbon.SetValue(Grid.RowProperty, 0);
             mainRibbon.SetValue(Grid.ColumnProperty, 0);
             mainRibbon.SetValue(Grid.ColumnSpanProperty, 3);
@@ -338,11 +371,13 @@ namespace GDDST.GIS
             {
                 RibbonTab ribbonTab = new RibbonTab() { Header = tabDef.Header };
                 mainRibbon.Items.Add(ribbonTab);
+                //ribbonTab.Margin = new Thickness(0, 0, 0, -125);
 
                 foreach (MainRibbonGroupDef groupDef in tabDef.RibbonGroups)
                 {
                     RibbonGroup ribbonGroup = new RibbonGroup() { Header = groupDef.Header };
                     ribbonTab.Items.Add(ribbonGroup);
+                    //ribbonGroup.Margin = new Thickness(0, 0, 0, -100);
 
                     foreach (MainRibbonComponentDef comDef in groupDef.RibbonComponents)
                     {
@@ -357,7 +392,23 @@ namespace GDDST.GIS
                                 RibbonButton rbtn = new RibbonButton();
                                 rbtn.Label = comDef.Label;
                                 rbtn.Tag = cmd;
-                                rbtn.SmallImageSource = CreateBitmapImageSource(cmd.SmallBitmap);
+
+                                if (comDef.width > 0)
+                                {
+                                    rbtn.Width = comDef.width;
+                                }
+
+                                switch (comDef.ImageType)
+                                {
+                                    case ImageType.itSmall:
+                                        rbtn.SmallImageSource = CreateBitmapImageSource(cmd.SmallBitmap);
+                                        break;
+                                    case ImageType.itLarge:
+                                        rbtn.LargeImageSource = CreateBitmapImageSource(cmd.LargeBitmap);
+                                        break;
+                                    default:
+                                        break;
+                                }
 
                                 rbtn.Click += delegate (object sender, RoutedEventArgs e)
                                 {
@@ -374,7 +425,23 @@ namespace GDDST.GIS
                                 RibbonButton rbtn = new RibbonButton();
                                 rbtn.Label = comDef.Label;
                                 rbtn.Tag = tool;
-                                rbtn.SmallImageSource = CreateBitmapImageSource(tool.SmallBitmap);
+
+                                if (comDef.width > 0)
+                                {
+                                    rbtn.Width = comDef.width;
+                                }
+                                
+                                switch (comDef.ImageType)
+                                {
+                                    case ImageType.itSmall:
+                                        rbtn.SmallImageSource = CreateBitmapImageSource(tool.SmallBitmap);
+                                        break;
+                                    case ImageType.itLarge:
+                                        rbtn.LargeImageSource = CreateBitmapImageSource(tool.LargeBitmap);
+                                        break;
+                                    default:
+                                        break;
+                                }
                                 rbtn.Click += delegate (object sender, RoutedEventArgs e)
                                 {
                                     (rbtn.Tag as IDsTool).OnActivate();
@@ -399,135 +466,28 @@ namespace GDDST.GIS
             mainGrid.Children.Add(mainRibbon);
             #endregion
 
-            #region Ribbon
-            /*
-            Ribbon mainRibbon = new Ribbon();
-
-            RibbonTab dataConnTab = new RibbonTab() { Header = "加载数据" };
-            RibbonGroup dataConnGrp = new RibbonGroup() { Header = "加载数据" };
-            dataConnTab.Items.Add(dataConnGrp);
-            RibbonTab mapNavTab = new RibbonTab() { Header = "视图操作" };
-            RibbonGroup mapNavGrp = new RibbonGroup() { Header = "视图操作" };
-            mapNavTab.Items.Add(mapNavGrp);
-            RibbonButton rbtn = null;
-            foreach (IDsTool tool in m_tools)
-            {
-                tool.OnCreate(m_application);
-
-                switch (tool.Category)
-                {
-                    case "加载数据":
-                        rbtn = new RibbonButton();
-                        rbtn.Label = tool.Caption;
-                        rbtn.SmallImageSource = CreateBitmapImageSource(tool.SmallBitmap);
-                        dataConnGrp.Items.Add(rbtn);
-                        break;
-                    case "视图操作":
-                        rbtn = new RibbonButton();
-                        rbtn.Label = tool.Caption;
-                        rbtn.SmallImageSource = CreateBitmapImageSource(tool.SmallBitmap);
-                        mapNavGrp.Items.Add(rbtn);
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            foreach (IDsCommand cmd in m_commands)
-            {
-                cmd.OnCreate(m_application);
-                switch (cmd.Category)
-                {
-                    case "加载数据":
-                        rbtn = new RibbonButton();
-                        rbtn.Label = cmd.Caption;
-                        rbtn.SmallImageSource = CreateBitmapImageSource(cmd.SmallBitmap);
-                        dataConnGrp.Items.Add(rbtn);
-                        break;
-                    case "视图操作":
-                        rbtn = new RibbonButton();
-                        rbtn.Label = cmd.Caption;
-                        if (cmd.LargeBitmap != null)
-                        {
-                            rbtn.LargeImageSource = CreateBitmapImageSource(cmd.LargeBitmap);
-                        } else
-                        {
-                            rbtn.SmallImageSource = CreateBitmapImageSource(cmd.SmallBitmap);
-                        }
-                        mapNavGrp.Items.Add(rbtn);
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            mainRibbon.Items.Add(dataConnTab);
-            mainRibbon.Items.Add(mapNavTab);
-
-            mainRibbon.Items.Add(CreateTestUITab());
-
-            mainRibbon.Items.Add(CreateTestStyleTab());
-
-            mainRibbon.Items.Add(CreateUserControlTab());
-
-            //mainRibbon.Items.Add(CreatePluginPanelTab());
-
-            mainRibbon.SetValue(Grid.RowProperty, 0);
-            mainRibbon.SetValue(Grid.ColumnProperty, 0);
-            mainRibbon.SetValue(Grid.ColumnSpanProperty, 3);
-
-            mainGrid.Children.Add(mainRibbon);
-            */
-            #endregion
-
             #region GIS Controls
-            /*
-            AxMapControl mapCtrl = new AxMapControl();
-            mapCtrl.BeginInit();
-            mapCtrl.Dock = System.Windows.Forms.DockStyle.Fill;
-            
-            mapHost.Child = mapCtrl;
-            mapCtrl.OnMouseDown += delegate (object sender, IMapControlEvents2_OnMouseDownEvent e) {
-                MessageBox.Show(string.Format("{0},{1}", e.x, e.y));
-            };
-            mapCtrl.EndInit();
 
-            AxTOCControl tocCtrl = new AxTOCControl();
-            tocCtrl.BeginInit();
-            tocCtrl.Dock = System.Windows.Forms.DockStyle.Fill;
-            tocHost.Child = tocCtrl;
-            tocCtrl.EndInit();
-            tocCtrl.SetBuddyControl(mapCtrl);
-            */
-            /*
-            if (m_mapCtrl != null)
+            GISControlsConfigXML gisCtrlsCfg = new GISControlsConfigXML();
+            GISControlsDef gisCtrlsDef = gisCtrlsCfg.CreateGISControlsDef();
+            if (gisCtrlsDef != null && m_gisCtrls != null)
             {
-                // Not OK 只能放置在0，0位置
-                (m_mapCtrl.DsMapControl as GDDST.GIS.Controls.UCMapControl).SetValue(Grid.RowProperty, 1);
-                (m_mapCtrl.DsMapControl as GDDST.GIS.Controls.UCMapControl).SetValue(Grid.ColumnProperty, 1);
-                
-                mainGrid.Children.Add((m_mapCtrl.DsMapControl as GDDST.GIS.Controls.UCMapControl));
-                //
+                IEnumerable<IDsGISControls> items = from g in m_gisCtrls
+                           where g.ToString() == gisCtrlsDef.NameSpace
+                           select g;
 
-                //OK
-                //mainGrid.Children.Add(m_mapCtrl.CreateMapControl(1, 1));
+                if (items.Count() > 0)
+                {
+                    IDsGISControls gisCtrls = items.First();
 
+                    if (gisCtrls != null)
+                    {
+                        gisCtrls.InitializeControls(m_application);
 
-                //OK
-                //mapCtrlGrid.Children.Add(m_mapCtrl.DsMapControl);    
-
-            }
-            */
-
-            if (m_gisCtrls != null)
-            {
-                m_gisCtrls.InitializeControls(m_application);
-
-                m_application.MapControl = m_gisCtrls.MapControlCore;
-                m_application.LegendControl = m_gisCtrls.LegendControlCore;
-
-                mapCtrlGrid.Children.Add(m_gisCtrls.MapControl);
-                legendCtrlGrid.Children.Add(m_gisCtrls.LegendControl);
+                        legendCtrlGrid.Children.Add(gisCtrls.LegendControl);
+                        mapCtrlGrid.Children.Add(gisCtrls.MapControl);
+                    }
+                }
             }
             #endregion
 

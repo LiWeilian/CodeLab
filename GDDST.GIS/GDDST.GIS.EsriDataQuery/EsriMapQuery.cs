@@ -4,15 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-
 using System.ComponentModel.Composition;
 
 using GDDST.GIS.PluginEngine;
 
-namespace GDDST.GIS.MapQuery
+namespace GDDST.GIS.EsriDataQuery
 {
     [Export(typeof(IDsPanel))]
-    class MapQueryByAttr : DsBasePanel
+    public class EsriMapQuery : DsBasePanel
     {
         public override UserControl PluginPanel
         {
@@ -29,15 +28,7 @@ namespace GDDST.GIS.MapQuery
         public override void OnCreate(IDsApplication hook)
         {
             base.m_app = hook;
-
-            base.PluginPanel = new UCMapQueryByAttr();
-
-            (base.PluginPanel as UCMapQueryByAttr).cbLayers.Items.Add(DateTime.Now.ToString());
-        }
-
-        public override void OnActivate()
-        {
-            base.OnActivate();
+            base.PluginPanel = new esriMapQueryUC(m_app);
         }
     }
 }

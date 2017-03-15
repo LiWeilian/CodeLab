@@ -29,6 +29,11 @@ namespace GDDST.GIS.PluginEngine
         //private AxHost m_axMapControl;
         private IDsTool m_defaultTool = null;
 
+        public DsApplication()
+        {
+            Plugins = new List<IDsPlugin>();
+        }
+
         #region IDsApplication 成员
 
         /// <summary>
@@ -137,6 +142,7 @@ namespace GDDST.GIS.PluginEngine
         public object MapControl { get; set; }
 
         public object LegendControl { get; set; }
+        public List<IDsPlugin> Plugins { get; private set; }
 
         #endregion
 

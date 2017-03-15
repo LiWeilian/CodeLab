@@ -34,7 +34,8 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="ESRI.ArcGIS.Carto, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>False</Private>
     </Reference>
     <Reference Include="ESRI.ArcGIS.Controls, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -72,6 +73,7 @@
     <Compile Include="esriMapControl.xaml.cs">
       <DependentUpon>esriMapControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EsriMapRefresh.cs" />
     <Compile Include="EsriMapFullExtent.cs" />
     <Compile Include="EsriMapNextView.cs" />
     <Compile Include="EsriMapPan.cs" />

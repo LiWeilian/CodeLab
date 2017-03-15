@@ -126,5 +126,10 @@ namespace GDDST.GIS.PluginEngine
         /// 图例控件
         /// </summary>
         object LegendControl { get; set; }
+
+        /// <summary>
+        /// 应用程序插件集合
+        /// </summary>
+        List<IDsPlugin> Plugins { get; }
     }
 }

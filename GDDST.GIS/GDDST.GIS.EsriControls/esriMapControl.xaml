@@ -8,26 +8,29 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid x:Name="mapCtrlGrid" Margin="0,0,0,0">
-        <WindowsFormsHost x:Name="navHost" Margin="20,20, 0, 0" Height="40" Width="300" HorizontalAlignment="Left" VerticalAlignment="Top" Background="LightGray">
+        <WindowsFormsHost x:Name="navHost" Margin="20,20, 0, 0" Height="40" Width="320" HorizontalAlignment="Left" VerticalAlignment="Top" Background="LightGray">
             <ElementHost>
                 <ToolBar x:Name="toolBar" ToolBarTray.IsLocked="True" Background="LightGray" Loaded="ToolBar_Loaded">
-                    <Button x:Name="btnZoomIn">
+                    <Button x:Name="btnZoomIn" ToolTip="放大">
                         <Image x:Name="imgZoomIn" />
                     </Button>
-                    <Button x:Name="btnZoomOut">
+                    <Button x:Name="btnZoomOut" ToolTip="缩小">
                         <Image x:Name="imgZoomOut" />
                     </Button>
-                    <Button x:Name="btnPriorView">
+                    <Button x:Name="btnPriorView" ToolTip="前一视图">
                         <Image x:Name="imgPriorView" />
                     </Button>
-                    <Button x:Name="btnNextView">
+                    <Button x:Name="btnNextView" ToolTip="后一视图">
                         <Image x:Name="imgNextView" />
                     </Button>
-                    <Button x:Name="btnPan">
+                    <Button x:Name="btnPan" ToolTip="漫游">
                         <Image x:Name="imgPan" />
                     </Button>
-                    <Button x:Name="btnFullExtent">
+                    <Button x:Name="btnFullExtent" ToolTip="全图">
                         <Image x:Name="imgFullExtent" />
+                    </Button>
+                    <Button x:Name="btnRefresh" ToolTip="刷新">
+                        <Image x:Name="imgRefresh" />
                     </Button>
                 </ToolBar>
             </ElementHost>

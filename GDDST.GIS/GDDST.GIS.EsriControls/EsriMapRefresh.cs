@@ -13,21 +13,21 @@ using GDDST.GIS.EsriUtils;
 namespace GDDST.GIS.EsriControls
 {
     [Export(typeof(IDsCommand))]
-    public class EsriMapFullExtent : DsBaseCommand
+    public class EsriMapRefresh : DsBaseCommand
     {
         private IMapControlDefault m_mapCtrl = null;
         public override void OnCreate(IDsApplication hook)
         {
             base.m_app = hook;
-            base.Caption = "全图显示";
+            base.Caption = "地图刷新";
             base.Category = "视图操作";
-            base.Message = "当前工具：全图显示";
-            base.Tooltip = "全图显示";
-            base.Name = "EsriMapFullExtent";
+            base.Message = "当前工具：地图刷新";
+            base.Tooltip = "地图刷新";
+            base.Name = "EsriMapRefresh";
             base.Checked = false;
             base.Enabled = true;
-            base.m_bitmapNameSmall = "EsriMapFullExtent_16.png";
-            base.m_bitmapNameLarge = "EsriMapFullExtent_32.png";
+            base.m_bitmapNameSmall = "EsriMapRefresh_16.png";
+            base.m_bitmapNameLarge = "EsriMapRefresh_32.png";
 
             base.LoadSmallBitmap();
             base.LoadLargeBitmap();
@@ -44,7 +44,7 @@ namespace GDDST.GIS.EsriControls
 
             if (m_mapCtrl != null)
             {
-                ViewAgent.ZoomAll(m_mapCtrl.ActiveView);
+                m_mapCtrl.ActiveView.Refresh();
             }
         }
     }
