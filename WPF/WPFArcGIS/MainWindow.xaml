@@ -3,12 +3,17 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:esri="clr-namespace:ESRI.ArcGIS.Controls;assembly=ESRI.ArcGIS.AxControls"
         xmlns:local="clr-namespace:WPFArcGIS"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid Margin="0,0,-59,7">
         <WindowsFormsHost Height="54" HorizontalAlignment="Left" Name="windowsFormsHost1" VerticalAlignment="Top" Width="576" />
-        <WindowsFormsHost Height="232" HorizontalAlignment="Left" Margin="0,60,0,0" Name="windowsFormsHost2" VerticalAlignment="Top" Width="133" />
-        <WindowsFormsHost Height="232" HorizontalAlignment="Left" Margin="139,60,0,0" Name="windowsFormsHost3" VerticalAlignment="Top" Width="437" />
+        <WindowsFormsHost Height="232" HorizontalAlignment="Left" Margin="0,60,0,0" Name="windowsFormsHost2" VerticalAlignment="Top" Width="133" >
+            <esri:AxTOCControl x:Name="tocControl" Dock="Fill"/>
+        </WindowsFormsHost>
+        <WindowsFormsHost Height="232" HorizontalAlignment="Left" Margin="139,60,0,0" Name="windowsFormsHost3" VerticalAlignment="Top" Width="437" >
+            <esri:AxMapControl x:Name="mapControl" Dock="Fill"/>
+        </WindowsFormsHost>
     </Grid>
 </Window>

@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 
 using ESRI.ArcGIS.esriSystem;
 using ESRI.ArcGIS.Controls;
+using ESRI.ArcGIS.Carto;
 using System.Windows.Interop;
 using System.Windows.Forms.Integration;
 
@@ -30,14 +31,35 @@ namespace WPFArcGIS
             GISInitialize();
             InitializeComponent();
 
-            AxMapControl mapControl = new AxMapControl();
-            windowsFormsHost3.Child = mapControl;
-            AxTOCControl tocControl = new AxTOCControl();
-            windowsFormsHost2.Child = tocControl;
+            //AxMapControl mapControl = new AxMapControl();
+            //windowsFormsHost3.Child = mapControl;
 
+            mapControl.BeginInit();
             mapControl.OnMouseDown += MapControl_OnMouseDown;
             mapControl.OnMouseUp += MapControl_OnMouseUp;
             mapControl.OnMouseMove += MapControl_OnMouseMove;
+
+            IMap map = (mapControl.Object as IMapControlDefault).Map;
+            IActiveViewEvents_Event viewEvent = (IActiveViewEvents_Event)map;
+            try
+            {
+
+                viewEvent.ItemAdded += ViewEvent_ItemAdded;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            mapControl.EndInit();
+
+            //AxTOCControl tocControl = new AxTOCControl();
+            //windowsFormsHost2.Child = tocControl;
+            tocControl.SetBuddyControl(mapControl.Object);
+        }
+
+        private void ViewEvent_ItemAdded(object Item)
+        {
+            throw new NotImplementedException();
         }
 
         private void MapControl_OnMouseMove(object sender, IMapControlEvents2_OnMouseMoveEvent e)

@@ -5,10 +5,35 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApplication1"
         xmlns:winform="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+        xmlns:ribbon="clr-namespace:System.Windows.Controls.Ribbon;assembly=System.Windows.Controls.Ribbon"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <WindowsFormsHost x:Name="navHost" Margin="10,10,0,0" Height="40" Width="263" HorizontalAlignment="Left" VerticalAlignment="Top" Background="LightGray">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Ribbon Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+            <RibbonTab Margin="0,0,0,-126">
+                <RibbonGroup Header="Font" Name="Font" Margin="0,0,0,-126" >
+                    <RibbonGroup.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" MaxWidth="300" />
+                        </ItemsPanelTemplate>
+                    </RibbonGroup.ItemsPanel>
+                </RibbonGroup>
+            </RibbonTab>
+        </Ribbon>
+        
+        <WindowsFormsHost x:Name="navHost" Margin="10,10,0,0" Height="40" Width="263" HorizontalAlignment="Left" VerticalAlignment="Top" Background="LightGray"  Grid.Row="1" Grid.Column="1">
             <ElementHost>
                 <ToolBar x:Name="toolBar" ToolBarTray.IsLocked="True" Background="LightGray">
                     <Button >
@@ -18,7 +43,7 @@
             </ElementHost>
         </WindowsFormsHost>
         
-        <WindowsFormsHost HorizontalAlignment="Stretch" Margin="5,5,5,5" VerticalAlignment="Stretch">
+        <WindowsFormsHost HorizontalAlignment="Stretch" Margin="5,5,5,5" VerticalAlignment="Stretch" Grid.Row="1" Grid.Column="1">
             <winform:Panel Dock="Fill" BackColor="Gold"></winform:Panel>
         </WindowsFormsHost>
         
