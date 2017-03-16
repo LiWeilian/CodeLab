@@ -69,7 +69,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EsriControls.cs" />
-    <Compile Include="EsriInitialize.cs" />
     <Compile Include="esriMapControl.xaml.cs">
       <DependentUpon>esriMapControl.xaml</DependentUpon>
     </Compile>

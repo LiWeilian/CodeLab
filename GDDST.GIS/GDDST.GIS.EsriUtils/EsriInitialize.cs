@@ -9,7 +9,7 @@ using ESRI.ArcGIS.esriSystem;
 
 using GDDST.GIS.PluginEngine;
 
-namespace GDDST.GIS.EsriControls
+namespace GDDST.GIS.EsriUtils
 {
     [Export(typeof(IDsGISInitialize))]
     public class EsriInitialize : IDsGISInitialize
