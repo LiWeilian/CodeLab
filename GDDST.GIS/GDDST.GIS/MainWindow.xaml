@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GDDST.GIS"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525"
+        Title="Dragon Spring GIS" Height="350" Width="525"
         WindowStartupLocation="CenterScreen"
-        WindowState="Maximized" Closed="Window_Closed">
+        WindowState="Maximized" Closed="Window_Closed" Icon="images\hidden_main_logo.png">
     <Grid x:Name="mainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -15,17 +15,17 @@
             <RowDefinition Height="50" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="300" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <StatusBar HorizontalAlignment="Left" Height="18" Margin="0,0,0,0" VerticalAlignment="Top" Width="100" Grid.Row="2"/>
-
-        <Grid x:Name="legendCtrlGrid" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid x:Name="legendCtrlGrid" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
         </Grid>
-        <Grid x:Name="mapCtrlGrid" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid x:Name="mapCtrlGrid" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             
         </Grid>
+        <StatusBar Margin="5,0,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" BorderThickness="1" BorderBrush="Black"/>
     </Grid>
 </Window>

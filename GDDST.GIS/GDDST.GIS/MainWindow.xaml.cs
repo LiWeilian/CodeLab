@@ -365,7 +365,7 @@ namespace GDDST.GIS
             
             mainRibbon.SetValue(Grid.RowProperty, 0);
             mainRibbon.SetValue(Grid.ColumnProperty, 0);
-            mainRibbon.SetValue(Grid.ColumnSpanProperty, 3);
+            mainRibbon.SetValue(Grid.ColumnSpanProperty, 4);
 
             foreach (MainRibbonTabDef tabDef in mainRibbonDef.RibbonTabs)
             {

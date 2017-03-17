@@ -50,11 +50,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>images\hidden_main_logo.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject />
+    <StartupObject>GDDST.GIS.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -84,6 +83,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppSkin.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="QueryPanel.xaml.cs">
       <DependentUpon>QueryPanel.xaml</DependentUpon>
     </Compile>
@@ -169,6 +169,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\hidden_main_logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\hidden_main_logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

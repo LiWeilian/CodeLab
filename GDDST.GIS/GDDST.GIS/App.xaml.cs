@@ -13,5 +13,6 @@ namespace GDDST.GIS
     /// </summary>
     public partial class App : Application
     {
+        
     }
 }

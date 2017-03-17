@@ -494,8 +494,14 @@ namespace GDDST.GIS.PluginEngine
         bool Deactivate { get; set; }
     }
 
+    /// <summary>
+    /// 面板插件
+    /// </summary>
     public interface IDsPanel : IDsPlugin
     {
+        /// <summary>
+        /// 自定义面板控件，内部可承载其他控件
+        /// </summary>
         UserControl PluginPanel { get; }
     }
 
