@@ -143,6 +143,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AvalonDock\AvalonDock.csproj">
+      <Project>{db81988f-e0f2-45a0-a1fd-8c37f3d35244}</Project>
+      <Name>AvalonDock</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GDDST.GIS.dsSystem\GDDST.GIS.dsSystem.csproj">
       <Project>{73bd1974-2d6d-481e-941b-44501d30a750}</Project>
       <Name>GDDST.GIS.dsSystem</Name>

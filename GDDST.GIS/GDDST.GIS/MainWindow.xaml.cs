@@ -22,6 +22,7 @@ using System.ComponentModel.Composition.Hosting;
 using GDDST.GIS.PluginEngine;
 using GDDST.GIS.dsSystem;
 using GDDST.GIS.ui;
+using AvalonDock.Layout;
 
 namespace GDDST.GIS
 {
@@ -483,9 +484,25 @@ namespace GDDST.GIS
                     if (gisCtrls != null)
                     {
                         gisCtrls.InitializeControls(m_application);
-
+                        /*
                         legendCtrlGrid.Children.Add(gisCtrls.LegendControl);
                         mapCtrlGrid.Children.Add(gisCtrls.MapControl);
+                        */
+                        LayoutAnchorable layoutAnchor = new LayoutAnchorable();
+                        layoutAnchor.ContentId = "";
+                        layoutAnchor.Content = gisCtrls.LegendControl;
+                        layoutAnchor.Title = "图层列表";
+                        LayoutAnchorablePane anchorPane = new LayoutAnchorablePane();
+                        anchorPane.Children.Add(layoutAnchor);
+                        anchorGrpLayers.Children.Add(anchorPane);
+
+                        LayoutDocument layoutDoc = new LayoutDocument();
+                        layoutDoc.Title = "地图";
+                        layoutDoc.ContentId = "";
+                        layoutDoc.Content = gisCtrls.MapControl;
+                        LayoutDocumentPane layoutDocPane = new LayoutDocumentPane();
+                        layoutDocPane.Children.Add(layoutDoc);
+                        docGrpMaps.Children.Add(layoutDocPane);
                     }
                 }
             }

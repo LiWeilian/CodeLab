@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:avalonDock="http://avalondock.codeplex.com"
         xmlns:local="clr-namespace:GDDST.GIS"
         mc:Ignorable="d"
         Title="Dragon Spring GIS" Height="350" Width="525"
@@ -14,18 +15,29 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="50" />
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="300" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
+        <avalonDock:DockingManager Grid.Row="1" x:Name="dockManager">
+            <avalonDock:LayoutRoot x:Name="dockLayoutRoot">
+                <avalonDock:LayoutPanel>
+                    <avalonDock:LayoutAnchorablePaneGroup x:Name="anchorGrpLayers" DockWidth="300">
+                    </avalonDock:LayoutAnchorablePaneGroup>
+
+                    <avalonDock:LayoutDocumentPaneGroup x:Name="docGrpMaps">
+                    </avalonDock:LayoutDocumentPaneGroup>
+
+                    <avalonDock:LayoutAnchorablePaneGroup x:Name="anchorGrpInfos" DockWidth="300" Orientation="Vertical">
+                    </avalonDock:LayoutAnchorablePaneGroup>
+                </avalonDock:LayoutPanel>
+            </avalonDock:LayoutRoot>
+
+        </avalonDock:DockingManager>
+        <!--
         <Grid x:Name="legendCtrlGrid" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
         </Grid>
         <Grid x:Name="mapCtrlGrid" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             
         </Grid>
+        -->
         <StatusBar Margin="5,0,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" BorderThickness="1" BorderBrush="Black"/>
     </Grid>
 </Window>
