@@ -131,5 +131,14 @@ namespace GDDST.GIS.PluginEngine
         /// 应用程序插件集合
         /// </summary>
         List<IDsPlugin> Plugins { get; }
+
+        /// <summary>
+        /// 将信息窗口添加到信息面板
+        /// </summary>
+        /// <param name="infoControl">信息窗口控件</param>
+        void AddToInfoPanel(object infoControl, 
+            bool canClose, bool canHide, bool canFloat, bool isUnique);
+
+        //void SetLayoutControls();
     }
 }

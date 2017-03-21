@@ -8,6 +8,8 @@ using System.ComponentModel.Composition;
 using System.Windows;
 using System.Windows.Controls;
 
+using AvalonDock.Layout;
+
 namespace GDDST.GIS.PluginEngine
 {
     [Export(typeof(IDsApplication))]
@@ -144,6 +146,15 @@ namespace GDDST.GIS.PluginEngine
         public object LegendControl { get; set; }
         public List<IDsPlugin> Plugins { get; private set; }
 
+
+        /// <summary>
+        /// 将信息窗口添加到信息面板
+        /// </summary>
+        /// <param name="infoControl">信息窗口控件</param>
+        public void AddToInfoPanel(object infoControl, bool canClose, bool canHide, bool canFloat, bool isUnique)
+        {
+
+        }
         #endregion
 
         #region

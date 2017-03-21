@@ -71,11 +71,17 @@ namespace GDDST.GIS
             ShutdownGISComponents();
         }
 
+        /// <summary>
+        /// 初始化系统设置
+        /// </summary>
         private void InitializeSystemSettinigs()
         {
             App.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
         }
 
+        /// <summary>
+        /// 初始化必要的GIS组件
+        /// </summary>
         private void InitializeGISComponents()
         {
             if (m_gisInitList != null)
@@ -87,6 +93,9 @@ namespace GDDST.GIS
             }
         }
 
+        /// <summary>
+        /// 关闭GIS组件
+        /// </summary>
         private void ShutdownGISComponents()
         {
             if (m_gisInitList != null)
@@ -98,6 +107,9 @@ namespace GDDST.GIS
             }
         }
 
+        /// <summary>
+        /// 初始化MEF插件
+        /// </summary>
         private void InitializeComponentModel()
         {
             AggregateCatalog catalog = new AggregateCatalog();
@@ -114,7 +126,7 @@ namespace GDDST.GIS
                 //throw;
             }
 
-            #region
+            #region 将所有插件添加到应用程序插件集合
             if (m_tools != null)
             {
                 foreach (IDsTool tool in m_tools)
@@ -140,6 +152,11 @@ namespace GDDST.GIS
             #endregion
         }
 
+        /// <summary>
+        /// 从文件名称创建位图源
+        /// </summary>
+        /// <param name="imageFileName">文件名称</param>
+        /// <returns></returns>
         private BitmapSource CreateBitmapImageSource(string imageFileName)
         {
             IntPtr ptr = IntPtr.Zero;
@@ -162,6 +179,12 @@ namespace GDDST.GIS
             }
             
         }
+
+        /// <summary>
+        /// 从位图对象创建位图源
+        /// </summary>
+        /// <param name="bitmap">位图对象</param>
+        /// <returns></returns>
         private BitmapSource CreateBitmapImageSource(Bitmap bitmap)
         {
             if (bitmap == null)
@@ -354,6 +377,9 @@ namespace GDDST.GIS
             return null;
         }
 
+        /// <summary>
+        /// 初始化用户界面
+        /// </summary>
         private void InitializeUI()
         {
             #region 根据XML配置文件生成Ribbon
@@ -467,6 +493,7 @@ namespace GDDST.GIS
             mainGrid.Children.Add(mainRibbon);
             #endregion
 
+
             #region GIS Controls
 
             GISControlsConfigXML gisCtrlsCfg = new GISControlsConfigXML();
@@ -484,25 +511,37 @@ namespace GDDST.GIS
                     if (gisCtrls != null)
                     {
                         gisCtrls.InitializeControls(m_application);
-                        /*
-                        legendCtrlGrid.Children.Add(gisCtrls.LegendControl);
-                        mapCtrlGrid.Children.Add(gisCtrls.MapControl);
-                        */
-                        LayoutAnchorable layoutAnchor = new LayoutAnchorable();
-                        layoutAnchor.ContentId = "";
-                        layoutAnchor.Content = gisCtrls.LegendControl;
-                        layoutAnchor.Title = "图层列表";
-                        LayoutAnchorablePane anchorPane = new LayoutAnchorablePane();
-                        anchorPane.Children.Add(layoutAnchor);
-                        anchorGrpLayers.Children.Add(anchorPane);
 
-                        LayoutDocument layoutDoc = new LayoutDocument();
-                        layoutDoc.Title = "地图";
-                        layoutDoc.ContentId = "";
-                        layoutDoc.Content = gisCtrls.MapControl;
-                        LayoutDocumentPane layoutDocPane = new LayoutDocumentPane();
-                        layoutDocPane.Children.Add(layoutDoc);
-                        docGrpMaps.Children.Add(layoutDocPane);
+                        #region 在左停靠面板放置图例控件
+                        LayoutAnchorable legendLayoutAnchor = new LayoutAnchorable();
+                        legendLayoutAnchor.ContentId = "";
+                        legendLayoutAnchor.Content = gisCtrls.LegendControl;
+                        legendLayoutAnchor.Title = "图层列表";
+                        //隐藏状态下宽度 = 容器的宽度
+                        legendLayoutAnchor.AutoHideWidth = anchorGrpLeft.DockWidth.Value - 20;
+                        //不能关闭
+                        legendLayoutAnchor.CanHide = false;
+                        legendLayoutAnchor.CanClose = false;
+                        //可以浮动
+                        legendLayoutAnchor.CanFloat = true;
+                        //可以隐藏
+                        legendLayoutAnchor.CanAutoHide = true;
+                        //触发自动隐藏，需放到界面放入容器后调用
+                        //legendLayoutAnchor.ToggleAutoHide();
+
+                        anchorPaneLeft.Children.Add(legendLayoutAnchor);
+                        #endregion
+
+                        #region 在主停靠面板放置地图控件
+                        LayoutDocument mapLayoutDoc = new LayoutDocument();
+                        mapLayoutDoc.Title = "地图";
+                        mapLayoutDoc.ContentId = "";
+                        mapLayoutDoc.Content = gisCtrls.MapControl;
+                        mapLayoutDoc.CanClose = false;
+                        mapLayoutDoc.CanFloat = false;
+
+                        docPaneMain.Children.Add(mapLayoutDoc);
+                        #endregion
                     }
                 }
             }

@@ -13,31 +13,43 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="50" />
+            <RowDefinition Height="0" />
         </Grid.RowDefinitions>
         <avalonDock:DockingManager Grid.Row="1" x:Name="dockManager">
             <avalonDock:LayoutRoot x:Name="dockLayoutRoot">
-                <avalonDock:LayoutPanel>
-                    <avalonDock:LayoutAnchorablePaneGroup x:Name="anchorGrpLayers" DockWidth="300">
+                <avalonDock:LayoutPanel Orientation="Horizontal">
+                    <avalonDock:LayoutAnchorablePaneGroup x:Name="anchorGrpLeft" DockWidth="300">
+                        <avalonDock:LayoutAnchorablePane x:Name="anchorPaneLeft">
+                            
+                        </avalonDock:LayoutAnchorablePane>
                     </avalonDock:LayoutAnchorablePaneGroup>
 
-                    <avalonDock:LayoutDocumentPaneGroup x:Name="docGrpMaps">
+                    <avalonDock:LayoutDocumentPaneGroup x:Name="docGrpMain">
+                        <avalonDock:LayoutDocumentPane x:Name="docPaneMain">
+                            
+                        </avalonDock:LayoutDocumentPane>
                     </avalonDock:LayoutDocumentPaneGroup>
 
-                    <avalonDock:LayoutAnchorablePaneGroup x:Name="anchorGrpInfos" DockWidth="300" Orientation="Vertical">
+                    <avalonDock:LayoutAnchorablePaneGroup x:Name="anchorGrpRight" DockWidth="300">
+                        <avalonDock:LayoutAnchorablePane x:Name="anchorPaneRight">
+
+                        </avalonDock:LayoutAnchorablePane>
                     </avalonDock:LayoutAnchorablePaneGroup>
                 </avalonDock:LayoutPanel>
+                
+                <avalonDock:LayoutRoot.BottomSide>
+                    <avalonDock:LayoutAnchorSide x:Name="anchorSideBottom">
+                        <avalonDock:LayoutAnchorGroup x:Name="anchorGrpBottom" >
+                            <avalonDock:LayoutAnchorable Title="消息" ContentId="anchorSysMsg" AutoHideHeight="200" FloatingHeight="200" CanHide="False" CanClose="False" CanFloat="True" CanAutoHide="True">
+                                <TextBox x:Name="txtSysMsg"/>
+                            </avalonDock:LayoutAnchorable>
+                            <avalonDock:LayoutAnchorable Title="日志" ContentId="anchorSysLog" AutoHideHeight="200" FloatingHeight="200" CanHide="False" CanClose="False" CanFloat="True" CanAutoHide="True">
+                                <TextBox x:Name="txtSysLog"/>
+                            </avalonDock:LayoutAnchorable>
+                        </avalonDock:LayoutAnchorGroup>
+                    </avalonDock:LayoutAnchorSide>
+                </avalonDock:LayoutRoot.BottomSide>                
             </avalonDock:LayoutRoot>
-
         </avalonDock:DockingManager>
-        <!--
-        <Grid x:Name="legendCtrlGrid" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-
-        </Grid>
-        <Grid x:Name="mapCtrlGrid" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            
-        </Grid>
-        -->
-        <StatusBar Margin="5,0,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" BorderThickness="1" BorderBrush="Black"/>
     </Grid>
 </Window>
