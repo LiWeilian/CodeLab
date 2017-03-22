@@ -20,13 +20,13 @@
                 <avalonDock:LayoutPanel Orientation="Horizontal">
                     <avalonDock:LayoutAnchorablePaneGroup x:Name="anchorGrpLeft" DockWidth="300">
                         <avalonDock:LayoutAnchorablePane x:Name="anchorPaneLeft">
-                            
+
                         </avalonDock:LayoutAnchorablePane>
                     </avalonDock:LayoutAnchorablePaneGroup>
 
                     <avalonDock:LayoutDocumentPaneGroup x:Name="docGrpMain">
                         <avalonDock:LayoutDocumentPane x:Name="docPaneMain">
-                            
+
                         </avalonDock:LayoutDocumentPane>
                     </avalonDock:LayoutDocumentPaneGroup>
 
@@ -36,19 +36,19 @@
                         </avalonDock:LayoutAnchorablePane>
                     </avalonDock:LayoutAnchorablePaneGroup>
                 </avalonDock:LayoutPanel>
-                
+
                 <avalonDock:LayoutRoot.BottomSide>
                     <avalonDock:LayoutAnchorSide x:Name="anchorSideBottom">
                         <avalonDock:LayoutAnchorGroup x:Name="anchorGrpBottom" >
-                            <avalonDock:LayoutAnchorable Title="消息" ContentId="anchorSysMsg" AutoHideHeight="200" FloatingHeight="200" CanHide="False" CanClose="False" CanFloat="True" CanAutoHide="True">
-                                <TextBox x:Name="txtSysMsg"/>
+                            <avalonDock:LayoutAnchorable Title="系统消息" ContentId="anchorSysMsg" AutoHideHeight="200" FloatingHeight="200" CanHide="False" CanClose="False" CanFloat="True" CanAutoHide="True">
+                                <TextBox x:Name="txtSysMsg" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                             </avalonDock:LayoutAnchorable>
-                            <avalonDock:LayoutAnchorable Title="日志" ContentId="anchorSysLog" AutoHideHeight="200" FloatingHeight="200" CanHide="False" CanClose="False" CanFloat="True" CanAutoHide="True">
-                                <TextBox x:Name="txtSysLog"/>
+                            <avalonDock:LayoutAnchorable Title="系统日志" ContentId="anchorSysLog" AutoHideHeight="200" FloatingHeight="200" CanHide="False" CanClose="False" CanFloat="True" CanAutoHide="True">
+                                <TextBox x:Name="txtSysLog" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                             </avalonDock:LayoutAnchorable>
                         </avalonDock:LayoutAnchorGroup>
                     </avalonDock:LayoutAnchorSide>
-                </avalonDock:LayoutRoot.BottomSide>                
+                </avalonDock:LayoutRoot.BottomSide>                                                                                                                                             
             </avalonDock:LayoutRoot>
         </avalonDock:DockingManager>
     </Grid>
