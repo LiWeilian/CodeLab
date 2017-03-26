@@ -11,7 +11,7 @@
         <WindowsFormsHost x:Name="mapHost" HorizontalAlignment="Stretch" Margin="5,5,5,5" VerticalAlignment="Stretch">
             <esri:AxMapControl x:Name="mapCtrl" Dock="Fill"/>
         </WindowsFormsHost>
-        <WindowsFormsHost x:Name="navHost" Margin="20,20, 0, 0" Height="40" Width="320" HorizontalAlignment="Left" VerticalAlignment="Top" Background="LightGray">
+        <WindowsFormsHost x:Name="navHost" Margin="20,20, 0, 0" Height="40" Width="360" HorizontalAlignment="Left" VerticalAlignment="Top" Background="LightGray">
             <ElementHost>
                 <ToolBar x:Name="toolBar" ToolBarTray.IsLocked="True" Background="LightGray" Loaded="ToolBar_Loaded">
                     <Button x:Name="btnZoomIn" ToolTip="放大">
@@ -34,6 +34,9 @@
                     </Button>
                     <Button x:Name="btnRefresh" ToolTip="刷新">
                         <Image x:Name="imgRefresh" />
+                    </Button>
+                    <Button x:Name="btnIdentify" ToolTip="信息查看">
+                        <Image x:Name="imgIdentify" />
                     </Button>
                 </ToolBar>
             </ElementHost>

@@ -140,6 +140,16 @@ namespace GDDST.GIS.EsriControls
             {
                 refreshCmd.OnActivate();
             };
+
+            //Identify
+            EsriMapIdentify identifyTool = new EsriMapIdentify();
+            identifyTool.OnCreate(m_app);
+            imgIdentify.Source = CreateBitmapImageSource(identifyTool.LargeBitmap);
+            btnIdentify.Tag = refreshCmd;
+            btnIdentify.Click += delegate (object sender, RoutedEventArgs e)
+            {
+                identifyTool.OnActivate();
+            };
         }
 
         private void InitializeMapControlEvents()
