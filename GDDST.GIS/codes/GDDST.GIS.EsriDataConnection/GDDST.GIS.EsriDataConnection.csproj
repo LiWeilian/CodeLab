@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D6CDD4A1-5099-4FE4-B969-F15051F9F897}</ProjectGuid>
+    <ProjectGuid>{097C3E41-E80E-4E3E-B84B-4F422FC21669}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GDDST.GIS.EsriControls</RootNamespace>
-    <AssemblyName>GDDST.GIS.EsriControls</AssemblyName>
+    <RootNamespace>GDDST.GIS.EsriDataConnection</RootNamespace>
+    <AssemblyName>GDDST.GIS.EsriDataConnection</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\output\bin\</OutputPath>
+    <OutputPath>..\..\output\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -41,7 +41,15 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ESRI.ArcGIS.Geometry, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+    <Reference Include="ESRI.ArcGIS.DataSourcesGDB, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Display, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Geodatabase, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>False</Private>
     </Reference>
@@ -49,72 +57,27 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>False</Private>
     </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EsriControls.cs" />
-    <Compile Include="esriMapControl.xaml.cs">
-      <DependentUpon>esriMapControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="EsriMapIdentify.cs" />
-    <Compile Include="EsriMapIdentifyResults.xaml.cs">
-      <DependentUpon>EsriMapIdentifyResults.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="EsriMapRefresh.cs" />
-    <Compile Include="EsriMapFullExtent.cs" />
-    <Compile Include="EsriMapNextView.cs" />
-    <Compile Include="EsriMapPan.cs" />
-    <Compile Include="EsriMapPriorView.cs" />
-    <Compile Include="EsriMapZoomIn.cs" />
-    <Compile Include="esriTOCControl.xaml.cs">
-      <DependentUpon>esriTOCControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="EsriMapZoomOut.cs" />
+    <Compile Include="AddAccessData.cs" />
+    <Compile Include="AddSDEData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GDDST.GIS.dsSystem\GDDST.GIS.dsSystem.csproj">
-      <Project>{73bd1974-2d6d-481e-941b-44501d30a750}</Project>
-      <Name>GDDST.GIS.dsSystem</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\GDDST.GIS.EsriUtils\GDDST.GIS.EsriUtils.csproj">
-      <Project>{1f41cad8-d725-456e-8960-8405faeecbd2}</Project>
-      <Name>GDDST.GIS.EsriUtils</Name>
-    </ProjectReference>
     <ProjectReference Include="..\GDDST.GIS.PluginEngine\GDDST.GIS.PluginEngine.csproj">
       <Project>{e915e0fe-7841-468b-b7c2-a65406a096cb}</Project>
       <Name>GDDST.GIS.PluginEngine</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="esriMapControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="EsriMapIdentifyResults.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="esriTOCControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
