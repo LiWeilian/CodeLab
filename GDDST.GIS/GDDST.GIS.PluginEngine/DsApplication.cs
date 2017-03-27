@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 
 using AvalonDock.Layout;
+using AvalonDock.Controls;
 
 namespace GDDST.GIS.PluginEngine
 {
@@ -30,6 +31,8 @@ namespace GDDST.GIS.PluginEngine
         //private DSGIS.Environments.SelectionEnvironment m_selectionEnvironment;
         //private AxHost m_axMapControl;
         private IDsTool m_defaultTool = null;
+
+        private List<LayoutAnchorable> m_anchors = new List<LayoutAnchorable>();
 
         public DsApplication()
         {
@@ -148,13 +151,224 @@ namespace GDDST.GIS.PluginEngine
 
 
         /// <summary>
+        /// 右停靠面板，用作显示地图信息的停靠容器
+        /// </summary>
+        public object RightDockPanel { get; set; }
+
+        /// <summary>
+        /// 左停靠面板，用作显示地图图层信息的停靠容器
+        /// </summary>
+        public object LeftDockPanel { get; set; }
+        
+        /// <summary>
+        /// 主停靠面板，用作显示地图
+        /// </summary>
+        public object MainDockPanel { get; set; }
+
+        /// <summary>
+        /// 停靠管理器
+        /// </summary>
+        public object MainDockRoot { get; set; }
+
+        /// <summary>
         /// 将信息窗口添加到信息面板
         /// </summary>
         /// <param name="infoControl">信息窗口控件</param>
-        public void AddToInfoPanel(object infoControl, bool canClose, bool canHide, bool canFloat, bool isUnique)
+        public void AddToInfoPanel(UserControl infoControl, string title, bool canClose, bool canHide, bool canFloat, bool isUnique)
         {
+            if (RightDockPanel != null && RightDockPanel is LayoutAnchorablePane)
+            {
+                LayoutAnchorablePane anchorPane = (LayoutAnchorablePane)RightDockPanel;
 
+                LayoutAnchorable anchor = null;
+                try
+                {
+                    anchor = FindUserControl(infoControl.Tag.ToString());
+                }
+                catch (Exception)
+                {
+                    anchor = null;
+                }
+                /*
+                if (anchor != null && !anchor.IsActive)
+                {
+                    m_anchors.Remove(anchor);
+                    anchor.Close();
+                    anchor = null;
+                }
+                */
+                if (anchor == null)
+                {
+                    anchor = new LayoutAnchorable();
+                    anchor.Title = title;
+                    anchor.CanClose = canClose;
+                    anchor.CanHide = canHide;
+                    anchor.CanFloat = canFloat;
+                    anchor.CanAutoHide = true;
+                    anchor.Content = infoControl;
+                    anchor.AutoHideWidth = 280;
+                    anchor.AutoHideMinWidth = 280;                    
+
+                    (RightDockPanel as LayoutAnchorablePane).Children.Add(anchor);
+
+                    m_anchors.Add(anchor);
+                } else
+                {
+                    if (anchor.IsAutoHidden)
+                    {
+                        anchor.ToggleAutoHide();
+                    }
+                    
+                    anchor.Show();
+                }
+            }
         }
+
+        private LayoutAnchorable FindUserControl(string tag)
+        {
+            try
+            {
+                IEnumerable<LayoutAnchorable> anchors = m_anchors.Where(p => (p.Content as UserControl).Tag.ToString() == tag);
+                if (anchors.Count() > 0)
+                {
+                    return anchors.First();
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return null;
+
+            #region
+            /*
+            LayoutAnchorablePane anchorPaneRight = (LayoutAnchorablePane)RightDockPanel;
+
+            LayoutAnchorablePane anchorPaneLeft = (LayoutAnchorablePane)LeftDockPanel;
+
+            LayoutRoot dockRoot = (LayoutRoot)MainDockRoot;
+            try
+            {
+
+                IEnumerable<LayoutAnchorable> leftAnchors = anchorPaneLeft.Children.Where(p 
+                    => (p.Content as UserControl).Tag.ToString() == tag);
+
+                if (leftAnchors.Count() > 0)
+                {
+                    return leftAnchors.First();
+                }
+            }
+            catch
+            {
+
+            }
+            try
+            {
+
+                IEnumerable<LayoutAnchorable> rightAnchors = anchorPaneRight.Children.Where(p 
+                    => (p.Content as UserControl).Tag.ToString() == tag);
+
+                if (rightAnchors.Count() > 0)
+                {
+                    return rightAnchors.First();
+                }
+            }
+            catch
+            {
+
+            }
+
+            //从浮动窗口查找
+            foreach (LayoutFloatingWindow floatingWin in dockRoot.FloatingWindows)
+            {                
+                foreach (LayoutElement layoutElement in floatingWin.Children)
+                {
+                    if (layoutElement is LayoutAnchorablePaneGroup)
+                    {
+                        LayoutAnchorablePaneGroup anchorPaneGroup = layoutElement as LayoutAnchorablePaneGroup;
+
+                        foreach (LayoutAnchorablePane anchorPane in anchorPaneGroup.Children)
+                        {
+                            try
+                            {
+
+                                IEnumerable<LayoutAnchorable> floatingAnchors = anchorPane.Children.Where(p 
+                                    => (p.Content as UserControl).Tag.ToString() == tag);
+                                if (floatingAnchors.Count() > 0)
+                                {
+                                    return floatingAnchors.First();
+                                }
+                            }
+                            catch
+                            {
+
+                            }
+                        }
+                        
+                    }
+                }
+            }
+
+            foreach (LayoutAnchorGroup anchorGroup in dockRoot.RightSide.Children)
+            {
+                try
+                {
+
+                    IEnumerable<LayoutAnchorable> anchors = anchorGroup.Children.Where(p 
+                        => (p.Content as UserControl).Tag.ToString() == tag);
+                    if (anchors.Count() > 0)
+                    {
+                        return anchors.First();
+                    }
+                }
+                catch
+                {
+
+                }
+            }
+
+
+            foreach (LayoutAnchorGroup anchorGroup in dockRoot.LeftSide.Children)
+            {
+                try
+                {
+
+                    IEnumerable<LayoutAnchorable> anchors = anchorGroup.Children.Where(p
+                        => (p.Content as UserControl).Tag.ToString() == tag);
+                    if (anchors.Count() > 0)
+                    {
+                        return anchors.First();
+                    }
+                }
+                catch
+                {
+
+                }
+            }
+
+
+            foreach (LayoutAnchorGroup anchorGroup in dockRoot.BottomSide.Children)
+            {
+                try
+                {
+
+                    IEnumerable<LayoutAnchorable> anchors = anchorGroup.Children.Where(p
+                        => (p.Content as UserControl).Tag.ToString() == tag);
+                    if (anchors.Count() > 0)
+                    {
+                        return anchors.First();
+                    }
+                }
+                catch
+                {
+
+                }
+            }
+
+            return null;
+            */
+            #endregion
+        }
+
         #endregion
 
         #region

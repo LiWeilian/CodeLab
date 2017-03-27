@@ -15,6 +15,7 @@ namespace GDDST.GIS.EsriControls
     public class EsriMapIdentify : DsBaseTool
     {
         private IMapControlDefault m_mapCtrl = null;
+        private EsriMapIdentifyResults m_identifyResult = null;
         public override void OnCreate(IDsApplication hook)
         {
             base.m_app = hook;
@@ -53,8 +54,22 @@ namespace GDDST.GIS.EsriControls
 
             if (m_mapCtrl != null && button == 1)
             {
-
+                if (m_identifyResult == null)
+                {
+                    m_identifyResult = new EsriMapIdentifyResults();
+                }
+                m_app.AddToInfoPanel(m_identifyResult, "信息查看", true, true, true, true);
             }
+        }
+
+        public override void OnMapItemAdded(object Item)
+        {
+            base.OnMapItemAdded(Item);
+        }
+
+        public override void OnMapItemDeleted(object Item)
+        {
+            base.OnMapItemDeleted(Item);
         }
     }
 }

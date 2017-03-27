@@ -542,12 +542,22 @@ namespace GDDST.GIS
 
                         docPaneMain.Children.Add(mapLayoutDoc);
                         #endregion
+
+                        m_application.LegendControl = gisCtrls.LegendControlCore;
+                        m_application.MapControl = gisCtrls.MapControlCore;
                     }
                 }
             }
             #endregion
-            
 
+            #region DsApplication Controls
+            m_application.RightDockPanel = anchorPaneRight;
+            m_application.LeftDockPanel = anchorPaneLeft;
+            m_application.MainDockRoot = dockLayoutRoot;
+            m_application.MainDockPanel = docPaneMain;
+            //test
+            
+            #endregion
         }
     }
 }

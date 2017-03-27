@@ -133,10 +133,30 @@ namespace GDDST.GIS.PluginEngine
         List<IDsPlugin> Plugins { get; }
 
         /// <summary>
+        /// 右停靠面板，用作显示地图信息的停靠容器
+        /// </summary>
+        object RightDockPanel { get; set; }
+
+        /// <summary>
+        /// 左停靠面板，用作显示地图图层信息的停靠容器
+        /// </summary>
+        object LeftDockPanel { get; set; }
+        
+        /// <summary>
+        /// 主停靠面板，用作显示地图
+        /// </summary>
+        object MainDockPanel { get; set; }
+
+        /// <summary>
+        /// 停靠管理器
+        /// </summary>
+        object MainDockRoot { get; set; }
+
+        /// <summary>
         /// 将信息窗口添加到信息面板
         /// </summary>
         /// <param name="infoControl">信息窗口控件</param>
-        void AddToInfoPanel(object infoControl, 
+        void AddToInfoPanel(UserControl infoControl, string title,
             bool canClose, bool canHide, bool canFloat, bool isUnique);
 
         //void SetLayoutControls();
