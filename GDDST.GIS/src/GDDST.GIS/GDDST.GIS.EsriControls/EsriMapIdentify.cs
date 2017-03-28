@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.Composition;
 
 using ESRI.ArcGIS.Controls;
+using ESRI.ArcGIS.Carto;
 
 using GDDST.GIS.PluginEngine;
 
@@ -56,7 +57,7 @@ namespace GDDST.GIS.EsriControls
             {
                 if (m_identifyResult == null)
                 {
-                    m_identifyResult = new EsriMapIdentifyResults();
+                    m_identifyResult = new EsriMapIdentifyResults(m_mapCtrl);
                 }
                 m_app.AddToInfoPanel(m_identifyResult, "信息查看", true, true, true, true);
             }
@@ -65,11 +66,21 @@ namespace GDDST.GIS.EsriControls
         public override void OnMapItemAdded(object Item)
         {
             base.OnMapItemAdded(Item);
+
+            if (m_identifyResult != null && Item is ILayer)
+            {
+                m_identifyResult.MapAddLayer(Item as ILayer);
+            }
         }
 
         public override void OnMapItemDeleted(object Item)
         {
             base.OnMapItemDeleted(Item);
+
+            if (m_identifyResult != null && Item is ILayer)
+            {
+                m_identifyResult.MapDeleteLayer(Item as ILayer);
+            }
         }
     }
 }

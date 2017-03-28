@@ -31,6 +31,12 @@ namespace GDDST.GIS.EsriControls
         public AxMapControl MapControl { get { return this.mapCtrl; } }
 
         private IDsApplication m_app = null;
+
+        /// <summary>
+        /// ActiveView事件绑定，一定需要是全局成员
+        /// </summary>
+        private IActiveViewEvents_Event m_avEvent;
+
         public esriMapControl(IDsApplication hook)
         {
             InitializeComponent();
@@ -71,85 +77,158 @@ namespace GDDST.GIS.EsriControls
         private void InitializeNavBar()
         {
             //ZoomIn
-            EsriMapZoomIn zoomInTool = new EsriMapZoomIn();
-            zoomInTool.OnCreate(m_app);
-            imgZoomIn.Source = CreateBitmapImageSource(zoomInTool.LargeBitmap);
-            btnZoomIn.Tag = zoomInTool;
-            btnZoomIn.Click += delegate (object sender, RoutedEventArgs e)
+            try
             {
-                zoomInTool.OnActivate();
-            };
+                EsriMapZoomIn zoomInTool = (EsriMapZoomIn)m_app.Plugins.Where(p
+                    => p.ToString() == "GDDST.GIS.EsriControls.EsriMapZoomIn").First();
+                zoomInTool.OnCreate(m_app);
+                imgZoomIn.Source = CreateBitmapImageSource(zoomInTool.LargeBitmap);
+                btnZoomIn.Tag = zoomInTool;
+                btnZoomIn.Click += delegate (object sender, RoutedEventArgs e)
+                {
+                    zoomInTool.OnActivate();
+                };
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
 
             //ZoomOut
-            EsriMapZoomOut zoomOutTool = new EsriMapZoomOut();
-            zoomOutTool.OnCreate(m_app);
-            imgZoomOut.Source = CreateBitmapImageSource(zoomOutTool.LargeBitmap);
-            btnZoomOut.Tag = zoomOutTool;
-            btnZoomOut.Click += delegate (object sender, RoutedEventArgs e)
+            try
             {
-                zoomOutTool.OnActivate();
-            };
+                EsriMapZoomOut zoomOutTool = (EsriMapZoomOut)m_app.Plugins.Where(p
+                    => p.ToString() == "GDDST.GIS.EsriControls.EsriMapZoomOut").First();
+                zoomOutTool.OnCreate(m_app);
+                imgZoomOut.Source = CreateBitmapImageSource(zoomOutTool.LargeBitmap);
+                btnZoomOut.Tag = zoomOutTool;
+                btnZoomOut.Click += delegate (object sender, RoutedEventArgs e)
+                {
+                    zoomOutTool.OnActivate();
+                };
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
 
             //PriorView
-            EsriMapPriorView priorView = new EsriMapPriorView();
-            priorView.OnCreate(m_app);
-            imgPriorView.Source = CreateBitmapImageSource(priorView.LargeBitmap);
-            btnPriorView.Tag = priorView;
-            btnPriorView.Click += delegate (object sender, RoutedEventArgs e)
+            try
             {
-                priorView.OnActivate();
-            };
+                EsriMapPriorView priorView = (EsriMapPriorView)m_app.Plugins.Where(p
+                    => p.ToString() == "GDDST.GIS.EsriControls.EsriMapPriorView").First();
+                priorView.OnCreate(m_app);
+                imgPriorView.Source = CreateBitmapImageSource(priorView.LargeBitmap);
+                btnPriorView.Tag = priorView;
+                btnPriorView.Click += delegate (object sender, RoutedEventArgs e)
+                {
+                    priorView.OnActivate();
+                };
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
 
 
             //NextView
-            EsriMapNextView nextView = new EsriMapNextView();
-            nextView.OnCreate(m_app);
-            imgNextView.Source = CreateBitmapImageSource(nextView.LargeBitmap);
-            btnNextView.Tag = priorView;
-            btnNextView.Click += delegate (object sender, RoutedEventArgs e)
+            try
             {
-                nextView.OnActivate();
-            };
+                EsriMapNextView nextView = (EsriMapNextView)m_app.Plugins.Where(p
+                    => p.ToString() == "GDDST.GIS.EsriControls.EsriMapNextView").First();
+                nextView.OnCreate(m_app);
+                imgNextView.Source = CreateBitmapImageSource(nextView.LargeBitmap);
+                btnNextView.Tag = nextView;
+                btnNextView.Click += delegate (object sender, RoutedEventArgs e)
+                {
+                    nextView.OnActivate();
+                };
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
 
             //Pan
-            EsriMapPan panTool = new EsriMapPan();
-            panTool.OnCreate(m_app);
-            imgPan.Source = CreateBitmapImageSource(panTool.LargeBitmap);
-            btnPan.Tag = panTool;
-            btnPan.Click += delegate (object sender, RoutedEventArgs e)
+            try
             {
-                panTool.OnActivate();
-            };
+                EsriMapPan panTool = (EsriMapPan)m_app.Plugins.Where(p
+                    => p.ToString() == "GDDST.GIS.EsriControls.EsriMapPan").First();
+                panTool.OnCreate(m_app);
+                imgPan.Source = CreateBitmapImageSource(panTool.LargeBitmap);
+                btnPan.Tag = panTool;
+                btnPan.Click += delegate (object sender, RoutedEventArgs e)
+                {
+                    panTool.OnActivate();
+                };
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
 
             //FullExtent
-            EsriMapFullExtent fullExtCmd = new EsriMapFullExtent();
-            fullExtCmd.OnCreate(m_app);
-            imgFullExtent.Source = CreateBitmapImageSource(fullExtCmd.LargeBitmap);
-            btnFullExtent.Tag = fullExtCmd;
-            btnFullExtent.Click += delegate (object sender, RoutedEventArgs e)
+            try
             {
-                fullExtCmd.OnActivate();
-            };
+                EsriMapFullExtent fullExtCmd = (EsriMapFullExtent)m_app.Plugins.Where(p
+                    => p.ToString() == "GDDST.GIS.EsriControls.EsriMapFullExtent").First();
+                fullExtCmd.OnCreate(m_app);
+                imgFullExtent.Source = CreateBitmapImageSource(fullExtCmd.LargeBitmap);
+                btnFullExtent.Tag = fullExtCmd;
+                btnFullExtent.Click += delegate (object sender, RoutedEventArgs e)
+                {
+                    fullExtCmd.OnActivate();
+                };
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
 
             //Refresh
-            EsriMapRefresh refreshCmd = new EsriMapRefresh();
-            refreshCmd.OnCreate(m_app);
-            imgRefresh.Source = CreateBitmapImageSource(refreshCmd.LargeBitmap);
-            btnRefresh.Tag = refreshCmd;
-            btnRefresh.Click += delegate (object sender, RoutedEventArgs e)
+            try
             {
-                refreshCmd.OnActivate();
-            };
+                EsriMapRefresh refreshCmd = (EsriMapRefresh)m_app.Plugins.Where(p
+                    => p.ToString() == "GDDST.GIS.EsriControls.EsriMapRefresh").First();
+                refreshCmd.OnCreate(m_app);
+                imgRefresh.Source = CreateBitmapImageSource(refreshCmd.LargeBitmap);
+                btnRefresh.Tag = refreshCmd;
+                btnRefresh.Click += delegate (object sender, RoutedEventArgs e)
+                {
+                    refreshCmd.OnActivate();
+                };
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
 
             //Identify
-            EsriMapIdentify identifyTool = new EsriMapIdentify();
-            identifyTool.OnCreate(m_app);
-            imgIdentify.Source = CreateBitmapImageSource(identifyTool.LargeBitmap);
-            btnIdentify.Tag = refreshCmd;
-            btnIdentify.Click += delegate (object sender, RoutedEventArgs e)
+            try
             {
-                identifyTool.OnActivate();
-            };
+                EsriMapIdentify identifyTool = (EsriMapIdentify)m_app.Plugins.Where(p 
+                    => p.ToString() == "GDDST.GIS.EsriControls.EsriMapIdentify").First();
+                identifyTool.OnCreate(m_app);
+                imgIdentify.Source = CreateBitmapImageSource(identifyTool.LargeBitmap);
+                btnIdentify.Tag = identifyTool;
+                btnIdentify.Click += delegate (object sender, RoutedEventArgs e)
+                {
+                    identifyTool.OnActivate();
+                };
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            
         }
 
         private void InitializeMapControlEvents()
@@ -346,9 +425,9 @@ namespace GDDST.GIS.EsriControls
         {
             #region 地图视图事件
             IMap map = mapCtrl.Map;
-            IActiveViewEvents_Event viewEvent = (IActiveViewEvents_Event)map;
+            m_avEvent = (IActiveViewEvents_Event)map;
 
-            viewEvent.ItemAdded += delegate (object Item)
+            m_avEvent.ItemAdded += delegate (object Item)
             {
                 if (m_app == null || m_app.Plugins == null)
                 {
@@ -360,7 +439,7 @@ namespace GDDST.GIS.EsriControls
                 }
             };
 
-            viewEvent.ItemDeleted += delegate (object Item)
+            m_avEvent.ItemDeleted += delegate (object Item)
             {
                 if (m_app == null || m_app.Plugins == null)
                 {
@@ -372,7 +451,7 @@ namespace GDDST.GIS.EsriControls
                 }
             };
 
-            viewEvent.ContentsChanged += delegate ()
+            m_avEvent.ContentsChanged += delegate ()
             {
                 if (m_app == null || m_app.Plugins == null)
                 {
@@ -384,7 +463,7 @@ namespace GDDST.GIS.EsriControls
                 }
             };
 
-            viewEvent.ViewRefreshed += delegate (IActiveView View, esriViewDrawPhase phase, object Data, ESRI.ArcGIS.Geometry.IEnvelope envelope)
+            m_avEvent.ViewRefreshed += delegate (IActiveView View, esriViewDrawPhase phase, object Data, ESRI.ArcGIS.Geometry.IEnvelope envelope)
             {
                 if (m_app == null || m_app.Plugins == null)
                 {
@@ -396,7 +475,7 @@ namespace GDDST.GIS.EsriControls
                 }
             };
 
-            viewEvent.SelectionChanged += delegate ()
+            m_avEvent.SelectionChanged += delegate ()
             {
                 if (m_app == null || m_app.Plugins == null)
                 {

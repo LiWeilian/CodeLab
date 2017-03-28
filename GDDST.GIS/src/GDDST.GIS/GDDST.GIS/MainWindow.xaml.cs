@@ -31,7 +31,6 @@ namespace GDDST.GIS
     /// </summary>
     public partial class MainWindow : Window
     {
-        [Import]
         private IDsApplication m_application;
         [Import]
         private IDsUIStyle m_UIStyle;
@@ -77,6 +76,7 @@ namespace GDDST.GIS
         private void InitializeSystemSettinigs()
         {
             App.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
+            m_application = new DsApplication();
         }
 
         /// <summary>

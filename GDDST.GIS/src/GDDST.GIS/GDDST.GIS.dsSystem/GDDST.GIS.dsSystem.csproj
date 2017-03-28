@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E915E0FE-7841-468B-B7C2-A65406A096CB}</ProjectGuid>
+    <ProjectGuid>{73BD1974-2D6D-481E-941B-44501D30A750}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GDDST.GIS.PluginEngine</RootNamespace>
-    <AssemblyName>GDDST.GIS.PluginEngine</AssemblyName>
+    <RootNamespace>GDDST.GIS.dsSystem</RootNamespace>
+    <AssemblyName>GDDST.GIS.dsSystem</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\output\bin\</OutputPath>
+    <OutputPath>..\..\..\release\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -30,40 +30,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DefaultTool.cs" />
-    <Compile Include="DsApplication.cs" />
-    <Compile Include="DsBaseCommand.cs" />
-    <Compile Include="DsBasePanel.cs" />
-    <Compile Include="DsBaseTool.cs" />
-    <Compile Include="IDsApplication.cs" />
-    <Compile Include="IDsGISControls.cs" />
-    <Compile Include="IDsGISInitialize.cs" />
-    <Compile Include="IDsMapControl.cs" />
-    <Compile Include="IDsPlugin.cs" />
-    <Compile Include="IDsUIStyle.cs" />
+    <Compile Include="Application.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AvalonDock\AvalonDock.csproj">
-      <Project>{db81988f-e0f2-45a0-a1fd-8c37f3d35244}</Project>
-      <Name>AvalonDock</Name>
-    </ProjectReference>
+    <Compile Include="Win32.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
