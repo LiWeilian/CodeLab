@@ -1,0 +1,21 @@
+﻿<ESRI.Configuration xmlns="http://schemas.esri.com/Desktop/AddIns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>ArcMapAddin.AddEncryptedData</Name>
+  <AddInID>{0da37fe1-6b3e-44b5-bc38-cccffde3b40a}</AddInID>
+  <Description>加载已加密的本地数据库</Description>
+  <Version>1.0</Version>
+  <Image>Images\ArcMapAddin.AddEncryptedData.png</Image>
+  <Author>Li</Author>
+  <Company>MyCompany</Company>
+  <Date>2017-3-29</Date>
+  <Targets>
+    <Target name="Desktop" version="10.2" />
+  </Targets>
+  <AddIn language="CLR4.0" library="ArcMapAddin.AddEncryptedData.dll" namespace="ArcMapAddin.AddEncryptedData">
+    <ArcMap>
+      <Commands>
+        <Button id="MyCompany_ArcMapAddin.AddEncryptedData_AddAccessData" class="AddAccessData" message="加载已加密的Access数据库。" caption="加载Access数据库" tip="加载已加密的Access数据库" category="Add-In Controls" image="Images\AddAccessData.png" />
+        <Button id="MyCompany_ArcMapAddin.AddEncryptedData_AddEsriGDB" class="AddEsriGDB" message="加载已加密的GDB数据库。" caption="加载GDB" tip="加载已加密的GDB数据库" category="Add-In Controls" image="Images\AddEsriGDB.png" />
+      </Commands>
+    </ArcMap>
+  </AddIn>
+</ESRI.Configuration>
