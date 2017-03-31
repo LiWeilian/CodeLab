@@ -81,10 +81,12 @@ namespace NetServerDemo
                 System.Text.Encoding utf8 = System.Text.Encoding.UTF8;
                 string requestString = utf8.GetString(buffer, 0, recLen);
 
-                string msg = string.Format("时间：{0}\r\n接收信息：{1}\r\n", DateTime.Now.ToString(), requestString);
+                //string msg = string.Format("时间：{0}\r\n接收信息：{1}\r\n", DateTime.Now.ToString(), requestString);
+                string msg = requestString;
                 Console.WriteLine("客户端: " + client.Handle);
                 Console.WriteLine(msg);
                 Console.WriteLine("");
+                
 
                 try
                 {
@@ -93,12 +95,6 @@ namespace NetServerDemo
                 catch (SocketException se)
                 {
                     socketErr = se.SocketErrorCode;
-                    break;
-                }
-                
-
-                if (Console.KeyAvailable)
-                {
                     break;
                 }
             }

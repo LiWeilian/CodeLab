@@ -47,15 +47,22 @@ namespace NetClientDemo
                 return;
             }
 
+            NetworkStream ns = null;
+
             while (true)
             {
+                if (ns == null)
+                {
+                    ns = tcpClient.GetStream();
+                }
+
                 Console.WriteLine("请输入信息：");
                 string msg = Console.ReadLine();
                 byte[] msgByte = System.Text.Encoding.UTF8.GetBytes(msg);
-                NetworkStream ns = tcpClient.GetStream();
+                
                 try
                 {
-
+                    //ns = tcpClient.GetStream();
                     ns.Write(msgByte, 0, msgByte.Length);
                     ns.Flush();
                 }
@@ -72,11 +79,12 @@ namespace NetClientDemo
 
                 Console.WriteLine("");
                 Console.WriteLine("正在等待接收信息...");
+                
                 byte[] recMsgByte = new byte[4096];
                 int recLen;
                 try
                 {
-                    ns = tcpClient.GetStream();
+                    //ns = tcpClient.GetStream();
                     recLen = ns.Read(recMsgByte, 0, recMsgByte.Length);
                 }
                 catch (SocketException se)
@@ -93,6 +101,11 @@ namespace NetClientDemo
                 string recMsg = System.Text.Encoding.UTF8.GetString(recMsgByte, 0, recLen);
                 Console.WriteLine(recMsg);
                 Console.WriteLine("");
+
+                //int int32 = BitConverter.ToInt32(recMsgByte, 0);
+                //string hexStr = "0x" + Convert.ToString(int32, 16);
+
+                //Console.WriteLine(hexStr);
 
                 if (Console.KeyAvailable)
                 {

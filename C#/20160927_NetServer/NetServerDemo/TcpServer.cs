@@ -8,7 +8,8 @@ namespace NetServerDemo
     {
         static public void Run()
         {
-            IPAddress address = IPAddress.Loopback;
+            //IPAddress address = IPAddress.Loopback;
+            IPAddress address = IPAddress.Parse("172.16.1.2");
             IPEndPoint endPoint = new IPEndPoint(address, 50002);
             TcpListener newserver = new TcpListener(endPoint);
 
@@ -27,7 +28,7 @@ namespace NetServerDemo
                 int length = ns.Read(request, 0, 4096);
                 string requestString = utf8.GetString(request, 0, length);
                 Console.WriteLine(requestString);
-
+                
                 string statusLine = "HTTP/1.1 200 OK\r\n";
                 byte[] statusLineBytes = utf8.GetBytes(statusLine);
                 string responseBody = "<html><head><title>测试tcplistener</title></head><body><h1>HAHAHAHAHAH</h1></body></html>";
@@ -41,7 +42,7 @@ namespace NetServerDemo
                 ns.Write(responseBodyBytes, 0, responseBodyBytes.Length);
 
                 newclient.Close();
-
+                
                 if (Console.KeyAvailable)
                 {
                     break;
