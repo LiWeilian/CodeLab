@@ -15,12 +15,19 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <ComboBox x:Name="cbLayers" Margin="10, 5, 10, 5" Grid.Row="0" />
-        <Grid x:Name="gridFeatures" Margin="10, 5, 10, 0" Grid.Row="1" Height="100" HorizontalAlignment="Stretch">
+        <Grid x:Name="gridFeatures" Margin="10, 5, 10, 0" Grid.Row="1" Height="250" HorizontalAlignment="Stretch">
             <TreeView x:Name="tvFeatures" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
         </Grid>
         <Grid x:Name="gridCoords" Margin="10, 5, 10, 0" Grid.Row="2" Height="40" HorizontalAlignment="Stretch">
             <TextBox x:Name="txtCoords" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
         </Grid>
-        <ListView x:Name="lvAttributes" Margin="10, 5, 10, 5" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        <ListView x:Name="lvAttributes" Margin="10, 5, 10, 5" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+            <ListView.View>
+                <GridView AllowsColumnReorder="True">
+                    <GridViewColumn Header="字段" Width="110"/>
+                    <GridViewColumn Header="值" Width="125"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </UserControl>

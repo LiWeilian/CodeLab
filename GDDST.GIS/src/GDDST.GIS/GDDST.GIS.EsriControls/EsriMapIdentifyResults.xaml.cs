@@ -36,6 +36,45 @@ namespace GDDST.GIS.EsriControls
             InitializeLayerList();
         }
 
+        public void DoEsriMapIdentify(IGeometry geo)
+        {
+
+            switch (cbLayers.SelectedIndex)
+            {
+                case 0:
+                    //最顶图层
+                    break;
+                case 1:
+                    //可视图层
+                    break;
+                case 2:
+                    //可选图层
+                    break;
+                case 3:
+                    //全部图层
+                    break;
+                default:
+                    //当前选项中的图层
+                    IdentifyLayerItem layerItem = (IdentifyLayerItem)cbLayers.SelectedItem;
+                    DoLayerIdentify(layerItem.Layer, geo);
+                    break;
+            }
+        }
+
+        public void DoLayerIdentify(ILayer layer, IGeometry geo)
+        {
+            if (layer != null && layer is IIdentify)
+            {
+                IIdentify id = layer as IIdentify;
+                IArray objs = id.Identify(geo);
+
+                if (objs != null)
+                {
+
+                }
+            }
+        }
+
         private void AddGroupLayerToList(IGroupLayer groupLayer)
         {
             ICompositeLayer comLayer = (ICompositeLayer)groupLayer;

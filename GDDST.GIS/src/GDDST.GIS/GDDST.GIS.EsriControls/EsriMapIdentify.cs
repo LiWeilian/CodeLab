@@ -7,8 +7,10 @@ using System.ComponentModel.Composition;
 
 using ESRI.ArcGIS.Controls;
 using ESRI.ArcGIS.Carto;
+using ESRI.ArcGIS.Geometry;
 
 using GDDST.GIS.PluginEngine;
+using GDDST.GIS.EsriUtils;
 
 namespace GDDST.GIS.EsriControls
 {
@@ -59,7 +61,38 @@ namespace GDDST.GIS.EsriControls
                 {
                     m_identifyResult = new EsriMapIdentifyResults(m_mapCtrl);
                 }
-                m_app.AddToInfoPanel(m_identifyResult, "信息查看", true, true, true, true);
+
+                if (m_identifyResult != null)
+                {
+                    IGeometry idGeo = null;
+                    switch (shift)
+                    {
+                        case 0:
+                            idGeo = m_mapCtrl.ToMapPoint(x, y);
+                            double mapLen = Units.ConvertScreenPixelsToMapUnits(m_mapCtrl.ActiveView.ScreenDisplay, 10.0);
+                            idGeo = TopologicalOperator.Buffer(idGeo, mapLen);
+                            break;
+                        case 1:
+                            idGeo = m_mapCtrl.TrackPolygon();
+                            break;
+                        case 2:
+                            idGeo = m_mapCtrl.TrackRectangle();
+                            break;
+                        case 4:
+                            idGeo = m_mapCtrl.TrackCircle();
+                            break;
+                        default:
+                            idGeo = m_mapCtrl.ToMapPoint(x, y);
+                            break;
+                    }
+
+                    if (idGeo != null & !idGeo.IsEmpty)
+                    {
+                        idGeo.SpatialReference = m_mapCtrl.Map.SpatialReference;
+                        m_identifyResult.DoEsriMapIdentify(idGeo);
+                    }
+                    m_app.AddToInfoPanel(m_identifyResult, "信息查看", true, true, true, true);
+                }
             }
         }
 
