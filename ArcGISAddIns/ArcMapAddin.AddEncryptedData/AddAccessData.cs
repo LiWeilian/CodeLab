@@ -18,7 +18,7 @@ namespace ArcMapAddin.AddEncryptedData
             //  TODO: Sample code showing how to access button host
             //
             ArcMap.Application.CurrentTool = null;
-            MessageBox.Show("Add Access Data");
+            MessageBox.Show("功能未实现");
         }
         protected override void OnUpdate()
         {

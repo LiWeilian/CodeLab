@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ArcMapAddin.AddEncryptedData</RootNamespace>
     <AssemblyName>ArcMapAddin.AddEncryptedData</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -31,6 +31,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,18 +47,36 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\Release\bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ESRI.ArcGIS.Carto, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Controls, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.DataSourcesGDB, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="ESRI.ArcGIS.Desktop.AddIns">
       <Private>False</Private>
     </Reference>
+    <Reference Include="ESRI.ArcGIS.Display, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="ESRI.ArcGIS.Framework">
       <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Geodatabase, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Geometry, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="ESRI.ArcGIS.System">
       <Private>False</Private>
@@ -80,12 +99,21 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Config.esriaddinx</DependentUpon>
     </Compile>
+    <Compile Include="EncryptGDB.cs" />
+    <Compile Include="FormSelectDatasets.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSelectDatasets.Designer.cs">
+      <DependentUpon>FormSelectDatasets.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <AddInContent Include="Config.esriaddinx">
       <Generator>ArcGISAddInHostGenerator</Generator>
       <LastGenOutput>Config.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </AddInContent>
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +152,46 @@
   </ItemGroup>
   <ItemGroup>
     <AddInContent Include="Images\AddEsriGDB.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FormSelectDatasets.resx">
+      <DependentUpon>FormSelectDatasets.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\GeodatabaseFeatureClassAnnotation32.png" />
+    <Content Include="Images\GeodatabaseFeatureClassDimension32.png" />
+    <Content Include="Images\GeodatabaseFeatureClassEmpty32.png" />
+    <Content Include="Images\GeodatabaseFeatureClassLine32.png" />
+    <Content Include="Images\GeodatabaseFeatureClassMultipatch32.png" />
+    <Content Include="Images\GeodatabaseFeatureClassMultipoint32.png" />
+    <Content Include="Images\GeodatabaseFeatureClassPoint32.png" />
+    <Content Include="Images\GeodatabaseFeatureClassPolygon32.png" />
+    <Content Include="Images\GeodatabaseFeatureClassRoute32.png" />
+    <Content Include="Images\GeodatabaseFeatureDataset32.png" />
+    <Content Include="Images\GeodatabaseHistoryArchiveAdd32.png" />
+    <Content Include="Images\GeodatabaseHistoryMarkerManager32.png" />
+    <Content Include="Images\GeodatabaseHistoryViewer32.png" />
+    <Content Include="Images\GeodatabaseHome32.png" />
+    <Content Include="Images\GeodatabaseMosaicDataset32.png" />
+    <Content Include="Images\GeodatabaseNetworkDataset32.png" />
+    <Content Include="Images\GeodatabaseNetworkGeometric32.png" />
+    <Content Include="Images\GeodatabaseNew32.png" />
+    <Content Include="Images\GeodatabaseRaster32.png" />
+    <Content Include="Images\GeodatabaseRasterCatalog32.png" />
+    <Content Include="Images\GeodatabaseRasterGrid32.png" />
+    <Content Include="Images\GeodatabaseRasterGridBand32.png" />
+    <Content Include="Images\GeodatabaseRelationship32.png" />
+    <Content Include="Images\GeodatabaseSmall32.png" />
+    <Content Include="Images\GeodatabaseSmall_B_32.png" />
+    <Content Include="Images\GeodatabaseTable32.png" />
+    <Content Include="Images\GeodatabaseTable_B_32.png" />
+    <Content Include="Images\GeodatabaseTable_C_32.png" />
+    <Content Include="Images\GeodatabaseTerrain32.png" />
+    <Content Include="Images\GeodatabaseTin32.png" />
+    <Content Include="Images\GeodatabaseTiny_B_32.png" />
+    <Content Include="Images\GeodatabaseTopology32.png" />
+    <Content Include="Images\GeodatabaseTopology_B_32.png" />
   </ItemGroup>
   <PropertyGroup>
     <ZipFileExtension>esriAddIn</ZipFileExtension>
