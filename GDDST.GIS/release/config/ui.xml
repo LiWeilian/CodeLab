@@ -8,8 +8,9 @@
 		</RibbonTab>
 		<RibbonTab header="加载数据">
 			<RibbonGroup header="矢量数据">
-				<Component namespace="GDDST.GIS.EsriDataConnection.AddAccessData" label="Access数据" imagetype="large" width="-1"/>
-				<Component namespace="GDDST.GIS.EsriDataConnection.AddSDEData" label="SDE数据" imagetype="large" width="100"/>
+				<Component namespace="GDDST.GIS.EsriDataConnection.AddAccessData" label="Access数据库" imagetype="large" width="-1"/>
+				<Component namespace="GDDST.GIS.EsriDataConnection.AddFileGDBData" label="文件数据库" imagetype="large" width="100"/>
+				<Component namespace="GDDST.GIS.EsriDataConnection.AddSDEData" label="SDE数据库" imagetype="large" width="100"/>
 			</RibbonGroup>			
 			<RibbonGroup header="栅格数据">
 			</RibbonGroup>

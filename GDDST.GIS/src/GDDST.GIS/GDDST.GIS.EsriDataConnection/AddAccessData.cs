@@ -18,17 +18,6 @@ namespace GDDST.GIS.EsriDataConnection
     [Export(typeof(IDsCommand))]
     public class AddAccessData : DsBaseCommand
     {
-        private IWorkspace OpenAccessWorkspace(string fileName)
-        {
-            IWorkspaceFactory2 wsf = new AccessWorkspaceFactoryClass();
-            return wsf.OpenFromFile(fileName, 0);
-        }
-
-        private void AddLayerToMap(IMap map, ILayer layer)
-        {
-            (map as IMapLayers2).InsertLayer(layer, true, 0);
-        }
-
         public override void OnCreate(IDsApplication hook)
         {
             base.m_app = hook;
@@ -39,7 +28,7 @@ namespace GDDST.GIS.EsriDataConnection
             base.Name = "AddAccessData";
             base.Checked = false;
             base.Enabled = true;
-            base.m_bitmapNameSmall = "AddAccessData_16.ico";
+            base.m_bitmapNameSmall = "AddAccessData_16.png";
             base.m_bitmapNameLarge = "AddAccessData_32.png";
 
             base.LoadSmallBitmap();
@@ -69,6 +58,20 @@ namespace GDDST.GIS.EsriDataConnection
                 IWorkspace ws = OpenAccessWorkspace(openDlg.FileName);
                 if (ws != null)
                 {
+                    FormSelectDatasets frmSelectDS = new FormSelectDatasets(ws);
+                    if (frmSelectDS.ShowDialog() == DialogResult.OK)
+                    {
+                        List<ILayer> layers = frmSelectDS.SelectedLayers;
+                        foreach (ILayer layer in layers)
+                        {
+                            AddLayerToMap(mapCtrl.Map, layer);
+                        }
+
+                        mapCtrl.ActiveView.Extent = frmSelectDS.SelectedExtent;
+                        mapCtrl.ActiveView.Refresh();
+                    }
+
+                    /*
                     IEnumDataset datasets = ws.Datasets[esriDatasetType.esriDTAny];
                     datasets.Reset();
                     IDataset dataset = datasets.Next();
@@ -110,8 +113,27 @@ namespace GDDST.GIS.EsriDataConnection
                         }
                         dataset = datasets.Next();
                     }
+                    */
                 }
             }
+        }
+
+        private IWorkspace OpenAccessWorkspace(string fileName)
+        {
+            try
+            {
+                IWorkspaceFactory2 wsf = new AccessWorkspaceFactoryClass();
+                return wsf.OpenFromFile(fileName, 0);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private void AddLayerToMap(IMap map, ILayer layer)
+        {
+            (map as IMapLayers2).InsertLayer(layer, true, 0);
         }
     }
 }

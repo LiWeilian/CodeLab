@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
 using System.ComponentModel.Composition;
 
@@ -10,27 +11,26 @@ using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.DataSourcesGDB;
 using ESRI.ArcGIS.Controls;
 using ESRI.ArcGIS.Carto;
-using ESRI.ArcGIS.esriSystem;
 
 using GDDST.GIS.PluginEngine;
 
 namespace GDDST.GIS.EsriDataConnection
 {
     [Export(typeof(IDsCommand))]
-    public class AddSDEData : DsBaseCommand
+    class AddFileGDBData : DsBaseCommand
     {
         public override void OnCreate(IDsApplication hook)
         {
             base.m_app = hook;
-            base.Caption = "加载SDE数据";
+            base.Caption = "加载文件地理数据库";
             base.Category = "加载数据";
             base.Message = "";
-            base.Tooltip = "加载SDE数据";
-            base.Name = "AddSDEData";
+            base.Tooltip = "加载文件地理数据库";
+            base.Name = "AddFileGDBData";
             base.Checked = false;
             base.Enabled = true;
-            base.m_bitmapNameSmall = "AddSDEData_16.png";
-            base.m_bitmapNameLarge = "AddSDEData_32.png";
+            base.m_bitmapNameSmall = "AddFileGDBData_16.png";
+            base.m_bitmapNameLarge = "AddFileGDBData_32.png";
 
             base.LoadSmallBitmap();
             base.LoadLargeBitmap();
@@ -51,18 +51,10 @@ namespace GDDST.GIS.EsriDataConnection
                 return;
             }
 
-            WinConnectToSDE winConnToSDE = new WinConnectToSDE();
-            winConnToSDE.Owner = m_app.MainWindow;
-            if ((bool)winConnToSDE.ShowDialog())
+            string gdbPath = GetFileGDBPath();
+            if (Directory.Exists(gdbPath))
             {
-                string server = winConnToSDE.Server;
-                string instance = winConnToSDE.Instance;
-                string database = winConnToSDE.Database;
-                string user = winConnToSDE.User;
-                string password = winConnToSDE.Password;
-                string version = winConnToSDE.Version;
-
-                IWorkspace ws = OpenSDEWorkspace(server, instance, database, user, password, version);
+                IWorkspace ws = OpenFileGDBWorkspace(gdbPath);
                 if (ws != null)
                 {
                     FormSelectDatasets frmSelectDS = new FormSelectDatasets(ws);
@@ -81,28 +73,36 @@ namespace GDDST.GIS.EsriDataConnection
             }
         }
 
-        private IWorkspace OpenSDEWorkspace(string server, string instance, string database,
-            string user, string password, string version)
+        private string GetFileGDBPath()
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+
+            fbd.ShowNewFolderButton = false;
+            fbd.SelectedPath = Application.StartupPath;
+            fbd.Description = "选择文件地理数据库(*.gdb)";
+
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                string tempPath = fbd.SelectedPath;
+
+                if (System.IO.Path.GetExtension(tempPath).ToUpper() == ".GDB")
+                {
+                    return fbd.SelectedPath;
+                }
+            }
+
+            return string.Empty;
+        }
+
+        private IWorkspace OpenFileGDBWorkspace(string gdbPath)
         {
             try
             {
-                IPropertySet propSet = new PropertySetClass();
-                if (server.Trim() != string.Empty)
-                {
-                    propSet.SetProperty("SERVER", server);
-                }
-                propSet.SetProperty("INSTANCE", instance);
-                propSet.SetProperty("DATABASE", database);
-                propSet.SetProperty("USER", user);
-                propSet.SetProperty("PASSWORD", password);
-                propSet.SetProperty("VERSION", version);
-
-                IWorkspaceFactory wsf = new SdeWorkspaceFactoryClass();
-                return wsf.Open(propSet, 0);
+                IWorkspaceFactory wsf = new FileGDBWorkspaceFactoryClass();
+                return wsf.OpenFromFile(gdbPath, 0);
             }
-            catch (Exception e)
+            catch
             {
-                MessageBox.Show(e.Message);
                 return null;
             }
         }

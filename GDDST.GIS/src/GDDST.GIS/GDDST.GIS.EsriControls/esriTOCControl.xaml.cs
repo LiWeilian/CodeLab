@@ -53,12 +53,12 @@ namespace GDDST.GIS.EsriControls
 
         private void TocCtrl_OnMouseUp(object sender, ITOCControlEvents_OnMouseUpEvent e)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void TocCtrl_OnMouseMove(object sender, ITOCControlEvents_OnMouseMoveEvent e)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void TocCtrl_OnMouseDown(object sender, ITOCControlEvents_OnMouseDownEvent e)
@@ -84,7 +84,7 @@ namespace GDDST.GIS.EsriControls
 
         private void TocCtrl_OnDoubleClick(object sender, ITOCControlEvents_OnDoubleClickEvent e)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void TocCtrl_OnEndLabelEdit(object sender, ITOCControlEvents_OnEndLabelEditEvent e)
