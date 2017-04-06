@@ -50,7 +50,7 @@ namespace GDDST.GIS.EsriDataConnection
             {
                 return;
             }
-
+            
             string gdbPath = GetFileGDBPath();
             if (Directory.Exists(gdbPath))
             {

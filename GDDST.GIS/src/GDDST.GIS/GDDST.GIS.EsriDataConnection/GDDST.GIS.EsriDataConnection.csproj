@@ -90,6 +90,9 @@
     <Compile Include="WinConnectToSDE.xaml.cs">
       <DependentUpon>WinConnectToSDE.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WinSelectDatasets.xaml.cs">
+      <DependentUpon>WinSelectDatasets.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GDDST.GIS.PluginEngine\GDDST.GIS.PluginEngine.csproj">
@@ -104,6 +107,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="WinConnectToSDE.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WinSelectDatasets.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
