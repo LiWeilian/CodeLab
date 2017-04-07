@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDDST.DI.Test", "GDDST.DI.Test\GDDST.DI.Test.csproj", "{919CAA59-7B37-4FA9-ABCD-95D3277EEFAB}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDDST.DI.NetServerConsoleDemo", "GDDST.DI.NetServerConsoleDemo\GDDST.DI.NetServerConsoleDemo.csproj", "{F62A9ADD-8A08-4C9D-9266-36106BBB12C2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDDST.DI.NetClientConsoleDemo", "GDDST.DI.NetClientConsoleDemo\GDDST.DI.NetClientConsoleDemo.csproj", "{0C00B01A-EB56-45ED-A84F-BE9CFF8F37D5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDDST.DI.NetClientFormDemo", "GDDST.DI.NetClientFormDemo\GDDST.DI.NetClientFormDemo.csproj", "{EDC08FED-74A0-4208-8DF7-8CCD673067F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDDST.DI.GetDataServer", "GDDST.DI.GetDataServer\GDDST.DI.GetDataServer.csproj", "{1A40AF93-7BC9-4C43-AD1D-571AA7886AFC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{919CAA59-7B37-4FA9-ABCD-95D3277EEFAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{919CAA59-7B37-4FA9-ABCD-95D3277EEFAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{919CAA59-7B37-4FA9-ABCD-95D3277EEFAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{919CAA59-7B37-4FA9-ABCD-95D3277EEFAB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F62A9ADD-8A08-4C9D-9266-36106BBB12C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F62A9ADD-8A08-4C9D-9266-36106BBB12C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F62A9ADD-8A08-4C9D-9266-36106BBB12C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +29,10 @@ Global
 		{EDC08FED-74A0-4208-8DF7-8CCD673067F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDC08FED-74A0-4208-8DF7-8CCD673067F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDC08FED-74A0-4208-8DF7-8CCD673067F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A40AF93-7BC9-4C43-AD1D-571AA7886AFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A40AF93-7BC9-4C43-AD1D-571AA7886AFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A40AF93-7BC9-4C43-AD1D-571AA7886AFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A40AF93-7BC9-4C43-AD1D-571AA7886AFC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
