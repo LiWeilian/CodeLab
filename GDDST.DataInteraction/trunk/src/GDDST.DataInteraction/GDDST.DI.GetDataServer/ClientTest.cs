@@ -11,43 +11,39 @@ namespace GDDST.DI.GetDataServer
 {
     class ClientTest
     {
+        const int m_bufferSize = 1024;
+        private string m_dataProtocol = string.Empty;
+        private IPAddress m_serverIP = null;
+        private ushort m_serverPort = 0;
         private Socket m_clientSocket = null;
         private Thread m_clientThread = null;
         private bool m_isThreadStop = false;
         public void OnStart(string dataProtocol, string serverIP, string serverPort, 
             GetDataServiceDAL dal)
         {
-            IPAddress ip;
-            if (!IPAddress.TryParse(serverIP, out ip))
+            if (!IPAddress.TryParse(serverIP, out m_serverIP))
             {
                 ServiceLog.LogServiceMessage(string.Format("IP地址[{0}]无效。", serverIP));
                 return;
             }
             
-            ushort port;
-            if (!ushort.TryParse(serverPort, out port))
+            if (!ushort.TryParse(serverPort, out m_serverPort))
             {
                 ServiceLog.LogServiceMessage(string.Format("端口[{0}]无效。", serverPort));
                 return;
             }
 
-            ServiceLog.LogServiceMessage(string.Format("开始连接[{0}:{1}]", serverIP, serverPort));
-            m_clientSocket = CreateClientSocket(ip, port);
-            if (m_clientSocket != null)
+            
+            try
             {
-                ServiceLog.LogServiceMessage(string.Format("连接[{0}:{1}]成功", serverIP, serverPort));
+                m_clientThread = new Thread(new ThreadStart(Run));
+                m_clientThread.IsBackground = true;
+                m_clientThread.Start();
+            }
+            catch (Exception)
+            {
 
-                try
-                {
-                    m_clientThread = new Thread(new ThreadStart(Run));
-                    m_clientThread.IsBackground = true;
-                    m_clientThread.Start();
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
+                throw;
             }
 
         }
@@ -80,6 +76,207 @@ namespace GDDST.DI.GetDataServer
         private void Run()
         {
             m_isThreadStop = false;
+
+            ServiceLog.LogServiceMessage(string.Format("开始连接[{0}:{1}]", m_serverIP, m_serverPort));
+            m_clientSocket = CreateClientSocket(m_serverIP, m_serverPort);
+            if (m_clientSocket != null)
+            {
+                ServiceLog.LogServiceMessage(string.Format("连接[{0}:{1}]成功", m_serverIP, m_serverPort));
+                try
+                {
+
+                    while (m_clientSocket != null && m_clientSocket.Connected)
+                    {
+                        Thread.Sleep(10);
+
+
+                        SendAsync(m_clientSocket, DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss\r\n"));
+
+                        StateObject stateObj = new StateObject();
+                        stateObj.ClientSocket = m_clientSocket;
+
+                        Console.WriteLine("");
+                        Console.WriteLine("开始接收信息...");
+                        m_clientSocket.BeginReceive(stateObj.Buffer, 0, StateObject.BufferSize,
+                            0, new AsyncCallback(ReceiveCallback), stateObj);
+
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(string.Format("连接出现异常：{0}", e.Message));
+                }
+
+                Console.WriteLine("结束...");
+            }
+        }
+
+        private void SendAsync(Socket clientSocket, string msg)
+        {
+            try
+            {
+
+                if (clientSocket != null && clientSocket.Connected)
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine(string.Format("开始发送信息：{0}", msg));
+                    byte[] sendBytes = new byte[1024];
+                    sendBytes = Encoding.UTF8.GetBytes(msg);
+                    Console.WriteLine(string.Format("开始发送信息，信息长度：{0}", sendBytes.Length));
+                    clientSocket.BeginSend(sendBytes, 0, sendBytes.Length,
+                        0, new AsyncCallback(SendCallback), clientSocket);
+                }
+            }
+            catch (SocketException se)
+            {
+                Console.WriteLine(string.Format("套接字连接出现异常：\r\n{0},\r\n错误代码：{1}", se.Message, se.SocketErrorCode));
+                try
+                {
+                    if (clientSocket.Connected)
+                    {
+                        clientSocket.Shutdown(SocketShutdown.Both);
+                        clientSocket.Disconnect(false);
+                    }
+                    clientSocket.Close();
+                }
+                catch (Exception)
+                {
+
+                }
+                return;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(string.Format("连接出现异常：{0}", e.Message));
+                try
+                {
+                    if (clientSocket.Connected)
+                    {
+                        clientSocket.Shutdown(SocketShutdown.Both);
+                        clientSocket.Disconnect(false);
+                    }
+                    clientSocket.Close();
+                }
+                catch (Exception)
+                {
+
+                }
+                return;
+            }
+        }
+
+        private void SendCallback(IAsyncResult ar)
+        {
+            Socket clientSocket = null;
+            try
+            {
+                clientSocket = (Socket)ar.AsyncState;
+                if (clientSocket != null)
+                    clientSocket.EndSend(ar);
+            }
+            catch (SocketException se)
+            {
+                Console.WriteLine(string.Format("套接字连接出现异常：\r\n{0},\r\n错误代码：{1}", se.Message, se.SocketErrorCode));
+                try
+                {
+                    if (clientSocket.Connected)
+                    {
+                        clientSocket.Shutdown(SocketShutdown.Both);
+                        clientSocket.Disconnect(false);
+                    }
+                    clientSocket.Close();
+                }
+                catch (Exception)
+                {
+
+                }
+                return;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(string.Format("连接出现异常：{0}", e.Message));
+                try
+                {
+                    if (clientSocket.Connected)
+                    {
+                        clientSocket.Shutdown(SocketShutdown.Both);
+                        clientSocket.Disconnect(false);
+                    }
+                    clientSocket.Close();
+                }
+                catch (Exception)
+                {
+
+                }
+                return;
+            }
+        }
+
+        private void ReceiveCallback(IAsyncResult ar)
+        {
+            Socket clientSocket = null;
+            try
+            {
+                Console.WriteLine("");
+                Console.WriteLine("正在接收信息...");
+
+                int byteRead = -1;
+                StateObject stateObj = (StateObject)ar.AsyncState;
+                clientSocket = stateObj.ClientSocket;
+                if (clientSocket != null)
+                {
+                    byteRead = clientSocket.EndReceive(ar);
+                } else
+                {
+                    Console.WriteLine("客户端连接无效");
+                }
+
+                if (byteRead > 0)
+                {
+                    string msg = Encoding.Default.GetString(stateObj.Buffer, 0, byteRead);
+
+                    Console.WriteLine(string.Format("接收到来自[{0}:{1}]的数据：\r\n{2}", m_serverIP, m_serverPort, msg));
+
+                    //clientSocket.BeginReceive(stateObj.Buffer, 0, StateObject.BufferSize, 
+                    //    0, new AsyncCallback(ReceiveCallback), stateObj);
+                }
+            }
+            catch (SocketException se)
+            {
+                Console.WriteLine(string.Format("套接字连接出现异常：\r\n{0},\r\n错误代码：{1}", se.Message, se.SocketErrorCode));
+                try
+                {
+                    if (clientSocket.Connected)
+                    {
+                        clientSocket.Shutdown(SocketShutdown.Both);
+                        clientSocket.Disconnect(false);
+                    }
+                    clientSocket.Close();
+                }
+                catch (Exception)
+                {
+
+                }
+                return;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(string.Format("连接出现异常：{0}", e.Message));
+                try
+                {
+                    if (clientSocket.Connected)
+                    {
+                        clientSocket.Shutdown(SocketShutdown.Both);
+                        clientSocket.Disconnect(false);
+                    }
+                    clientSocket.Close();
+                }
+                catch (Exception)
+                {
+
+                }
+                return;
+            }
         }
     }
 }

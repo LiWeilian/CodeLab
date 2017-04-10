@@ -9,6 +9,7 @@ using System.Text;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace GDDST.DI.GetDataServer
 {
@@ -29,7 +30,13 @@ namespace GDDST.DI.GetDataServer
             ServiceLog.LogServiceMessage("启动服务");
 
             //读取配置，获取服务器列表，每个服务器创建一个对应的客户端连接
+            ClientTest client = new ClientTest();
+            client.OnStart("", "172.16.1.2", "50002", null);
 
+            Thread.Sleep(1000);
+
+            //ClientTest client2 = new ClientTest();
+            //client2.OnStart("", "172.16.1.2", "50003", null);
         }
 
         protected override void OnStop()

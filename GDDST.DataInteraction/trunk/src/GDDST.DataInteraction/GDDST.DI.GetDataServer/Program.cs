@@ -14,19 +14,22 @@ namespace GDDST.DI.GetDataServer
         static void Main()
         {
             /*
+            //正式
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[]
             {
                 new GetDataService()
             };
             ServiceBase.Run(ServicesToRun);
+            //正式
             */
 
-            
+            //测试
             GetDataService getDataSvc = new GetDataService();
             getDataSvc.OnStart();
 
             Console.ReadLine();
+            //测试
         }
     }
 }
