@@ -126,7 +126,7 @@ namespace GDDST.DI.NetServerConsoleDemo
             {
                 while (client != null && client.Connected)
                 {
-                    Thread.Sleep(10);
+                    Thread.Sleep(31);
                     try
                     {
                         StateObject recStateObj = new StateObject();

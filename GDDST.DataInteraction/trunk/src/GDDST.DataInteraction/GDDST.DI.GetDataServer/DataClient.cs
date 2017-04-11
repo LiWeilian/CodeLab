@@ -9,7 +9,7 @@ using System.Net.Sockets;
 
 namespace GDDST.DI.GetDataServer
 {
-    class ClientTest
+    class DataClient
     {
         const int m_bufferSize = 1024;
         private string m_dataProtocol = string.Empty;
@@ -53,6 +53,11 @@ namespace GDDST.DI.GetDataServer
             m_isThreadStop = true;
         }
 
+        private void DisplayMessage(string msg)
+        {
+            Console.WriteLine(msg);
+        }
+
         private Socket CreateClientSocket(IPAddress serverIP, ushort serverPort)
         {
             Socket clientSocket = null;
@@ -87,7 +92,7 @@ namespace GDDST.DI.GetDataServer
 
                     while (m_clientSocket != null && m_clientSocket.Connected)
                     {
-                        Thread.Sleep(10);
+                        Thread.Sleep(47);
 
 
                         SendAsync(m_clientSocket, DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss\r\n"));
@@ -95,8 +100,8 @@ namespace GDDST.DI.GetDataServer
                         StateObject stateObj = new StateObject();
                         stateObj.ClientSocket = m_clientSocket;
 
-                        Console.WriteLine("");
-                        Console.WriteLine("开始接收信息...");
+                        DisplayMessage("");
+                        DisplayMessage("开始接收信息...");
                         m_clientSocket.BeginReceive(stateObj.Buffer, 0, StateObject.BufferSize,
                             0, new AsyncCallback(ReceiveCallback), stateObj);
 
@@ -104,10 +109,10 @@ namespace GDDST.DI.GetDataServer
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(string.Format("连接出现异常：{0}", e.Message));
+                    DisplayMessage(string.Format("连接出现异常：{0}", e.Message));
                 }
 
-                Console.WriteLine("结束...");
+                DisplayMessage("结束...");
             }
         }
 
@@ -118,18 +123,18 @@ namespace GDDST.DI.GetDataServer
 
                 if (clientSocket != null && clientSocket.Connected)
                 {
-                    Console.WriteLine("");
-                    Console.WriteLine(string.Format("开始发送信息：{0}", msg));
+                    DisplayMessage("");
+                    DisplayMessage(string.Format("开始发送信息：{0}", msg));
                     byte[] sendBytes = new byte[1024];
                     sendBytes = Encoding.UTF8.GetBytes(msg);
-                    Console.WriteLine(string.Format("开始发送信息，信息长度：{0}", sendBytes.Length));
+                    DisplayMessage(string.Format("开始发送信息，信息长度：{0}", sendBytes.Length));
                     clientSocket.BeginSend(sendBytes, 0, sendBytes.Length,
                         0, new AsyncCallback(SendCallback), clientSocket);
                 }
             }
             catch (SocketException se)
             {
-                Console.WriteLine(string.Format("套接字连接出现异常：\r\n{0},\r\n错误代码：{1}", se.Message, se.SocketErrorCode));
+                DisplayMessage(string.Format("套接字连接出现异常：\r\n{0},\r\n错误代码：{1}", se.Message, se.SocketErrorCode));
                 try
                 {
                     if (clientSocket.Connected)
@@ -147,7 +152,7 @@ namespace GDDST.DI.GetDataServer
             }
             catch (Exception e)
             {
-                Console.WriteLine(string.Format("连接出现异常：{0}", e.Message));
+                DisplayMessage(string.Format("连接出现异常：{0}", e.Message));
                 try
                 {
                     if (clientSocket.Connected)
@@ -176,7 +181,7 @@ namespace GDDST.DI.GetDataServer
             }
             catch (SocketException se)
             {
-                Console.WriteLine(string.Format("套接字连接出现异常：\r\n{0},\r\n错误代码：{1}", se.Message, se.SocketErrorCode));
+                DisplayMessage(string.Format("套接字连接出现异常：\r\n{0},\r\n错误代码：{1}", se.Message, se.SocketErrorCode));
                 try
                 {
                     if (clientSocket.Connected)
@@ -194,7 +199,7 @@ namespace GDDST.DI.GetDataServer
             }
             catch (Exception e)
             {
-                Console.WriteLine(string.Format("连接出现异常：{0}", e.Message));
+                DisplayMessage(string.Format("连接出现异常：{0}", e.Message));
                 try
                 {
                     if (clientSocket.Connected)
@@ -217,8 +222,8 @@ namespace GDDST.DI.GetDataServer
             Socket clientSocket = null;
             try
             {
-                Console.WriteLine("");
-                Console.WriteLine("正在接收信息...");
+                DisplayMessage("");
+                DisplayMessage("正在接收信息...");
 
                 int byteRead = -1;
                 StateObject stateObj = (StateObject)ar.AsyncState;
@@ -228,14 +233,14 @@ namespace GDDST.DI.GetDataServer
                     byteRead = clientSocket.EndReceive(ar);
                 } else
                 {
-                    Console.WriteLine("客户端连接无效");
+                    DisplayMessage("客户端连接无效");
                 }
 
                 if (byteRead > 0)
                 {
                     string msg = Encoding.Default.GetString(stateObj.Buffer, 0, byteRead);
 
-                    Console.WriteLine(string.Format("接收到来自[{0}:{1}]的数据：\r\n{2}", m_serverIP, m_serverPort, msg));
+                    DisplayMessage(string.Format("接收到来自[{0}:{1}]的数据：\r\n{2}", m_serverIP, m_serverPort, msg));
 
                     //clientSocket.BeginReceive(stateObj.Buffer, 0, StateObject.BufferSize, 
                     //    0, new AsyncCallback(ReceiveCallback), stateObj);
@@ -243,7 +248,7 @@ namespace GDDST.DI.GetDataServer
             }
             catch (SocketException se)
             {
-                Console.WriteLine(string.Format("套接字连接出现异常：\r\n{0},\r\n错误代码：{1}", se.Message, se.SocketErrorCode));
+                DisplayMessage(string.Format("套接字连接出现异常：\r\n{0},\r\n错误代码：{1}", se.Message, se.SocketErrorCode));
                 try
                 {
                     if (clientSocket.Connected)
@@ -261,7 +266,7 @@ namespace GDDST.DI.GetDataServer
             }
             catch (Exception e)
             {
-                Console.WriteLine(string.Format("连接出现异常：{0}", e.Message));
+                DisplayMessage(string.Format("连接出现异常：{0}", e.Message));
                 try
                 {
                     if (clientSocket.Connected)

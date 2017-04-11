@@ -10,6 +10,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Threading;
+using System.Configuration;
 
 namespace GDDST.DI.GetDataServer
 {
@@ -19,6 +20,7 @@ namespace GDDST.DI.GetDataServer
     public partial class GetDataService : ServiceBase
     {
         private ServiceLog m_svcLog;
+        private ServersConfig m_svrCfg = null;
         public GetDataService()
         {
             InitializeComponent();
@@ -30,18 +32,32 @@ namespace GDDST.DI.GetDataServer
             ServiceLog.LogServiceMessage("启动服务");
 
             //读取配置，获取服务器列表，每个服务器创建一个对应的客户端连接
-            ClientTest client = new ClientTest();
-            client.OnStart("", "172.16.1.2", "50002", null);
+            m_svrCfg = new ServersConfig();
+            List<DataServerSetting> dataServers = m_svrCfg.GetServers();
+            foreach (DataServerSetting dataServer in dataServers)
+            {
+                DataClient client = new DataClient();
 
-            Thread.Sleep(1000);
-
-            //ClientTest client2 = new ClientTest();
-            //client2.OnStart("", "172.16.1.2", "50003", null);
+                client.OnStart(dataServer.DataProtocol, dataServer.IP, dataServer.Port, );
+                Thread.Sleep(10);
+            }
         }
 
         protected override void OnStop()
         {
             ServiceLog.LogServiceMessage("停止服务");
+        }
+
+        private GetDataServiceDAL CreateGetDataServiceDAL(DataClientSetting dcs)
+        {
+            switch (dcs.DBMS.ToUpper().Trim())
+            {
+                case "MSSQLSERVER":
+                    return new GetDataServiceDAL_MSSQL(dcs.ServerName,
+                        client);
+                default:
+                    return null;
+            }
         }
     }
 }
