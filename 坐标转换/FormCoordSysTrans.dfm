@@ -1,8 +1,8 @@
 object frmCoordSysTrans: TfrmCoordSysTrans
   Left = 308
   Top = 233
-  Width = 759
-  Height = 297
+  Width = 760
+  Height = 473
   BorderIcons = [biSystemMenu]
   Caption = #22352#26631#36716#25442
   Color = clBtnFace
@@ -249,21 +249,99 @@ object frmCoordSysTrans: TfrmCoordSysTrans
     end
   end
   object btnTranslate: TButton
-    Left = 592
-    Top = 224
+    Left = 328
+    Top = 248
     Width = 75
     Height = 25
-    Caption = #36716#25442
+    Caption = #36716#25442' ->'
     TabOrder = 3
     OnClick = btnTranslateClick
   end
-  object Button1: TButton
-    Left = 504
+  object GroupBox4: TGroupBox
+    Left = 8
     Top = 224
+    Width = 281
+    Height = 193
+    Caption = 'WGS84'
+    TabOrder = 4
+    object ledtWGS84GcsB: TLabeledEdit
+      Left = 8
+      Top = 37
+      Width = 121
+      Height = 20
+      EditLabel.Width = 24
+      EditLabel.Height = 12
+      EditLabel.Caption = #32428#24230
+      TabOrder = 0
+    end
+    object ledtWGS84GcsL: TLabeledEdit
+      Left = 8
+      Top = 77
+      Width = 121
+      Height = 20
+      EditLabel.Width = 24
+      EditLabel.Height = 12
+      EditLabel.Caption = #32463#24230
+      TabOrder = 1
+    end
+    object ledtWGS84GcsH: TLabeledEdit
+      Left = 8
+      Top = 117
+      Width = 121
+      Height = 20
+      EditLabel.Width = 24
+      EditLabel.Height = 12
+      EditLabel.Caption = #39640#24230
+      TabOrder = 2
+      Text = '0'
+    end
+  end
+  object GroupBox5: TGroupBox
+    Left = 448
+    Top = 224
+    Width = 281
+    Height = 193
+    Caption = #24179#38754#22352#26631
+    TabOrder = 5
+    object ledtLocaleX: TLabeledEdit
+      Left = 8
+      Top = 37
+      Width = 121
+      Height = 20
+      EditLabel.Width = 6
+      EditLabel.Height = 12
+      EditLabel.Caption = 'X'
+      TabOrder = 0
+    end
+    object ledtLocaleY: TLabeledEdit
+      Left = 8
+      Top = 77
+      Width = 121
+      Height = 20
+      EditLabel.Width = 6
+      EditLabel.Height = 12
+      EditLabel.Caption = 'Y'
+      TabOrder = 1
+    end
+    object ledtLocaleZ: TLabeledEdit
+      Left = 8
+      Top = 117
+      Width = 121
+      Height = 20
+      EditLabel.Width = 6
+      EditLabel.Height = 12
+      EditLabel.Caption = 'Z'
+      TabOrder = 2
+      Text = '0'
+    end
+  end
+  object btnRevTranslate: TButton
+    Left = 328
+    Top = 296
     Width = 75
     Height = 25
-    Caption = #27979#35797
-    TabOrder = 4
-    OnClick = Button1Click
+    Caption = '<- '#36716#25442
+    TabOrder = 6
+    OnClick = btnRevTranslateClick
   end
 end

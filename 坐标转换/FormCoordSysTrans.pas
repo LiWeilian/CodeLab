@@ -31,9 +31,18 @@ type
     ledtSemiMajor: TLabeledEdit;
     ledtFlattening: TLabeledEdit;
     btnTranslate: TButton;
-    Button1: TButton;
+    GroupBox4: TGroupBox;
+    ledtWGS84GcsB: TLabeledEdit;
+    ledtWGS84GcsL: TLabeledEdit;
+    ledtWGS84GcsH: TLabeledEdit;
+    GroupBox5: TGroupBox;
+    ledtLocaleX: TLabeledEdit;
+    ledtLocaleY: TLabeledEdit;
+    ledtLocaleZ: TLabeledEdit;
+    btnRevTranslate: TButton;
     procedure btnTranslateClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure btnRevTranslateClick(Sender: TObject);
   private
     
   public
@@ -52,8 +61,27 @@ uses
 
 procedure TfrmCoordSysTrans.btnTranslateClick(Sender: TObject);
 var
+  g2l: TGps2Locale;
+  x, y, z: Double;
+  B, L, H: Double;
   coordSysParam: TCoordSysParam;
 begin
+  if (not TryStrToFloat(ledtWGS84GcsB.Text, B)) or (B > 90) or (B < -90) then
+  begin
+    ShowMessage('纬度数值无效');
+    Exit;
+  end;
+  if (not TryStrToFloat(ledtWGS84GcsL.Text, L)) or (L > 180) or (L < -180) then
+  begin
+    ShowMessage('经度数值无效');
+    Exit;
+  end;
+  if not TryStrToFloat(ledtWGS84GcsH.Text, H) then
+  begin
+    ShowMessage('高度数值无效');
+    Exit;
+  end;
+
   coordSysParam := TCoordSysParam.Create;
   coordSysParam.SDX := StrToFloat(ledtSDX.Text);
   coordSysParam.SDY := StrToFloat(ledtSDY.Text);
@@ -75,7 +103,11 @@ begin
   coordSysParam.SemiMajor := StrToFloat(ledtSemiMajor.Text);
   coordSysParam.Flattening := StrToFloat(ledtFlattening.Text);
 
-
+  g2l := TGps2Locale.Create;
+  g2l.Transform(B, L, H, coordSysParam,  x, y, z);
+  ledtLocaleX.Text := FloatToStr(x);
+  ledtLocaleY.Text := FloatToStr(y);
+  ledtLocaleZ.Text := FloatToStr(z);
 end;
 
 procedure TfrmCoordSysTrans.Button1Click(Sender: TObject);
@@ -84,10 +116,10 @@ var
   //centralLong: Double;
   //n: Integer;
   x, y, z: Double;
-
+  B, L, H: Double;
   coordSysParam: TCoordSysParam;
 begin
-  g2l := TGps2Locale.Create;   
+  g2l := TGps2Locale.Create;
   //n := g2l.LongOfCentralMeridian(113.9, 3, centralLong);
   //ShowMessage('N: ' + IntToStr(n) + ', 中央子午线：' + FloatToStr(centralLong));
 
@@ -120,8 +152,67 @@ begin
   coordSysParam.SemiMajor := StrToFloat(ledtSemiMajor.Text);
   coordSysParam.Flattening := StrToFloat(ledtFlattening.Text);
 
-  g2l.Transform(23.062279545594, 113.322852104270, 11, coordSysParam,  x, y, z);
+  g2l.Transform(23.125467917688, 113.210002615135, 11, coordSysParam,  x, y, z);
   ShowMessage('x: ' + FloatToStr(x) + ', y: ' + FloatToStr(y) + ', z: ' + FloatToStr(z));
+  //23.062279545594, 113.322852104270
+  //44029, 21815, 17.32
+
+  //23.125467917688, 113.210002615135,
+  //32469.3902181918, 28815.631675113
+
+  g2l.RevTransform(28815.631675113, 32469.3902181918, 17.32, coordSysParam, B, L, H);
+  ShowMessage('B: ' + FloatToStr(B) + ', L: ' + FloatToStr(L) + ', H: ' + FloatToStr(H));
+end;
+
+procedure TfrmCoordSysTrans.btnRevTranslateClick(Sender: TObject);
+var
+  g2l: TGps2Locale;
+  x, y, z: Double;
+  B, L, H: Double;
+  coordSysParam: TCoordSysParam;
+begin
+  if not TryStrToFloat(ledtLocaleX.Text, X) then
+  begin
+    ShowMessage('X数值无效');
+    Exit;
+  end;
+  if not TryStrToFloat(ledtLocaleY.Text, Y) then
+  begin
+    ShowMessage('Y数值无效');
+    Exit;
+  end;
+  if not TryStrToFloat(ledtLocaleZ.Text, Z) then
+  begin
+    ShowMessage('Z数值无效');
+    Exit;
+  end;
+
+  coordSysParam := TCoordSysParam.Create;
+  coordSysParam.SDX := StrToFloat(ledtSDX.Text);
+  coordSysParam.SDY := StrToFloat(ledtSDY.Text);
+  coordSysParam.SDZ := StrToFloat(ledtSDZ.Text);
+  coordSysParam.SQX := StrToFloat(ledtSQX.Text);
+  coordSysParam.SQY := StrToFloat(ledtSQY.Text);
+  coordSysParam.SQZ := StrToFloat(ledtSQZ.Text);
+  coordSysParam.SScale := StrToFloat(ledtSScale.Text);
+  coordSysParam.FDX := StrToFloat(ledtFDX.Text);
+  coordSysParam.FDY := StrToFloat(ledtFDY.Text);
+  coordSysParam.FRotateAngle := StrToFloat(ledtFRotateAngle.Text);
+  coordSysParam.FScale := StrToFloat(ledtFScale.Text);
+  coordSysParam.PProjectionType := StrToInt(ledtProjectType.Text);
+  coordSysParam.PCentralMeridian := StrToFloat(ledtCentralMeridian.Text);
+  coordSysParam.PScale := StrToFloat(ledtProjectScale.Text);
+  coordSysParam.PBenchmarkLatitude := StrToFloat(ledtBenchmarkLatitude.Text);
+  coordSysParam.PConstantX := StrToFloat(ledtConstantX.Text);
+  coordSysParam.PConstantY := StrToFloat(ledtConstantY.Text);
+  coordSysParam.SemiMajor := StrToFloat(ledtSemiMajor.Text);
+  coordSysParam.Flattening := StrToFloat(ledtFlattening.Text);
+
+  g2l := TGps2Locale.Create;
+  g2l.RevTransform(Y, X, Z, coordSysParam, B, L, H);
+  ledtWGS84GcsB.Text := FloatToStr(B);
+  ledtWGS84GcsL.Text := FloatToStr(L);
+  ledtWGS84GcsH.Text := FloatToStr(H);
 end;
 
 end.
