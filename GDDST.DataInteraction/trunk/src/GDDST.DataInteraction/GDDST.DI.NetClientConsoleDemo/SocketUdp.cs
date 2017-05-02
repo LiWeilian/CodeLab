@@ -86,6 +86,7 @@ namespace GDDST.DI.NetClientConsoleDemo
                 try
                 {
                     socket.SendTo(msgByte, 0, msgByte.Length, SocketFlags.None, remoteEndPoint);
+                    Console.WriteLine("已发送");
                 }
                 catch (SocketException se)
                 {

@@ -49,9 +49,20 @@ namespace GDDST.DI.NetClientConsoleDemo
                 Console.WriteLine("请输入信息：");
                 string msg = Console.ReadLine();
                 byte[] msgByte = System.Text.Encoding.UTF8.GetBytes(msg);
+                byte[] msgByte2 = new byte[msgByte.Length + 1];
+                for (int i = 0; i < msgByte.Length; i++)
+                {
+                    msgByte2[i] = msgByte[i];
+                }
+                msgByte2[msgByte2.Length - 1] = 0;
+
+                for (int i = 0; i < msgByte2.Length; i++)
+                {
+                    Console.WriteLine(msgByte2[i]);
+                }
                 try
                 {
-                    clientSocket.Send(msgByte, msgByte.Length, SocketFlags.None);
+                    clientSocket.Send(msgByte2, msgByte2.Length, SocketFlags.None);
                 }
                 catch (SocketException se)
                 {
@@ -72,8 +83,9 @@ namespace GDDST.DI.NetClientConsoleDemo
                     Console.WriteLine("接收消息失败：{0}", se.SocketErrorCode.ToString());
                     break;
                 }
-                
+
                 string recMsg = System.Text.Encoding.UTF8.GetString(recMsgByte, 0, recLen);
+                //string recMsg = System.Text.Encoding.ASCII.GetString(recMsgByte, 0, recLen);
                 Console.WriteLine(recMsg);
                 Console.WriteLine("");
 

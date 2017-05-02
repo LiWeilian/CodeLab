@@ -38,7 +38,7 @@ namespace GDDST.DI.GetDataServer
             {
                 DataClient client = new DataClient();
 
-                client.OnStart(dataServer.DataProtocol, dataServer.IP, dataServer.Port, );
+                client.OnStart(dataServer.DataProtocol, dataServer.IP, dataServer.Port, null);
                 Thread.Sleep(10);
             }
         }
@@ -54,7 +54,7 @@ namespace GDDST.DI.GetDataServer
             {
                 case "MSSQLSERVER":
                     return new GetDataServiceDAL_MSSQL(dcs.ServerName,
-                        client);
+                        dcs.DatabaseName, dcs.UserName, dcs.Password);
                 default:
                     return null;
             }
