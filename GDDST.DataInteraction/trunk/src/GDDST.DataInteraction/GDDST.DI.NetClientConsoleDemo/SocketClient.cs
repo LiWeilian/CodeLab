@@ -49,20 +49,20 @@ namespace GDDST.DI.NetClientConsoleDemo
                 Console.WriteLine("请输入信息：");
                 string msg = Console.ReadLine();
                 byte[] msgByte = System.Text.Encoding.UTF8.GetBytes(msg);
-                byte[] msgByte2 = new byte[msgByte.Length + 1];
+                byte[] msgByte_send = new byte[msgByte.Length + 1];
                 for (int i = 0; i < msgByte.Length; i++)
                 {
-                    msgByte2[i] = msgByte[i];
+                    msgByte_send[i] = msgByte[i];
                 }
-                msgByte2[msgByte2.Length - 1] = 0;
+                msgByte_send[msgByte_send.Length - 1] = 0;
 
-                for (int i = 0; i < msgByte2.Length; i++)
+                for (int i = 0; i < msgByte_send.Length; i++)
                 {
-                    Console.WriteLine(msgByte2[i]);
+                    Console.WriteLine(msgByte_send[i]);
                 }
                 try
                 {
-                    clientSocket.Send(msgByte2, msgByte2.Length, SocketFlags.None);
+                    clientSocket.Send(msgByte_send, msgByte_send.Length, SocketFlags.None);
                 }
                 catch (SocketException se)
                 {

@@ -55,6 +55,8 @@ namespace GDDST.DI.GetDataServer
                 case "MSSQLSERVER":
                     return new GetDataServiceDAL_MSSQL(dcs.ServerName,
                         dcs.DatabaseName, dcs.UserName, dcs.Password);
+                case "ORACLE":
+                    return null;
                 default:
                     return null;
             }

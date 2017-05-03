@@ -59,11 +59,16 @@ namespace GDDST.DI.NetClientConsoleDemo
                 Console.WriteLine("请输入信息：");
                 string msg = Console.ReadLine();
                 byte[] msgByte = System.Text.Encoding.UTF8.GetBytes(msg);
-                
+                byte[] msgByte_send = new byte[msgByte.Length + 1];
+                for (int i = 0; i < msgByte.Length; i++)
+                {
+                    msgByte_send[i] = msgByte[i];
+                }
+                msgByte_send[msgByte_send.Length - 1] = 0;
                 try
                 {
                     //ns = tcpClient.GetStream();
-                    ns.Write(msgByte, 0, msgByte.Length);
+                    ns.Write(msgByte_send, 0, msgByte_send.Length);
                     ns.Flush();
                 }
                 catch (SocketException se)
