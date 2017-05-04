@@ -39,6 +39,7 @@ namespace GDDST.DI.GetDataServer
                 DataClient client = new DataClient();
 
                 client.OnStart(dataServer.DataProtocol, dataServer.IP, dataServer.Port, null);
+                //通讯太频繁会出问题
                 Thread.Sleep(10);
             }
         }

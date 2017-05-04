@@ -11,6 +11,8 @@ namespace GDDST.DI.GetDataServer
     abstract class GetDataServiceDAL
     {
         public abstract bool CreateConnection(out string errMsg);
+
+        public abstract bool InsertPLCData(PLCDataEntity data);
     }
 
     class GetDataServiceDAL_ORA : GetDataServiceDAL
@@ -18,6 +20,13 @@ namespace GDDST.DI.GetDataServer
         public override bool CreateConnection(out string errMsg)
         {
             errMsg = string.Empty;
+            return false;
+        }
+
+        public override bool InsertPLCData(PLCDataEntity data)
+        {
+            string insertSql = string.Empty;
+
             return false;
         }
     }
@@ -56,6 +65,13 @@ namespace GDDST.DI.GetDataServer
                 errMsg = ex.Message;
                 return false;
             }
+        }
+
+        public override bool InsertPLCData(PLCDataEntity data)
+        {
+            string insertSql = string.Format("");
+
+            return false;
         }
     }
 }

@@ -242,6 +242,10 @@ namespace GDDST.DI.GetDataServer
 
                     DisplayMessage(string.Format("接收到来自[{0}:{1}]的数据：\r\n{2}", m_serverIP, m_serverPort, msg));
 
+                    //解析接收到的数据信息，是PLC传过来的数据格式而定
+
+                    //
+
                     //clientSocket.BeginReceive(stateObj.Buffer, 0, StateObject.BufferSize, 
                     //    0, new AsyncCallback(ReceiveCallback), stateObj);
                 }

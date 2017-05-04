@@ -52,6 +52,7 @@
     <Compile Include="DatabaseHelper.cs" />
     <Compile Include="DataClient.cs" />
     <Compile Include="CustomConfig.cs" />
+    <Compile Include="DataEntities.cs" />
     <Compile Include="GetDataService.cs">
       <SubType>Component</SubType>
     </Compile>
