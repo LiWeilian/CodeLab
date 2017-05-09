@@ -55,14 +55,23 @@ namespace GDDST.DI.NetClientConsoleDemo
                     msgByte_send[i] = msgByte[i];
                 }
                 msgByte_send[msgByte_send.Length - 1] = 0;
-
+                /*
                 for (int i = 0; i < msgByte_send.Length; i++)
                 {
                     Console.WriteLine(msgByte_send[i]);
                 }
+                */
+
+                //byte[] plc_send = new byte[12] {0x15, 0x01, 0x00, 0x00, 0x06, 0x00, 0xff, 0x03, 0x29, 0x00, 0x03, 0x00};
+                byte[] plc_send = new byte[12] { 0x15, 0x01, 0x00, 0x00, 0x00, 0x06, 0xff, 0x03, 0x00, 0x29, 0x00, 0x03 };
+                for (int i = 0; i < plc_send.Length; i++)
+                {
+                    Console.WriteLine(plc_send[i]);
+                }
                 try
                 {
-                    clientSocket.Send(msgByte_send, msgByte_send.Length, SocketFlags.None);
+                    //clientSocket.Send(msgByte_send, msgByte_send.Length, SocketFlags.None);
+                    clientSocket.Send(plc_send, plc_send.Length, SocketFlags.None);
                 }
                 catch (SocketException se)
                 {
@@ -86,7 +95,10 @@ namespace GDDST.DI.NetClientConsoleDemo
 
                 string recMsg = System.Text.Encoding.UTF8.GetString(recMsgByte, 0, recLen);
                 //string recMsg = System.Text.Encoding.ASCII.GetString(recMsgByte, 0, recLen);
-                Console.WriteLine(recMsg);
+                Console.WriteLine(string.Format("ASCII: {0}", recMsg));
+                Console.WriteLine("");
+
+                Console.WriteLine(string.Format("Bytes: {0}", BitConverter.ToString(recMsgByte)));
                 Console.WriteLine("");
 
                 if (Console.KeyAvailable)
