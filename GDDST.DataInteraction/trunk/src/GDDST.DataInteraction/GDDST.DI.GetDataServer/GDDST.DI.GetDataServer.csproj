@@ -53,6 +53,7 @@
     <Compile Include="DataClient.cs" />
     <Compile Include="CustomConfig.cs" />
     <Compile Include="DataEntities.cs" />
+    <Compile Include="CommHandler.cs" />
     <Compile Include="GetDataService.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -61,6 +62,7 @@
     </Compile>
     <Compile Include="GetDataServiceDAL.cs" />
     <Compile Include="Log.cs" />
+    <Compile Include="ModbusTCPHandler.cs" />
     <Compile Include="MSSQLHelper.cs" />
     <Compile Include="OracleHelper.cs" />
     <Compile Include="Program.cs" />

@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<configuration>
+<configuration
+  xmlns:modbus="http://modbus.org/">
   <Servers>
-    <Server dataprotocol="DS_PLC" ip="172.16.1.2" port="50002">
+    <Server dataprotocol="modbustcp" ip="172.16.1.2" port="502">
+      <modbus device_addr="1" func_code="03"  start_addr="41" preset_data="1" />
       <Client dbms="MSSQLSERVER" servername="" databasename="" username="" password="">
       </Client>
     </Server>
