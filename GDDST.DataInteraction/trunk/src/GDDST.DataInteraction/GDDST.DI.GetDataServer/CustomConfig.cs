@@ -29,7 +29,7 @@ namespace GDDST.DI.GetDataServer
         {
             if (m_xmlDoc != null)
             {
-                return m_xmlDoc.DocumentElement.SelectSingleNode("Servers");
+                return m_xmlDoc.DocumentElement.SelectSingleNode("servers");
             } else
             {
                 return null;
@@ -47,15 +47,15 @@ namespace GDDST.DI.GetDataServer
             XmlNode serversNode = GetServersNode();
             if (serversNode != null)
             {
-                XmlNodeList serverNodeList = serversNode.SelectNodes("Server");
+                XmlNodeList serverNodeList = serversNode.SelectNodes("server");
                 foreach (XmlNode serverNode in serverNodeList)
                 {
                     DataServerSetting ds = new DataServerSetting();
-                    ds.DataProtocol = serverNode.Attributes["dataprotocol"] != null 
+                    ds.DataProtocol = serverNode.Attributes["dataprotocol"] != null
                         ? serverNode.Attributes["dataprotocol"].Value : string.Empty;
-                    ds.IP = serverNode.Attributes["ip"] != null 
+                    ds.IP = serverNode.Attributes["ip"] != null
                         ? serverNode.Attributes["ip"].Value : string.Empty;
-                    ds.Port = serverNode.Attributes["port"] != null 
+                    ds.Port = serverNode.Attributes["port"] != null
                         ? serverNode.Attributes["port"].Value : string.Empty;
 
                     XmlNode clientNode = GetClientNode(serverNode);
@@ -78,6 +78,46 @@ namespace GDDST.DI.GetDataServer
             }
 
             return servers;
+        }
+
+        public List<DataServerConfigDesc> GetServerConfigDescList()
+        {
+            List<DataServerConfigDesc> servers = new List<DataServerConfigDesc>();
+            XmlNode serversNode = GetServersNode();
+            if (serversNode != null)
+            {
+                XmlNodeList serverNodeList = serversNode.SelectNodes("server");
+                foreach (XmlNode serverNode in serverNodeList)
+                {
+                    DataServerConfigDesc serverDesc = new DataServerConfigDesc(serverNode);
+                    servers.Add(serverDesc);
+                }
+            }
+
+            return servers;
+        }
+    }
+
+    class DataServerConfigDesc
+    {
+        public XmlNode ServerConfigNode { get; }
+        public string ServerType { get; }
+
+        public DataServerConfigDesc(XmlNode serverCfgNode)
+        {
+            ServerConfigNode = serverCfgNode;
+
+            ServerType = GetServerType();
+        }
+
+        private string GetServerType()
+        {
+            if (ServerConfigNode.Attributes["type"] != null)
+            {
+                return ServerConfigNode.Attributes["type"].Value;
+            }
+
+            return string.Empty;
         }
     }
 

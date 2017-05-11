@@ -21,6 +21,8 @@ namespace GDDST.DI.GetDataServer
     {
         private ServiceLog m_svcLog;
         private ServersConfig m_svrCfg = null;
+
+        private List<CommHandler> m_commHandlers = new List<CommHandler>();
         public GetDataService()
         {
             InitializeComponent();
@@ -33,12 +35,21 @@ namespace GDDST.DI.GetDataServer
 
             //读取配置，获取服务器列表，每个服务器创建一个对应的客户端连接
             m_svrCfg = new ServersConfig();
-            List<DataServerSetting> dataServers = m_svrCfg.GetServers();
-            foreach (DataServerSetting dataServer in dataServers)
+            List<DataServerConfigDesc> dataServers = m_svrCfg.GetServerConfigDescList();
+            foreach (DataServerConfigDesc dataServer in dataServers)
             {
-                DataClient client = new DataClient();
-
-                client.OnStart(dataServer.DataProtocol, dataServer.IP, dataServer.Port, null);
+                ServiceLog.LogServiceMessage(dataServer.ServerType);
+                switch (dataServer.ServerType.ToUpper())
+                {
+                    case "MODBUSTCP":
+                        ModbusTcpConfig mbTcpCfg = new ModbusTcpConfig(dataServer.ServerConfigNode);
+                        ModbusTCPHandler mbTcpHandler = new ModbusTCPHandler(mbTcpCfg);
+                        m_commHandlers.Add(mbTcpHandler);
+                        mbTcpHandler.OnStart();
+                        break;
+                    default:
+                        break;
+                }
                 //通讯太频繁会出问题
                 Thread.Sleep(10);
             }

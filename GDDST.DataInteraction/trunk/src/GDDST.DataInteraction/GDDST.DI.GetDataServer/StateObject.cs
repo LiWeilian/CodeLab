@@ -11,7 +11,7 @@ namespace GDDST.DI.GetDataServer
     {
         public Socket ClientSocket { get; set; }
 
-        public const int BufferSize = 1024;
+        public const int BufferSize = 128;
         public byte[] Buffer = new byte[BufferSize];
     }
 }

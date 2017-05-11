@@ -7,8 +7,7 @@ namespace GDDST.DI.GetDataServer
 {
     abstract class CommHandler
     {
-        public abstract byte[] GetRequestBytes();
-
-        public abstract void ProcessResponse(byte[] responeBytes);
+        public abstract void OnStart();
+        public abstract void OnStop();
     }
 }

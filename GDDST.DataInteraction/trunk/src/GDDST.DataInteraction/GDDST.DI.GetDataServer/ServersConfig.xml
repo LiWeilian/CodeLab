@@ -1,23 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<configuration
-  xmlns:modbus="http://modbus.org/">
-  <Servers>
-    <Server dataprotocol="modbustcp" ip="172.16.1.2" port="502">
-      <modbus device_addr="1" func_code="03"  start_addr="41" preset_data="1" />
-      <Client dbms="MSSQLSERVER" servername="" databasename="" username="" password="">
-      </Client>
-    </Server>
-    <Server dataprotocol="DS_PLC" ip="172.16.1.2" port="50003">
-      <Client dbms="MSSQLSERVER" servername="" databasename="" username="" password="">
-      </Client>
-    </Server>
-    <Server dataprotocol="DS_PLC" ip="172.16.1.2" port="50004">
-      <Client dbms="MSSQLSERVER" servername="" databasename="" username="" password="">
-      </Client>
-    </Server>
-    <Server dataprotocol="DS_PLC" ip="172.16.1.2" port="50005">
-      <Client dbms="MSSQLSERVER" servername="" databasename="" username="" password="">
-      </Client>
-    </Server>
-  </Servers>
+<configuration>
+	<servers>
+		<server type="modbustcp" name="永和加压站">
+			<connection ip="172.16.1.2" port="502" />
+			<items>
+				<item device_addr="1" func_code="03"  start_addr="41" reg_count="1" name="设定压力" />
+				<item device_addr="1" func_code="03"  start_addr="42" reg_count="1" name="工作频率" />
+				<item device_addr="1" func_code="03"  start_addr="43" reg_count="1" name="进水压力" />
+			</items>
+			<database dbms="MSSQLSERVER" >
+				<connection servername="172.16.1.2" databasename="" username="appuser" password="appuser" />
+				<realtimedatatable name="" />
+				<histroydatatable name="" />
+			</database>
+		</server>
+	</servers>
 </configuration>

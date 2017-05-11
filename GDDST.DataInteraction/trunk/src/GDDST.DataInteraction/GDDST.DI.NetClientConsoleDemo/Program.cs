@@ -11,7 +11,7 @@ namespace GDDST.DI.NetClientConsoleDemo
         {
             while (true)
             {
-                Console.WriteLine("输入客户端类型（socket|tcp|socketudp）：");
+                Console.WriteLine("输入客户端类型（socket|tcp|socketudp|modbus）：");
                 string input = Console.ReadLine();
                 switch (input.ToUpper().Trim())
                 {
@@ -23,6 +23,9 @@ namespace GDDST.DI.NetClientConsoleDemo
                         break;
                     case "SOCKETUDP":
                         SocketUdp.Run();
+                        break;
+                    case "MODBUS":
+                        ModbusClient.Run();
                         break;
                     default:
                         break;

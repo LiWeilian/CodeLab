@@ -4,7 +4,7 @@ using System.Net.Sockets;
 
 namespace GDDST.DI.NetClientConsoleDemo
 {
-    class SocketClient
+    class ModbusClient
     {
         static public void Run()
         {
@@ -63,9 +63,9 @@ namespace GDDST.DI.NetClientConsoleDemo
                 */
 
                 //读取从0x29寄存器开始1个寄存器的值
-                //byte[] plc_send = new byte[12] { 0x15, 0x01, 0x00, 0x00, 0x00, 0x06, 0x01, 0x03, 0x00, 0x29, 0x00, 0x01 };
+                //byte[] plc_send = new byte[12] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x06, 0x01, 0x03, 0x00, 0x29, 0x00, 0x01 };
                 //将单个值0x0001写入寄存器0x29
-                byte[] plc_send = new byte[12] { 0x15, 0x01, 0x00, 0x00, 0x00, 0x06, 0x01, 0x06, 0x00, 0x29, 0x00, 0x01 };
+                byte[] plc_send = new byte[12] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x06, 0x01, 0x06, 0x00, 0x29, 0x00, 0x01 };
                 for (int i = 0; i < plc_send.Length; i++)
                 {
                     Console.WriteLine(plc_send[i]);
@@ -83,7 +83,7 @@ namespace GDDST.DI.NetClientConsoleDemo
 
                 Console.WriteLine("");
                 Console.WriteLine("正在等待接收信息...");
-                byte[] recMsgByte = new byte[4096];
+                byte[] recMsgByte = new byte[256];
                 int recLen;
                 try
                 {
