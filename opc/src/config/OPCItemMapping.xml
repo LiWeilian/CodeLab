@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="GBK" ?>
+<OPCItemMapping>
+	<serverhost hostname="gddst-xp-vpn">
+		<opcserver servername="Matrikon.OPC.Simulation.1">
+			<OPCItem name="Random.real8">
+				<Mapping>
+					<field fieldname="RID" sourceopcitem="0" sourcecustom=":[0]:GUID" datatype="2" seqname="" autoinc="0" isentityidentity="0" />
+					<field fieldname="NET_NO" sourceopcitem="0" sourcecustom="测试特殊项" datatype="2" seqname="" autoinc="0" isentityidentity="1" />
+					<field fieldname="SENSOR_NAME" sourceopcitem="0" sourcecustom="测试传感器" datatype="2" seqname="" autoinc="0" isentityidentity="1" />
+					<field fieldname="SENSOR_TYPE" sourceopcitem="0" sourcecustom="1" datatype="2" seqname="" autoinc="0" isentityidentity="0" />
+					<field fieldname="FDATA" sourceopcitem="1" sourcecustom="" datatype="1" seqname="" autoinc="0" isentityidentity="0" />
+					<field fieldname="DTIME" sourceopcitem="3" sourcecustom="" datatype="4" seqname="" autoinc="0" isentityidentity="0" />
+					<field fieldname="OUT_OF" sourceopcitem="0" sourcecustom="N" datatype="2" seqname="" autoinc="0" isentityidentity="0" />
+				</Mapping>
+			</OPCItem>
+		</opcserver>
+	</serverhost>
+</OPCItemMapping>

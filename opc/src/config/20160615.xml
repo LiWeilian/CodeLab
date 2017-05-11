@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="GBK" standalone="yes"?>
+<opcclient>
+  <serverhost hostname="gddst-xp-vpn">
+    <opcserver servername="Matrikon.OPC.Simulation.1">
+      <opcgroup groupname="SCADA_DATA" deadband="0" updaterate="1000" isactive="1" issubscribed="1" timeoutsetting="0" autoinsert="1">
+        <opcitems>
+          <opcitem itemid="Random.real4" />
+        </opcitems>
+        <database-connection databasetype="0">
+          <connection servername="172.16.1.25" databasename="" username="appuser" password="appuser" />
+          <newdatatable tablename="appuser.dbo.SCADA_NET_NEW_DATA" />
+          <historydatatable tablename="appuser.dbo.SCADA_NET_DATA" />
+          <fields>
+            <field fieldname="RID" sourceopcitem="0" sourcecustom=":[0]:GUID" datatype="2" seqname="" autoinc="0" isentityidentity="0" />
+            <field fieldname="NET_NO" sourceopcitem="7" sourcecustom="" datatype="2" seqname="" autoinc="0" isentityidentity="1" />
+            <field fieldname="SENSOR_NAME" sourceopcitem="8" sourcecustom="" datatype="2" seqname="" autoinc="0" isentityidentity="1" />
+            <field fieldname="SENSOR_TYPE" sourceopcitem="0" sourcecustom=":[1]:SENSOR_NAME" datatype="2" seqname="" autoinc="0" isentityidentity="0" />
+            <field fieldname="FDATA" sourceopcitem="1" sourcecustom="" datatype="1" seqname="" autoinc="0" isentityidentity="0" />
+            <field fieldname="DTIME" sourceopcitem="3" sourcecustom=":[2]:Time" datatype="4" seqname="" autoinc="0" isentityidentity="0" />
+            <field fieldname="OUT_OF" sourceopcitem="0" sourcecustom="N" datatype="2" seqname="" autoinc="0" isentityidentity="0" />
+          </fields>
+        </database-connection>
+      </opcgroup>
+    </opcserver>
+  </serverhost>
+</opcclient>

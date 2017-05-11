@@ -1,0 +1,13 @@
+program dsOPCDataAccess;
+
+uses
+  Forms,
+  FormOPCDataAccess in 'FormOPCDataAccess.pas' {frmOPCDataAccess};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.CreateForm(TfrmOPCDataAccess, frmOPCDataAccess);
+  Application.Run;
+end.

@@ -1,0 +1,55 @@
+object frmOPCDataAccess: TfrmOPCDataAccess
+  Left = 302
+  Top = 241
+  Width = 601
+  Height = 441
+  Caption = 'OPC'#25968#25454#37319#38598
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = #23435#20307
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 12
+  object ledtServersHost: TLabeledEdit
+    Left = 16
+    Top = 24
+    Width = 241
+    Height = 20
+    EditLabel.Width = 108
+    EditLabel.Height = 12
+    EditLabel.Caption = #26381#21153#22120#23487#20027#21517#31216#25110'IP'
+    TabOrder = 0
+    Text = 'gddst-xp-vpn'
+  end
+  object btnConnectToServer: TButton
+    Left = 16
+    Top = 101
+    Width = 75
+    Height = 25
+    Caption = #36830#25509
+    TabOrder = 1
+    OnClick = btnConnectToServerClick
+  end
+  object mmRunMsg: TMemo
+    Left = 16
+    Top = 216
+    Width = 561
+    Height = 185
+    ScrollBars = ssVertical
+    TabOrder = 2
+  end
+  object ledtOPCServerGUID: TLabeledEdit
+    Left = 16
+    Top = 72
+    Width = 241
+    Height = 20
+    EditLabel.Width = 78
+    EditLabel.Height = 12
+    EditLabel.Caption = 'OPC'#26381#21153#22120'GUID'
+    TabOrder = 3
+    Text = '{F8582CF2-88FB-11D0-B850-00C0F0104305}'
+  end
+end
