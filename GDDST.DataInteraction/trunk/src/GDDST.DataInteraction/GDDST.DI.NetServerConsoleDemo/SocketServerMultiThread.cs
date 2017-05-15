@@ -126,7 +126,7 @@ namespace GDDST.DI.NetServerConsoleDemo
             {
                 while (client != null && client.Connected)
                 {
-                    Thread.Sleep(31);
+                    Thread.Sleep(1031);
                     try
                     {
                         StateObject recStateObj = new StateObject();
@@ -171,7 +171,7 @@ namespace GDDST.DI.NetServerConsoleDemo
                         break;
                     }
 
-
+                    
                     try
                     {
                         StateObject sendStateObj = new StateObject();
@@ -218,7 +218,7 @@ namespace GDDST.DI.NetServerConsoleDemo
                         }
                         break;
                     }
-
+                    
                 }
 
             }
@@ -258,10 +258,17 @@ namespace GDDST.DI.NetServerConsoleDemo
 
                 if (recLen > 0)
                 {
+                    Console.WriteLine(string.Format("接收到客户端[{0}]信息：\r\n", clientSocket.Handle));
                     System.Text.Encoding utf8 = System.Text.Encoding.UTF8;
                     string msg = utf8.GetString(stateObj.Buffer, 0, recLen);
-                    Console.WriteLine(string.Format("接收到客户端[{0}]信息：\r\n{1}\r\n",
-                        clientSocket.Handle, msg));
+                    Console.WriteLine(string.Format("UTF-8：\r\n{0}\r\n",
+                        msg));
+                    msg = System.Text.Encoding.ASCII.GetString(stateObj.Buffer, 0, recLen);
+                    Console.WriteLine(string.Format("ASCII：\r\n{0}\r\n",
+                        msg));
+                    msg = BitConverter.ToString(stateObj.Buffer);
+                    Console.WriteLine(string.Format("Bytes：\r\n{0}\r\n",
+                        msg));
                 }
             }
             catch (Exception ex)

@@ -95,7 +95,7 @@ namespace GDDST.DI.GetDataServer
 
                     while (m_clientSocket != null && m_clientSocket.Connected)
                     {
-                        Thread.Sleep(5047);
+                        Thread.Sleep(2047);
 
                         //SendAsync(m_clientSocket, DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss\r\n"));
                         foreach (ModbusTcpItem item in m_config.ModbusTcpItems)

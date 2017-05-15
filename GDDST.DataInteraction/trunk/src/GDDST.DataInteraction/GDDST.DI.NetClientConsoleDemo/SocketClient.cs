@@ -46,6 +46,7 @@ namespace GDDST.DI.NetClientConsoleDemo
 
             while (true)
             {
+                /*
                 Console.WriteLine("请输入信息：");
                 string msg = Console.ReadLine();
                 byte[] msgByte = System.Text.Encoding.UTF8.GetBytes(msg);
@@ -55,12 +56,7 @@ namespace GDDST.DI.NetClientConsoleDemo
                     msgByte_send[i] = msgByte[i];
                 }
                 msgByte_send[msgByte_send.Length - 1] = 0;
-                /*
-                for (int i = 0; i < msgByte_send.Length; i++)
-                {
-                    Console.WriteLine(msgByte_send[i]);
-                }
-                */
+
 
                 //读取从0x29寄存器开始1个寄存器的值
                 //byte[] plc_send = new byte[12] { 0x15, 0x01, 0x00, 0x00, 0x00, 0x06, 0x01, 0x03, 0x00, 0x29, 0x00, 0x01 };
@@ -82,8 +78,9 @@ namespace GDDST.DI.NetClientConsoleDemo
                 }
 
                 Console.WriteLine("");
+                */
                 Console.WriteLine("正在等待接收信息...");
-                byte[] recMsgByte = new byte[4096];
+                byte[] recMsgByte = new byte[1024];
                 int recLen;
                 try
                 {
