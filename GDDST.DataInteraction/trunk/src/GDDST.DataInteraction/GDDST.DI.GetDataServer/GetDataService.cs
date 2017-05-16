@@ -43,9 +43,12 @@ namespace GDDST.DI.GetDataServer
                 {
                     case "MODBUSTCP":
                         ModbusTcpConfig mbTcpCfg = new ModbusTcpConfig(dataServer.ServerConfigNode);
-                        ModbusTCPHandler mbTcpHandler = new ModbusTCPHandler(mbTcpCfg);
-                        m_commHandlers.Add(mbTcpHandler);
-                        mbTcpHandler.OnStart();
+                        if (mbTcpCfg != null)
+                        {
+                            ModbusTCPHandler mbTcpHandler = new ModbusTCPHandler(mbTcpCfg);
+                            m_commHandlers.Add(mbTcpHandler);
+                            mbTcpHandler.OnStart();
+                        }
                         break;
                     default:
                         break;

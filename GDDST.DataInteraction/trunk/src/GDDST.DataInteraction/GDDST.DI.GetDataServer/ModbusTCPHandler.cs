@@ -30,8 +30,28 @@ namespace GDDST.DI.GetDataServer
         {
             if (!IPAddress.TryParse(m_config.ServerIP, out m_serverIP))
             {
-                ServiceLog.LogServiceMessage(string.Format("IP地址[{0}]无效。", m_config.ServerIP));
-                return;
+                IPAddress[] ips = Dns.GetHostAddresses(m_config.ServerIP);
+                if (ips.Length == 0)
+                {
+                    ServiceLog.LogServiceMessage(string.Format("IP地址[{0}]无效。", m_config.ServerIP));
+                    return;
+                } else
+                {
+                    foreach (IPAddress ip in ips)
+                    {
+                        if (!ip.IsIPv6LinkLocal && !ip.IsIPv6Multicast && !ip.IsIPv6SiteLocal)
+                        {
+                            m_serverIP = ip;
+                            break;
+                        }
+                    }
+                    if (m_serverIP == null)
+                    {
+                        ServiceLog.LogServiceMessage(string.Format("IP地址[{0}]无效。", m_config.ServerIP));
+                        return;
+                    }
+                }
+                
             }
 
             m_serverPort = m_config.ServerPort;
@@ -96,18 +116,18 @@ namespace GDDST.DI.GetDataServer
                     while (m_clientSocket != null && m_clientSocket.Connected)
                     {
                         Thread.Sleep(2047);
-
+                        DisplayMessage(m_config.ModbusOperations.Count().ToString());
                         //SendAsync(m_clientSocket, DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss\r\n"));
-                        foreach (ModbusTcpItem item in m_config.ModbusTcpItems)
+                        foreach (ModbusTcpOperation operation in m_config.ModbusOperations)
                         {
-                            DisplayMessage(item.StartAddr.ToString());
+                            DisplayMessage(operation.StartAddr.ToString());
 
                             byte[] plc_send = new byte[12];
-                            byte[] identifier = BitConverter.GetBytes(item.Identifier);
-                            byte[] protocol = BitConverter.GetBytes(item.Protocol);
-                            byte[] length = BitConverter.GetBytes(item.Length);
-                            byte[] startAddr = BitConverter.GetBytes((ushort)item.StartAddr);
-                            byte[] regCount = BitConverter.GetBytes((ushort)item.RegCount);
+                            byte[] identifier = BitConverter.GetBytes(operation.Identifier);
+                            byte[] protocol = BitConverter.GetBytes(operation.Protocol);
+                            byte[] length = BitConverter.GetBytes(operation.Length);
+                            byte[] startAddr = BitConverter.GetBytes((ushort)operation.StartAddr);
+                            byte[] regCount = BitConverter.GetBytes((ushort)operation.RegCount);
 
                             plc_send[0] = identifier[1];
                             plc_send[1] = identifier[0];
@@ -115,8 +135,8 @@ namespace GDDST.DI.GetDataServer
                             plc_send[3] = protocol[0];
                             plc_send[4] = length[1];
                             plc_send[5] = length[0];
-                            plc_send[6] = (byte)item.DeviceAddr;
-                            plc_send[7] = (byte)item.FunctionCode;
+                            plc_send[6] = (byte)operation.DeviceAddr;
+                            plc_send[7] = (byte)operation.FunctionCode;
                             plc_send[8] = startAddr[1];
                             plc_send[9] = startAddr[0];
                             plc_send[10] = regCount[1];
@@ -340,20 +360,39 @@ namespace GDDST.DI.GetDataServer
                     byte devAddr = stateObj.Buffer[6];
                     byte funcCode = stateObj.Buffer[7];
 
-                    byte length2 = stateObj.Buffer[8];
+                    byte datalen = stateObj.Buffer[8];
 
-                    byte[] value = new byte[2];
-                    value[0] = stateObj.Buffer[10];
-                    value[1] = stateObj.Buffer[9];
+                    ushort[] values = new ushort[datalen/2];
 
-                    DisplayMessage(string.Format("Received: {0},{1},{2},{3},{4},{5},{6}",
-                        BitConverter.ToUInt16(identifier, 0),
-                        BitConverter.ToUInt16(protocol, 0),
-                        BitConverter.ToUInt16(length, 0),
-                        devAddr,
-                        funcCode,
-                        length2,
-                        BitConverter.ToUInt16(value, 0)));
+                    int dataIdx = 9;
+
+                    string sValue = string.Empty;
+
+                    for (int i = 0; i < datalen; i+=2)
+                    {
+                        byte[] value = new byte[2];
+                        value[0] = stateObj.Buffer[dataIdx + 1];
+                        value[1] = stateObj.Buffer[dataIdx];
+
+                        values[i/2] = BitConverter.ToUInt16(value, 0);
+
+                        sValue += string.Format("Value: {0}\r\n", values[i/2]);
+
+                        dataIdx += 2;
+                    }
+
+                    DisplayMessage(string.Format("Identifier: {0}, Data Length: {1}\r\n{2}", BitConverter.ToUInt16(identifier, 0), datalen, sValue));
+
+
+                    //返回结果 -> 对应请求 -> 寄存器与值配对
+                    ModbusTcpResult mbTcpResult = new ModbusTcpResult();
+                    mbTcpResult.Identifier = BitConverter.ToUInt16(identifier, 0);
+                    mbTcpResult.Protocol = BitConverter.ToUInt16(protocol, 0);
+                    mbTcpResult.Length = BitConverter.ToUInt16(length, 0);
+                    mbTcpResult.DeviceAddr = devAddr;
+                    mbTcpResult.FunctionCode = funcCode;
+                    mbTcpResult.ResultDataLength = datalen;
+                    mbTcpResult.ResultData = values;
 
                     //
 
@@ -397,6 +436,22 @@ namespace GDDST.DI.GetDataServer
                 }
                 return;
             }
+        }
+
+        private List<ModbusTcpDataEntity> GetModbusTcpData(ModbusTcpResult mbTcpResult)
+        {
+            List<ModbusTcpDataEntity> mbTcpDataList = new List<ModbusTcpDataEntity>();
+
+            //查找对应的operation
+            var ops = from n in m_config.ModbusOperations
+                      where n.Identifier == mbTcpResult.Identifier
+                      select n;
+            foreach (ModbusTcpOperation op in ops)
+            {
+
+            }
+
+            return mbTcpDataList;
         }
     }
 }

@@ -12,7 +12,8 @@ namespace GDDST.DI.GetDataServer
         private XmlNode m_serverCfgNode = null;
         public string ServerIP { get; }
         public ushort ServerPort { get; }
-        public List<ModbusTcpItem> ModbusTcpItems { get; private set; }
+        public List<ModbusTcpOperation> ModbusOperations { get; private set; }
+        public List<ModbusTcpConfigItem> ModbusItems { get; private set; }
         
         public ModbusTcpConfig(XmlNode serverCfgNode)
         {
@@ -21,7 +22,7 @@ namespace GDDST.DI.GetDataServer
             ServerIP = GetServerIP();
             ServerPort = GetServerPort();
 
-            ModbusTcpItems = GetModbusItems();
+            ModbusOperations = GetModbusTcpOperations();
 
         }
 
@@ -59,91 +60,159 @@ namespace GDDST.DI.GetDataServer
             return 502;
         }
 
-        private XmlNode GetModbusTcpItemsNode()
+        private XmlNode GetModbusTcpConfigItemsNode()
         {
             return m_serverCfgNode.SelectSingleNode("items");
         }
 
-        private List<ModbusTcpItem> GetModbusItems()
+        private List<ModbusTcpConfigItem> GetModbusTcpConfigItems()
         {
-            XmlNode itemsNode = GetModbusTcpItemsNode();
+            List<ModbusTcpConfigItem> items = new List<ModbusTcpConfigItem>();
 
-            List<ModbusTcpItem> items = new List<ModbusTcpItem>();
+            XmlNode itemsNode = GetModbusTcpConfigItemsNode();
             if (itemsNode != null)
             {
                 XmlNodeList itemNodeList = itemsNode.SelectNodes("item");
                 foreach (XmlNode itemNode in itemNodeList)
                 {
-                    ModbusTcpItem item = new ModbusTcpItem();
+                    ModbusTcpConfigItem item = new ModbusTcpConfigItem();
 
                     if (itemNode.Attributes["device_addr"] != null)
                     {
-                        string sDeviceAddr = itemNode.Attributes["device_addr"].Value;
+
+                    }
+                }
+            }
+
+            return items;
+        }
+
+        private XmlNode GetModbusTcpOperationsNode()
+        {
+            return m_serverCfgNode.SelectSingleNode("operations");
+        }
+
+        private List<ModbusTcpOperation> GetModbusTcpOperations()
+        {
+            List<ModbusTcpOperation> ops = new List<ModbusTcpOperation>();
+
+            XmlNode opsNode = GetModbusTcpOperationsNode();
+            if (opsNode != null)
+            {
+                XmlNodeList opNodeList = opsNode.SelectNodes("operation");
+                foreach (XmlNode opNode in opNodeList)
+                {
+                    ModbusTcpOperation op = new ModbusTcpOperation();
+
+                    if (opNode.Attributes["device_addr"] != null)
+                    {
+                        string sDeviceAddr = opNode.Attributes["device_addr"].Value;
                         byte tempDeviceAddr;
                         if (byte.TryParse(sDeviceAddr, out tempDeviceAddr))
                         {
-                            item.DeviceAddr = tempDeviceAddr;
+                            op.DeviceAddr = tempDeviceAddr;
                         }
                     }
-                    if (item.DeviceAddr == null)
+                    if (op.DeviceAddr == null)
                     {
                         continue;
                     }
 
-                    if (itemNode.Attributes["func_code"] != null)
+                    if (opNode.Attributes["func_code"] != null)
                     {
-                        string sFuncCode = itemNode.Attributes["func_code"].Value;
+                        string sFuncCode = opNode.Attributes["func_code"].Value;
                         byte tempFuncCode;
                         if (byte.TryParse(sFuncCode, out tempFuncCode))
                         {
-                            item.FunctionCode = tempFuncCode;
+                            op.FunctionCode = tempFuncCode;
                         }
                     }
-                    if (item.FunctionCode == null)
+                    if (op.FunctionCode == null)
                     {
                         continue;
                     }
 
-                    if (itemNode.Attributes["start_addr"] != null)
+                    if (opNode.Attributes["start_addr"] != null)
                     {
-                        string sStartAddr = itemNode.Attributes["start_addr"].Value;
+                        string sStartAddr = opNode.Attributes["start_addr"].Value;
                         ushort tempStartAddr;
                         if (ushort.TryParse(sStartAddr, out tempStartAddr))
                         {
-                            item.StartAddr = tempStartAddr;
+                            op.StartAddr = tempStartAddr;
                         }
                     }
-                    if (item.StartAddr == null)
+                    if (op.StartAddr == null)
                     {
                         continue;
                     }
 
-                    if (itemNode.Attributes["reg_count"] != null)
+                    if (opNode.Attributes["reg_count"] != null)
                     {
-                        string sRegCount = itemNode.Attributes["reg_count"].Value;
+                        string sRegCount = opNode.Attributes["reg_count"].Value;
                         ushort tempRegCount;
                         if (ushort.TryParse(sRegCount, out tempRegCount))
                         {
-                            item.RegCount = tempRegCount;
+                            op.RegCount = tempRegCount;
                         }
                     }
-                    if (item.RegCount == null)
+                    if (op.RegCount == null)
                     {
                         continue;
                     }
 
-                    item.Length = 6;
-                    item.Protocol = 0;
-                    item.Identifier = m_identifier++;
-                    ServiceLog.LogServiceMessage(item.ToString());
-                    items.Add(item);
+                    op.Length = 6;
+                    op.Protocol = 0;
+                    op.Identifier = m_identifier++;
+                    ServiceLog.LogServiceMessage(op.ToString());
+                    ops.Add(op);
                 }
             }
             
-            return items;
+            return ops;
         }
     }
 
+    class ModbusTcpConfigItem
+    {
+        public byte DeviceAddr { get; set; }
+        public byte RegAddr { get; set; }
+        public byte Name { get; set; }
+    }
+
+    class ModbusTcpOperation
+    {
+        public ushort Identifier { get; set; }
+        public ushort Protocol { get; set; }
+        public ushort Length { get; set; }
+        public byte? DeviceAddr { get; set; }
+        public byte? FunctionCode { get; set; }
+        public ushort? StartAddr { get; set; }
+        public ushort? RegCount { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("Identifier:{0}, Protocol:{1}, Length:{2}, DeviceAddress:{3}, FunctionCode:{4}, StartAddress:{5}, RegisterCount:{6}",
+                Identifier, Protocol, Length, DeviceAddr, FunctionCode, StartAddr, RegCount);
+        }
+    }
+
+    class ModbusTcpResult
+    {
+        public ushort Identifier { get; set; }
+        public ushort Protocol { get; set; }
+        public ushort Length { get; set; }
+        public byte DeviceAddr { get; set; }
+        public byte FunctionCode { get; set; }
+        public byte ResultDataLength { get; set; }
+        public ushort[] ResultData { get; set; }
+    }
+
+    class ModbusTcpDataEntity
+    {
+        public string RID { get; set; }
+        public string DEVICE_ADDR { get; set; }
+    }
+    /*
     class ModbusTcpItem
     {
         public ushort Identifier { get; set; }
@@ -160,4 +229,5 @@ namespace GDDST.DI.GetDataServer
                 Identifier, Protocol, Length, DeviceAddr, FunctionCode, StartAddr, RegCount);
         }
     }
+    */
 }

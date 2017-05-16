@@ -2,12 +2,19 @@
 <configuration>
 	<servers>
 		<server type="modbustcp" name="永和加压站">
-			<connection ip="172.16.1.2" port="502" />
-			<items>
-				<item device_addr="1" func_code="03"  start_addr="41" reg_count="1" name="设定压力" />
-				<item device_addr="1" func_code="03"  start_addr="42" reg_count="1" name="工作频率" />
-				<item device_addr="1" func_code="03"  start_addr="43" reg_count="1" name="进水压力" />
-			</items>
+      <connection ip="gddst-liweilian" port="502" />
+      <items>
+        <item device_addr="1" addr="41" name="设定压力"></item>
+        <item device_addr="1" addr="42" name="工作频率"></item>
+        <item device_addr="1" addr="43" name="进水压力"></item>
+        <item device_addr="1" addr="44" name="出水压力"></item>
+        <item device_addr="1" addr="51" name="出水流量1"></item>
+        <item device_addr="1" addr="52" name="出水流量2"></item>
+      </items>
+      <operations>
+        <operation device_addr="1" func_code="3" start_addr="41" reg_count="4" />
+        <operation device_addr="1" func_code="3" start_addr="51" reg_count="2" />
+      </operations>
 			<database dbms="MSSQLSERVER" >
 				<connection servername="172.16.1.2" databasename="" username="appuser" password="appuser" />
 				<realtimedatatable name="" />
