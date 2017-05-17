@@ -100,21 +100,34 @@ namespace GDDST.DI.GetDataServer
 
     class DataServerConfigDesc
     {
-        public XmlNode ServerConfigNode { get; }
-        public string ServerType { get; }
+        public XmlNode ServerConfigNode { get; private set; }
+        public string ServerCommType { get; private set; }
+        public String ServerName { get; private set; }
 
         public DataServerConfigDesc(XmlNode serverCfgNode)
         {
             ServerConfigNode = serverCfgNode;
 
-            ServerType = GetServerType();
+            ServerCommType = GetServerType();
+
+            ServerName = GetServerName();
         }
 
         private string GetServerType()
         {
-            if (ServerConfigNode.Attributes["type"] != null)
+            if (ServerConfigNode.Attributes["comm_type"] != null)
             {
-                return ServerConfigNode.Attributes["type"].Value;
+                return ServerConfigNode.Attributes["comm_type"].Value;
+            }
+
+            return string.Empty;
+        }
+
+        private string GetServerName()
+        {
+            if (ServerConfigNode.Attributes["name"] != null)
+            {
+                return ServerConfigNode.Attributes["name"].Value;
             }
 
             return string.Empty;

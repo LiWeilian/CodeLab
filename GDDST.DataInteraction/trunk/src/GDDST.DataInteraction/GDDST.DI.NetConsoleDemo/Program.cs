@@ -40,7 +40,7 @@ namespace GDDST.DI.NetConsoleDemo
                         }
                         break;
                     case "CLIENT":
-                        Console.WriteLine("输入客户端类型（socket|tcp|socketudp|modbus）：");
+                        Console.WriteLine("输入客户端类型（socket|tcp|socketudp|modbustcp|modbusrtu）：");
                         string clientType = Console.ReadLine();
                         switch (clientType.ToUpper().Trim())
                         {
@@ -53,8 +53,11 @@ namespace GDDST.DI.NetConsoleDemo
                             case "SOCKETUDP":
                                 SocketUdp.Run();
                                 break;
-                            case "MODBUS":
-                                ModbusClient.Run();
+                            case "MODBUSTCP":
+                                ModbusTcpClient.Run();
+                                break;
+                            case "MODBUSRTU":
+                                ModbusRtuClient.Run();
                                 break;
                             default:
                                 break;

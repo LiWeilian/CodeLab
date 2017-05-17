@@ -4,7 +4,7 @@ using System.Net.Sockets;
 
 namespace GDDST.DI.NetConsoleDemo
 {
-    class ModbusClient
+    class ModbusTcpClient
     {
         static public void Run()
         {

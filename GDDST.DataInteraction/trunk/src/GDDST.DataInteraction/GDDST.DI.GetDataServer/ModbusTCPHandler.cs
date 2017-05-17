@@ -393,8 +393,10 @@ namespace GDDST.DI.GetDataServer
                     mbTcpResult.FunctionCode = funcCode;
                     mbTcpResult.ResultDataLength = datalen;
                     mbTcpResult.ResultData = values;
-
+                    mbTcpResult.DataAcqTime = DateTime.Now;
                     //
+                    List<ModbusTcpDataEntity> mbTcpDataEntities = GetModbusTcpData(mbTcpResult);
+
 
                     //clientSocket.BeginReceive(stateObj.Buffer, 0, StateObject.BufferSize, 
                     //    0, new AsyncCallback(ReceiveCallback), stateObj);
@@ -446,12 +448,51 @@ namespace GDDST.DI.GetDataServer
             var ops = from n in m_config.ModbusOperations
                       where n.Identifier == mbTcpResult.Identifier
                       select n;
+            ModbusTcpOperation mbTcpOp = null;
             foreach (ModbusTcpOperation op in ops)
             {
+                mbTcpOp = op;
+            }
 
+            if (mbTcpOp != null)
+            {
+                for (int i = 0; i < mbTcpOp.RegCount; i++)
+                {
+                    ushort currentAddr = (ushort)(mbTcpOp.StartAddr + i);
+                    ModbusTcpConfigItem mbTcpCfgItem = GetModbusTcpConfigItemByRegAddr(currentAddr);
+                    if (mbTcpCfgItem != null)
+                    {
+                        ModbusTcpDataEntity dataEntity = new ModbusTcpDataEntity();
+                        dataEntity.RID = Guid.NewGuid().ToString();
+                        dataEntity.Device_Addr = mbTcpCfgItem.DeviceAddr.ToString();
+                        dataEntity.Station = m_config.ServerName;
+                        dataEntity.Sensor_Type = "-1";
+                        dataEntity.Sensor_Name = mbTcpCfgItem.Name;
+                        dataEntity.Ori_Value = mbTcpResult.ResultData[i];
+                        dataEntity.Trans_Value = dataEntity.Ori_Value * mbTcpCfgItem.Multiplier;
+                        dataEntity.Trans_Unit = mbTcpCfgItem.Unit;
+                        dataEntity.DataAcqTime = mbTcpResult.DataAcqTime;
+
+                        mbTcpDataList.Add(dataEntity);
+                    }
+                }
             }
 
             return mbTcpDataList;
+        }
+
+        private ModbusTcpConfigItem GetModbusTcpConfigItemByRegAddr(ushort regAddr)
+        {
+            var items = from n in m_config.ModbusTcpItems
+                        where n.RegAddr == regAddr
+                        select n;
+            ModbusTcpConfigItem mbTcpCfgItem = null;
+            foreach (ModbusTcpConfigItem item in items)
+            {
+                mbTcpCfgItem = item;
+            }
+
+            return mbTcpCfgItem;
         }
     }
 }

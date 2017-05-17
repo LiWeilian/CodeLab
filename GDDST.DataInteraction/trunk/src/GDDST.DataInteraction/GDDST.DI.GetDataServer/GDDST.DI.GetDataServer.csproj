@@ -63,6 +63,7 @@
     <Compile Include="GetDataServiceDAL.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="ModbusTcpConfig.cs" />
+    <Compile Include="ModbusTcpDAL.cs" />
     <Compile Include="ModbusTCPHandler.cs" />
     <Compile Include="MSSQLHelper.cs" />
     <Compile Include="OracleHelper.cs" />
@@ -75,6 +76,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StateObject.cs" />
+    <Compile Include="XmlUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

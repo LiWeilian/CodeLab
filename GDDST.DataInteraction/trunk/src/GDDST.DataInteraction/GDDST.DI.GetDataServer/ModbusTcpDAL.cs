@@ -8,38 +8,14 @@ using System.Data.OracleClient;
 
 namespace GDDST.DI.GetDataServer
 {
-    abstract class GetDataServiceDAL
-    {
-        public abstract bool CreateConnection(out string errMsg);
-
-        public abstract bool InsertData(DataEntity data, out string errMsg);
-    }
-
-    class GetDataServiceDAL_ORA : GetDataServiceDAL
-    {
-        public override bool CreateConnection(out string errMsg)
-        {
-            errMsg = string.Empty;
-            return false;
-        }
-
-        public override bool InsertData(DataEntity data, out string errMsg)
-        {
-            errMsg = string.Empty;
-            string insertSql = string.Empty;
-
-            return false;
-        }
-    }
-
-    class GetDataServiceDAL_MSSQL : GetDataServiceDAL
+    class ModbusTcpDAL_MSSQL : GetDataServiceDAL
     {
         private MSSQLHelper m_sqlHelper;
         private string m_server;
         private string m_database;
         private string m_userName;
         private string m_password;
-        public GetDataServiceDAL_MSSQL(string serverName, string dbName, string userName, string password)
+        public ModbusTcpDAL_MSSQL(string serverName, string dbName, string userName, string password)
         {
             this.m_server = serverName;
             this.m_database = dbName;
@@ -71,7 +47,36 @@ namespace GDDST.DI.GetDataServer
         public override bool InsertData(DataEntity data, out string errMsg)
         {
             errMsg = string.Empty;
-            string insertSql = string.Format("");
+            try
+            {
+
+                this.m_sqlHelper.Connected = true;
+            }
+            catch (Exception)
+            {
+            }
+            if (!this.m_sqlHelper.Connected)
+            {
+                errMsg = "未连接到数据库";
+                return false;
+            }
+
+            ModbusTcpDataEntity mbTcpData = (ModbusTcpDataEntity)data;
+
+            
+
+            string insertSql = string.Format(@"INSERT INTO {0}(RID, STATION,DEVICE_ADDR,SENSOR_TYPE,SENSOR_NAME,ORI_VALUE, VALUE, UNIT, DTIME) 
+                    VALUES('{1}','{2}','{3}','{4}','{5}',{6},{7},'{8}','{9}')", 
+                    "appuser.dbo.MODBUSTCP_DATA_HISTORY",
+                    mbTcpData.RID,
+                    mbTcpData.Station,
+                    mbTcpData.Device_Addr,
+                    mbTcpData.Sensor_Type,
+                    mbTcpData.Sensor_Name,
+                    mbTcpData.Ori_Value,
+                    mbTcpData.Trans_Value,
+                    mbTcpData.Trans_Unit,
+                    mbTcpData.DataAcqTime.ToString());
 
             return false;
         }

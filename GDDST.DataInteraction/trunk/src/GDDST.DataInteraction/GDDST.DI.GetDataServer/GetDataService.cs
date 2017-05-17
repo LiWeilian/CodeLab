@@ -38,11 +38,12 @@ namespace GDDST.DI.GetDataServer
             List<DataServerConfigDesc> dataServers = m_svrCfg.GetServerConfigDescList();
             foreach (DataServerConfigDesc dataServer in dataServers)
             {
-                ServiceLog.LogServiceMessage(dataServer.ServerType);
-                switch (dataServer.ServerType.ToUpper())
+                ServiceLog.LogServiceMessage(dataServer.ServerCommType);
+                switch (dataServer.ServerCommType.ToUpper())
                 {
                     case "MODBUSTCP":
-                        ModbusTcpConfig mbTcpCfg = new ModbusTcpConfig(dataServer.ServerConfigNode);
+                        ModbusTcpConfig mbTcpCfg = new ModbusTcpConfig(dataServer.ServerName, 
+                            dataServer.ServerCommType, dataServer.ServerConfigNode);
                         if (mbTcpCfg != null)
                         {
                             ModbusTCPHandler mbTcpHandler = new ModbusTCPHandler(mbTcpCfg);
