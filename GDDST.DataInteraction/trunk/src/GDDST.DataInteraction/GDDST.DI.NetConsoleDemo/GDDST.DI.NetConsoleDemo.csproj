@@ -44,6 +44,8 @@
     <Compile Include="HttpServer.cs" />
     <Compile Include="HttpServer2.cs" />
     <Compile Include="ModbusRtuClient.cs" />
+    <Compile Include="ModbusRtuTcpClient.cs" />
+    <Compile Include="ModbusRtuTcpServer.cs" />
     <Compile Include="ModbusTcpClient.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

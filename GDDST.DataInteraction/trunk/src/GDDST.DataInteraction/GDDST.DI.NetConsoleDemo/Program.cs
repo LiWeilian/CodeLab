@@ -16,7 +16,7 @@ namespace GDDST.DI.NetConsoleDemo
                 switch (appType.ToUpper().Trim())
                 {
                     case "SERVER":
-                        Console.WriteLine("输入服务器类型（socket|socketmt|tcp|http|http2）：");
+                        Console.WriteLine("输入服务器类型（socket|socketmt|tcp|http|http2|modbusrtutcp）：");
                         string serverType = Console.ReadLine();
                         switch (serverType.ToUpper().Trim())
                         {
@@ -35,12 +35,15 @@ namespace GDDST.DI.NetConsoleDemo
                             case "HTTP2":
                                 HttpServer2.Run();
                                 break;
+                            case "MODBUSRTUTCP":
+                                ModbusRtuTcpServer.Run();
+                                break;
                             default:
                                 break;
                         }
                         break;
                     case "CLIENT":
-                        Console.WriteLine("输入客户端类型（socket|tcp|socketudp|modbustcp|modbusrtu）：");
+                        Console.WriteLine("输入客户端类型（socket|tcp|socketudp|modbustcp|modbusrtu|modbusrtutcp）：");
                         string clientType = Console.ReadLine();
                         switch (clientType.ToUpper().Trim())
                         {
@@ -58,6 +61,9 @@ namespace GDDST.DI.NetConsoleDemo
                                 break;
                             case "MODBUSRTU":
                                 ModbusRtuClient.Run();
+                                break;
+                            case "MODBUSRTUTCP":
+                                ModbusRtuTcpClient.Run();
                                 break;
                             default:
                                 break;
