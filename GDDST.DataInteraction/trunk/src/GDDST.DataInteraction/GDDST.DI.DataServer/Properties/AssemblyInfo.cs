@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("GDDST.DI.GetDataServerWCF")]
+[assembly: AssemblyTitle("GDDST.DI.DataServer")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("GDDST.DI.GetDataServerWCF")]
+[assembly: AssemblyProduct("GDDST.DI.DataServer")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-[assembly: Guid("6bcf31fd-de4b-40d7-bae0-e9f792556c7d")]
+[assembly: Guid("1905435b-3e79-422e-8ace-f7f8355a45db")]
 
 // 程序集的版本信息由下列四个值组成: 
 //

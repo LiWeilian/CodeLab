@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDDST.DI.NetConsoleDemo", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDDST.DI.Driver", "GDDST.DI.Driver\GDDST.DI.Driver.csproj", "{07889F56-55C2-4DD1-B81D-6481CECB10E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDDST.DI.GetDataServerWCF", "GDDST.DI.GetDataServerWCF\GDDST.DI.GetDataServerWCF.csproj", "{6BCF31FD-DE4B-40D7-BAE0-E9F792556C7D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDDST.DI.DataServer", "GDDST.DI.DataServer\GDDST.DI.DataServer.csproj", "{1905435B-3E79-422E-8ACE-F7F8355A45DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +47,10 @@ Global
 		{07889F56-55C2-4DD1-B81D-6481CECB10E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07889F56-55C2-4DD1-B81D-6481CECB10E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07889F56-55C2-4DD1-B81D-6481CECB10E7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6BCF31FD-DE4B-40D7-BAE0-E9F792556C7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6BCF31FD-DE4B-40D7-BAE0-E9F792556C7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6BCF31FD-DE4B-40D7-BAE0-E9F792556C7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6BCF31FD-DE4B-40D7-BAE0-E9F792556C7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1905435B-3E79-422E-8ACE-F7F8355A45DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1905435B-3E79-422E-8ACE-F7F8355A45DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1905435B-3E79-422E-8ACE-F7F8355A45DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1905435B-3E79-422E-8ACE-F7F8355A45DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

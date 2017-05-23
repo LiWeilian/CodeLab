@@ -6,25 +6,23 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
 
-namespace GDDST.DI.GetDataServerWCF
+namespace GDDST.DI.DataServer
 {
     // 注意: 使用“重构”菜单上的“重命名”命令，可以同时更改代码和配置文件中的接口名“IService1”。
     [ServiceContract]
-    public interface IService1
+    public interface IDataService
     {
-        /*
+
         [OperationContract]
-        [WebInvoke(Method = "GET", UriTemplate = "getdata", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
         string GetData(int value);
 
         [OperationContract]
-        [WebInvoke(Method = "GET", UriTemplate = "getdatacontract", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
         CompositeType GetDataUsingDataContract(CompositeType composite);
-        */
+
         // TODO: 在此添加您的服务操作
         [OperationContract]
-        [WebInvoke(Method = "GET", UriTemplate = "getdata2/{value}", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
-        string GetData2(string value);
+        [WebInvoke(Method = "POST", UriTemplate = "modbusrtu", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
+        ModbusRTUResponseBody RequestModbusRTUData(ModbusRTURequestBody request);
     }
 
 

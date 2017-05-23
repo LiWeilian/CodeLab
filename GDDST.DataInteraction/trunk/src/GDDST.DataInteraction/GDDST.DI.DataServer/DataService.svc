@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="GDDST.DI.DataServer.DataService" CodeBehind="DataService.svc.cs" %>

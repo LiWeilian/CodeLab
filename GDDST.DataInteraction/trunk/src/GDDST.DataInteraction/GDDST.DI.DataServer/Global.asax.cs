@@ -4,16 +4,19 @@ using System.Linq;
 using System.Web;
 using System.Web.Security;
 using System.Web.SessionState;
+using System.Web.Routing;
+using System.ServiceModel.Activation;
 
-namespace GDDST.DI.GetDataServerWCF
+namespace GDDST.DI.DataServer
 {
     public class Global : System.Web.HttpApplication
     {
 
         protected void Application_Start(object sender, EventArgs e)
         {
-            System.Web.Routing.RouteTable.Routes.Add(new System.ServiceModel.Activation.ServiceRoute("Service1",
-                new System.ServiceModel.Activation.WebServiceHostFactory(), typeof(Service1)));
+            RouteTable.Routes.Add(new ServiceRoute("dataservice",
+                new WebServiceHostFactory(), 
+                typeof(DataService)));
         }
 
         protected void Session_Start(object sender, EventArgs e)

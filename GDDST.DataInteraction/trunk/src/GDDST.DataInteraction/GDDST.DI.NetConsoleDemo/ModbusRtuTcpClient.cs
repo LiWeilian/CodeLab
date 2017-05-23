@@ -36,7 +36,7 @@ namespace GDDST.DI.NetConsoleDemo
                 default:
                     serialPort.DataBits = 8;
                     break;
-            }            
+            }
 
             Console.WriteLine("校验方式(NONE|ODD|EVEN)：");
             string parity = Console.ReadLine();
@@ -74,8 +74,10 @@ namespace GDDST.DI.NetConsoleDemo
                     break;
             }
 
+            serialPort.DtrEnable = true;
+            serialPort.RtsEnable = true;
             serialPort.ReadTimeout = 500;
-            serialPort.WriteTimeout = -1;
+            serialPort.WriteTimeout = 500;
             try
             {
                 if (!serialPort.IsOpen)
@@ -117,86 +119,124 @@ namespace GDDST.DI.NetConsoleDemo
                 portStr = Console.ReadLine();
             }
 
-            IPEndPoint endPoint = new IPEndPoint(ip, port);
-            Socket clientSocket = new Socket(AddressFamily.InterNetwork,
-                SocketType.Stream, ProtocolType.Tcp);
-            Console.WriteLine("正在连接[{0}:{1}]...", ip, port);
+            Socket clientSocket = null;
 
-            try
+            while (clientSocket == null || !clientSocket.Connected)
             {
-                clientSocket.Connect(endPoint);
-                Console.WriteLine("连接成功[{0}]。\r\n", clientSocket.Handle);
+                try
+                {
+                    IPEndPoint endPoint = new IPEndPoint(ip, port);
+                    clientSocket = new Socket(AddressFamily.InterNetwork,
+                        SocketType.Stream, ProtocolType.Tcp);
+                    Console.WriteLine("正在连接[{0}:{1}]...", ip, port);
+
+                    clientSocket.Connect(endPoint);
+                    if (clientSocket.Connected)
+                    {
+                        Console.WriteLine("连接成功[{0}]。\r\n", clientSocket.Handle);
+                    }
+                }
+                catch (SocketException se)
+                {
+                    Console.WriteLine("连接失败：" + se.SocketErrorCode.ToString());
+                    //return;
+                }
+                #endregion
+                try
+                {
+                    while (clientSocket.Connected)
+                    {
+                        serialPort.DiscardOutBuffer();
+                        serialPort.DiscardInBuffer();
+                        //serialPort.DiscardOutBuffer();
+                        Console.WriteLine("正在从TCP服务端接收 Modbus RTU 请求数据...");
+                        byte[] modbusRtuReq = new byte[8];
+                        try
+                        {
+                            clientSocket.Receive(modbusRtuReq, modbusRtuReq.Length, SocketFlags.None);
+
+                            Console.WriteLine(string.Format("请求报文：{0}\r\n", BitConverter.ToString(modbusRtuReq)));
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("接收 Modbus RTU 请求数据时发生错误：{0}\r\n", e.Message);
+                            ResponseErrorToTcpServer(clientSocket);
+                            continue;
+                        }
+
+                        byte[] reqDataLen = new byte[2];
+                        reqDataLen[0] = modbusRtuReq[5];
+                        reqDataLen[1] = modbusRtuReq[4];
+                        int iReqDataLen = BitConverter.ToUInt16(reqDataLen, 0);
+                        if (iReqDataLen == 0)
+                        {
+                            clientSocket.Disconnect(false);
+                            break;
+                        }
+                        try
+                        {
+                            Console.WriteLine("正在发送 Modbus RTU 请求数据至Modbus设备...");
+                            //if (!serialPort.IsOpen)
+                            //{
+                            //    serialPort.Open();
+                            //}
+                            serialPort.Write(modbusRtuReq, 0, modbusRtuReq.Length);
+                            //serialPort.DiscardInBuffer();
+                            //serialPort.Close();
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("发送 Modbus RTU 请求数据至Modbus设备时发生错误：{0}\r\n", e.Message);
+                            ResponseErrorToTcpServer(clientSocket);
+                            continue;
+                        }
+
+                        Thread.Sleep(1000);
+                        byte[] respDataLen = new byte[2];
+                        respDataLen[0] = modbusRtuReq[5];
+                        respDataLen[1] = modbusRtuReq[4];
+                        int iRespDataLen = BitConverter.ToUInt16(respDataLen, 0);
+                        Console.WriteLine("回应数据长度：{0}", iRespDataLen);
+                        byte[] modbusRtuResponse = new byte[5 + iRespDataLen * 2];
+                        try
+                        {
+                            Console.WriteLine("正在从Modbus设备接收 Modbus RTU 回复数据...");
+                            //if (!serialPort.IsOpen)
+                            //{
+                            //    serialPort.Open();
+                            //}
+                            serialPort.Read(modbusRtuResponse, 0, modbusRtuResponse.Length);
+                            //serialPort.Close();
+                            //serialPort.DiscardOutBuffer();
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("从Modbus设备接收 Modbus RTU 回复数据时发生错误：{0}\r\n", e.Message);
+                            ResponseErrorToTcpServer(clientSocket);
+                            continue;
+                        }
+
+                        try
+                        {
+                            Console.WriteLine("正在发送 Modbus RTU 回复数据至TCP服务端...");
+                            Console.WriteLine(string.Format("回应报文：{0}\r\n", BitConverter.ToString(modbusRtuResponse)));
+                            clientSocket.Send(modbusRtuResponse, modbusRtuResponse.Length, SocketFlags.None);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("发送 Modbus RTU 回复数据至TCP服务端时发生错误：{0}\r\n", e.Message);
+                            ResponseErrorToTcpServer(clientSocket);
+                            continue;
+                        }
+                        Thread.Sleep(100);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    clientSocket = null;
+                }
             }
-            catch (SocketException se)
-            {
-                Console.WriteLine("连接失败：" + se.SocketErrorCode.ToString());
-                return;
-            }
-            #endregion
-
-            while (clientSocket.Connected)
-            {
-                Console.WriteLine("正在从TCP服务端接收 Modbus RTU 请求数据...");
-                byte[] modbusRtuReq = new byte[8];
-                try
-                {
-                    clientSocket.Receive(modbusRtuReq, modbusRtuReq.Length, SocketFlags.None);
-
-                    Console.WriteLine(string.Format("数据内容：{0}\r\n", BitConverter.ToString(modbusRtuReq)));
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("接收 Modbus RTU 请求数据时发生错误：{0}\r\n", e.Message);
-                    ResponseErrorToTcpServer(clientSocket);
-                    continue;
-                }
-
-                try
-                {
-                    Console.WriteLine("正在发送 Modbus RTU 请求数据至Modbus设备...");
-                    serialPort.Write(modbusRtuReq, 0, modbusRtuReq.Length);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("发送 Modbus RTU 请求数据至Modbus设备时发生错误：{0}\r\n", e.Message);
-                    ResponseErrorToTcpServer(clientSocket);
-                    continue;
-                }
-
-                Thread.Sleep(100);
-                byte[] respDataLen = new byte[2];
-                respDataLen[0] = modbusRtuReq[5];
-                respDataLen[1] = modbusRtuReq[4];
-                int iRespDataLen = BitConverter.ToUInt16(respDataLen, 0);
-                Console.WriteLine("回复数据长度：{0}", iRespDataLen);
-                byte[] modbusRtuResponse = new byte[5 + iRespDataLen * 2];
-                try
-                {
-                    Console.WriteLine("正在从Modbus设备接收 Modbus RTU 回复数据...");
-                    
-                    serialPort.Read(modbusRtuResponse, 0 , modbusRtuResponse.Length);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("从Modbus设备接收 Modbus RTU 回复数据时发生错误：{0}\r\n", e.Message);
-                    ResponseErrorToTcpServer(clientSocket);
-                    continue;
-                }
-
-                try
-                {
-                    Console.WriteLine("正在发送 Modbus RTU 回复数据至TCP服务端...");
-                    Console.WriteLine(string.Format("数据内容：{0}\r\n", BitConverter.ToString(modbusRtuResponse)));
-                    clientSocket.Send(modbusRtuResponse, modbusRtuResponse.Length, SocketFlags.None);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("发送 Modbus RTU 回复数据至TCP服务端时发生错误：{0}\r\n", e.Message);
-                    ResponseErrorToTcpServer(clientSocket);
-                    continue;
-                }
-                Thread.Sleep(100);
-            }
+            
         }
 
         private static void ResponseErrorToTcpServer(Socket clientSocket)
