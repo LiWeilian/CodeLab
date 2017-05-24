@@ -191,7 +191,7 @@ namespace GDDST.DI.NetConsoleDemo
                             continue;
                         }
 
-                        Thread.Sleep(1000);
+                        Thread.Sleep(500);
                         byte[] respDataLen = new byte[2];
                         respDataLen[0] = modbusRtuReq[5];
                         respDataLen[1] = modbusRtuReq[4];

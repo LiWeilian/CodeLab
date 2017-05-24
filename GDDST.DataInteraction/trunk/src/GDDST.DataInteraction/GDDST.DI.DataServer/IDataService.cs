@@ -21,7 +21,10 @@ namespace GDDST.DI.DataServer
 
         // TODO: 在此添加您的服务操作
         [OperationContract]
-        [WebInvoke(Method = "POST", UriTemplate = "modbusrtu", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
+        [WebInvoke(Method = "POST", 
+            UriTemplate = "modbusrtu", 
+            RequestFormat = WebMessageFormat.Json, 
+            ResponseFormat = WebMessageFormat.Json)]
         ModbusRTUResponseBody RequestModbusRTUData(ModbusRTURequestBody request);
     }
 
