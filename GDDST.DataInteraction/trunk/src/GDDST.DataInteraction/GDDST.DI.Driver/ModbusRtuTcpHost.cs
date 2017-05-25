@@ -78,7 +78,7 @@ namespace GDDST.DI.Driver
                         modbusRtuReq[3] = temp[3];
                         modbusRtuReq[4] = temp[4];
                         modbusRtuReq[5] = temp[5];
-                        //CRC16 地位在前，高位在后
+                        //CRC16 低位在前，高位在后
                         modbusRtuReq[6] = bCrc16[0];
                         modbusRtuReq[7] = bCrc16[1];
 
