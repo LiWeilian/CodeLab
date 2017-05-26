@@ -8,6 +8,7 @@ namespace GDDST.DI.DataServiceWCF
 {
     public class ModbusRTURequestBody
     {
+        public string ServerID { get; set; }
         public string DeviceAddr { get; set; }
         public string FunctionCode { get; set; }
         public string StartAddr { get; set; }
@@ -16,6 +17,7 @@ namespace GDDST.DI.DataServiceWCF
 
     public class ModbusRTUResponseBody
     {
+        public string ServerID { get; set; }
         public string DeviceAddr { get; set; }
         public string FunctionCode { get; set; }
         public string DataLength { get; set; }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
+using GDDST.DI.Driver;
 
 namespace GDDST.DI.DataServiceWCF
 {
@@ -32,13 +33,15 @@ namespace GDDST.DI.DataServiceWCF
         {
             
             ModbusRTUResponseBody response = new ModbusRTUResponseBody();
+            response.ServerID = request.ServerID;
             response.DeviceAddr = request.DeviceAddr;
             response.FunctionCode = request.FunctionCode;
             response.ErrorMessage = string.Empty;
-
-            if (GDDST.DI.Driver.HostContainer.TcpServerHost == null)
+            
+            TCPServerHost tcpServerHost = HostContainer.GetTcpServerHostByServerID(request.ServerID);
+            if (tcpServerHost == null)
             {
-                response.ErrorMessage = string.Format("数据采集服务未启动", request.DeviceAddr);
+                response.ErrorMessage = string.Format("数据采集服务未启动或未成功连接数据源", request.DeviceAddr);
                 return response;
             }
 
@@ -72,17 +75,17 @@ namespace GDDST.DI.DataServiceWCF
             
             try
             {
-                response.DataContent = GDDST.DI.Driver.HostContainer.TcpServerHost.RequestModbusRTUData(devAddr, funcCode, startAddr, regCount);
+                response.DataContent = tcpServerHost.RequestModbusRTUData(devAddr, funcCode, startAddr, regCount);
                 response.DataLength = (regCount * 2).ToString();
 
             }
             catch (Exception ex)
             {
-                response.DataContent = string.Empty;
+                response.DataContent = null;
                 response.DataLength = "0";
                 response.ErrorMessage = ex.Message;
             }
-
+            
             return response;
             
         }

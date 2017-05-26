@@ -6,42 +6,55 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
+using GDDST.DI.Utils;
+
 namespace GDDST.DI.Driver
 {
     public class TCPServerHost
     {
+        public string ServerID { get; set; }
         private IPAddress server_ip;
         private ushort server_port;
+        private Socket serverSocket = null;
         private Socket clientSocket = null;
-        public TCPServerHost(IPAddress server_ip, 
-            ushort server_port)
+        private string clientSocketEndPointInfo = string.Empty;
+        private uint waitTime = 500;
+        public TCPServerHost(string server_id, IPAddress server_ip,
+            ushort server_port, uint waitTime)
         {
+            ServerID = server_id;
             this.server_ip = server_ip;
             this.server_port = server_port;
+            this.waitTime = waitTime;
         }
 
         public void Run()
         {
-            IPEndPoint endPoint = new IPEndPoint(server_ip, server_port);
-            Socket serverSocket = new Socket(AddressFamily.InterNetwork,
-                                        SocketType.Stream,
-                                        ProtocolType.Tcp);
-            serverSocket.Bind(endPoint);
-            serverSocket.Listen(10);
-
+            serverSocket = null;
+            clientSocket = null;
             try
             {
-                //while (true)
-                //{
-                //    Socket clientSocket = serverSocket.Accept();
-
-                //}
-                clientSocket = serverSocket.Accept();
+                ServiceLog.LogServiceMessage(string.Format("正在启动数据采集服务[{0} {1}:{2}]", ServerID, server_ip, server_port));
+                IPEndPoint endPoint = new IPEndPoint(server_ip, server_port);
+                serverSocket = new Socket(AddressFamily.InterNetwork,
+                                            SocketType.Stream,
+                                            ProtocolType.Tcp);
+                serverSocket.Bind(endPoint);
+                serverSocket.Listen(10);
+                ServiceLog.LogServiceMessage(string.Format("启动数据采集服务[{0} {1}:{2}]成功，正在接收连接...", ServerID, server_ip, server_port));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                ServiceLog.LogServiceMessage(string.Format("启动数据采集服务[{0} {1}:{2}]发生错误：{3}", ServerID, server_ip, server_port, ex.Message));
+                return;
             }
+            
+            while (true)
+            {
+                Thread.Sleep(100);
+                clientSocket = AcceptConnection();
+            }
+            
         }
 
         public string RequestModbusRTUData(byte devAddr, 
@@ -50,11 +63,6 @@ namespace GDDST.DI.Driver
             ushort regCount)
         {
             string mbRtuData = string.Empty;
-
-            if (clientSocket == null || !clientSocket.Connected)
-            {
-                return mbRtuData;
-            }
 
             byte[] temp = new byte[6];
             temp[0] = devAddr;
@@ -82,24 +90,87 @@ namespace GDDST.DI.Driver
             modbusRtuReq[6] = bCrc16[0];
             modbusRtuReq[7] = bCrc16[1];
 
-            clientSocket.Send(modbusRtuReq);
-
-            Thread.Sleep(500);
-
-
             byte[] modbusRtuResponse = new byte[5 + regCount * 2];
             try
             {
+                ServiceLog.LogServiceMessage(string.Format("请求报文：{0}\r\n发送端：[{1} {2}:{3}]\r\n接收端：{4}",
+                    BitConverter.ToString(modbusRtuReq), ServerID, server_ip, server_port, clientSocketEndPointInfo));
+
+                clientSocket.Send(modbusRtuReq);           
                 clientSocket.Receive(modbusRtuResponse, modbusRtuResponse.Length, SocketFlags.None);
-                mbRtuData = BitConverter.ToString(modbusRtuResponse);
+
+                ServiceLog.LogServiceMessage(string.Format("回应报文：{0}\r\n发送端：{1}\r\n接收端：[{2} {3}:{4}]",
+                    BitConverter.ToString(modbusRtuResponse), clientSocketEndPointInfo, ServerID, server_ip, server_port));
+
+                mbRtuData = BitConverter.ToString(modbusRtuResponse, 3, regCount * 2).Replace("-", string.Empty);
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                //可能客户端连接断开，重试一次
+                ServiceLog.LogServiceMessage(string.Format("数据采集服务[{0} {1}:{2}]与[{3}]连接发生错误：{4}\r\n重试连接", 
+                    ServerID, server_ip, server_port, clientSocketEndPointInfo, ex.Message));
+                if (clientSocket != null && clientSocket.Connected)
+                {
+                    clientSocket.Disconnect(false);
+                }
+                clientSocket = null;
+                
+                try
+                {
+
+                    Thread.Sleep((int)waitTime);
+                    ServiceLog.LogServiceMessage(string.Format("请求报文：{0}\r\n发送端：[{1} {2}:{3}]\r\n接收端：{4}",
+                        BitConverter.ToString(modbusRtuReq), ServerID, server_ip, server_port, clientSocketEndPointInfo));
+
+                    clientSocket.Send(modbusRtuReq);
+                    clientSocket.Receive(modbusRtuResponse, modbusRtuResponse.Length, SocketFlags.None);
+
+                    ServiceLog.LogServiceMessage(string.Format("回应报文：{0}\r\n发送端：{1}\r\n接收端：[{2} {3}:{4}]",
+                        BitConverter.ToString(modbusRtuResponse), clientSocketEndPointInfo, ServerID, server_ip, server_port));
+
+
+                    mbRtuData = BitConverter.ToString(modbusRtuResponse, 3, regCount * 2).Replace("-", string.Empty);
+                }
+                catch (Exception)
+                {
+                    ServiceLog.LogServiceMessage(string.Format("数据采集服务[{0} {1}:{2}]与[{3}]连接发生错误：{4}",
+                        ServerID, server_ip, server_port, clientSocketEndPointInfo, ex.Message));
+                    if (clientSocket != null && clientSocket.Connected)
+                    {
+                        clientSocket.Disconnect(false);
+                    }
+                    clientSocket = null;
+                    throw new Exception(ex.Message);
+                }
+                
             }
 
 
             return mbRtuData;
+        }
+
+        private Socket AcceptConnection()
+        {
+            if (clientSocket == null || !clientSocket.Connected)
+            {
+                try
+                {
+                    clientSocket = serverSocket.Accept();
+                    ServiceLog.LogServiceMessage(string.Format("数据采集服务[{0} {1}:{2}]接收到连接[{3}]", ServerID, server_ip, server_port, clientSocket.RemoteEndPoint));
+                    HostContainer.AddTcpServerHost(this);
+                    clientSocketEndPointInfo = clientSocket.RemoteEndPoint.ToString();
+                    return clientSocket;
+                }
+                catch (Exception ex)
+                {
+                    clientSocket = null;
+                    ServiceLog.LogServiceMessage(string.Format("数据采集服务[{0} {1}:{2}]接收连接发生错误：{3}", ServerID, server_ip, server_port, ex.Message));
+                    return null;
+                }
+            } else
+            {
+                return clientSocket;
+            }
         }
 
         private uint ModbusCRC16(byte[] modbusData, int length)

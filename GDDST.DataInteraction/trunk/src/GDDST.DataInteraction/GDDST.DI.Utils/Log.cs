@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 namespace GDDST.DI.Utils
@@ -13,42 +12,50 @@ namespace GDDST.DI.Utils
 
         public static void LogServiceMessage(string msg)
         {
-            if (m_logFileName == string.Empty)
+            try
             {
-                string dir = string.Format("{0}\\log", AppDomain.CurrentDomain.BaseDirectory);
-                if (!Directory.Exists(dir))
+                //Console.WriteLine(msg);
+                if (m_logFileName == string.Empty)
                 {
-                    Directory.CreateDirectory(dir);
+                    string dir = string.Format("{0}\\log", AppDomain.CurrentDomain.BaseDirectory);
+                    if (!Directory.Exists(dir))
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+
+                    if (Directory.Exists(dir))
+                    {
+                        m_logFileName = string.Format("{0}\\Service_{1}.log", dir,
+                            DateTime.Now.ToString("yyyyMMddhhmmss"));
+                    }
                 }
 
-                if (Directory.Exists(dir))
+                if (m_logFileName == string.Empty)
                 {
-                    m_logFileName = string.Format("{0}\\Service_{1}.log", dir,
-                        DateTime.Now.ToString("yyyyMMddhhmmss"));
-                }
-            }
-
-            if (m_logFileName == string.Empty)
-            {
-                return;
-            }
-            else
-            {
-                FileStream fs;
-                if (File.Exists(m_logFileName))
-                {
-                    fs = new FileStream(m_logFileName, FileMode.Append, FileAccess.Write);
+                    return;
                 }
                 else
                 {
-                    fs = new FileStream(m_logFileName, FileMode.Create, FileAccess.Write);
-                }
+                    FileStream fs;
+                    if (File.Exists(m_logFileName))
+                    {
+                        fs = new FileStream(m_logFileName, FileMode.Append, FileAccess.Write);
+                    }
+                    else
+                    {
+                        fs = new FileStream(m_logFileName, FileMode.Create, FileAccess.Write);
+                    }
 
-                StreamWriter sw = new StreamWriter(fs);
-                sw.WriteLine(string.Format("{0}\r\n{1}\r\n", DateTime.Now, msg));
-                sw.Flush();
-                sw.Close();
-                fs.Close();
+                    StreamWriter sw = new StreamWriter(fs);
+                    sw.WriteLine(string.Format("{0}\r\n{1}\r\n", DateTime.Now, msg));
+                    sw.Flush();
+                    sw.Close();
+                    fs.Close();
+                }
+            }
+            catch
+            {
+
             }
         }
     }

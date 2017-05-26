@@ -19,7 +19,6 @@ namespace GDDST.DI.DataServiceWCF
         CompositeType GetDataUsingDataContract(CompositeType composite);
 
         // TODO: 在此添加您的服务操作
-        // TODO: 在此添加您的服务操作
         [OperationContract]
         [WebInvoke(Method = "POST",
             UriTemplate = "modbusrtu",

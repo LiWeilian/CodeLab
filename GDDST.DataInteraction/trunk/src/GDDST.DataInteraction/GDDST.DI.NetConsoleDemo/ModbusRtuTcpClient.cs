@@ -133,7 +133,7 @@ namespace GDDST.DI.NetConsoleDemo
                     clientSocket.Connect(endPoint);
                     if (clientSocket.Connected)
                     {
-                        Console.WriteLine("连接成功[{0}]。\r\n", clientSocket.Handle);
+                        Console.WriteLine("连接成功[{0} {1}]。\r\n", clientSocket.LocalEndPoint, clientSocket.Handle);
                     }
                 }
                 catch (SocketException se)

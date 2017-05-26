@@ -36,6 +36,12 @@ namespace GDDST.DI.DataServerWinSvc
             try
             {
                 string serversConfig = System.Configuration.ConfigurationManager.AppSettings["dataservers"];
+                string sWaitTime = System.Configuration.ConfigurationManager.AppSettings["waittime"];
+                uint waitTime;
+                if (!uint.TryParse(sWaitTime, out waitTime))
+                {
+                    waitTime = 500;
+                }
                 JavaScriptSerializer jss = new JavaScriptSerializer();
                 //{SN:001,IP:172.16.1.2,PORT:6008}
                 //{"SN":"001","IP":"172.16.1.2","PORT":"6008"}
@@ -44,37 +50,41 @@ namespace GDDST.DI.DataServerWinSvc
                 List<DataServerConfig> serverCfgList = jss.Deserialize<List<DataServerConfig>>(serversConfig);
                 foreach (DataServerConfig serverCfg in serverCfgList)
                 {
-                    Console.WriteLine(serverCfg.SN);
-                    Console.WriteLine(serverCfg.IP);
-                    Console.WriteLine(serverCfg.Port.ToString());
+                    Thread.Sleep(1000);
+                    if (serverCfg.ServerID.Trim() == string.Empty)
+                    {
+                        ServiceLog.LogServiceMessage(string.Format("服务器标识符无效", serverCfg.ServerID));
+                        continue;
+                    }
+                    IPAddress ip;
+                    if (!IPAddress.TryParse(serverCfg.IP, out ip))
+                    {
+                        ServiceLog.LogServiceMessage(string.Format("服务器IP地址[{0}]无效", serverCfg.IP));
+                        continue;
+                    }
+
+                    ushort port;
+                    if (!ushort.TryParse(serverCfg.Port, out port))
+                    {
+                        ServiceLog.LogServiceMessage(string.Format("服务器端口[{0}]无效", serverCfg.Port));
+                        continue;
+                    }
+                    try
+                    {
+                        TCPServerHost tcpSvrHost = new TCPServerHost(serverCfg.ServerID, ip, port, waitTime);
+                        Thread thread = new Thread(new ThreadStart(tcpSvrHost.Run));
+                        thread.IsBackground = true;
+                        thread.Start();
+                    }
+                    catch (Exception ex)
+                    {
+                        ServiceLog.LogServiceMessage(string.Format("启动数据采集服务[{0} {1}:{2}]线程时发生错误：{3}", serverCfg.ServerID, serverCfg.IP, serverCfg.Port,ex.Message));
+                    }
                 }
-                /*
-                string serverIp = System.Configuration.ConfigurationManager.AppSettings["server_ip"];
-                string serverPort = System.Configuration.ConfigurationManager.AppSettings["server_port"];
-
-                IPAddress ip;
-                if (!IPAddress.TryParse(serverIp, out ip))
-                {
-                    ServiceLog.LogServiceMessage(string.Format("服务器IP地址[{0}]无效", serverIp));
-                }
-
-                ushort port;
-                if (!ushort.TryParse(serverPort, out port))
-                {
-                    ServiceLog.LogServiceMessage(string.Format("服务器端口[{0}]无效", serverPort));
-                }
-
-                TCPServerHost tcpSvrHost = new TCPServerHost(ip, port);
-                Thread thread = new Thread(new ThreadStart(tcpSvrHost.Run));
-                thread.IsBackground = true;
-                thread.Start();
-
-                GDDST.DI.Driver.HostContainer.TcpServerHost = tcpSvrHost;
-                */
             }
             catch (Exception ex)
             {
-                ServiceLog.LogServiceMessage(string.Format("启动数据采集服务时发生错误：{0}", ex.Message));
+                ServiceLog.LogServiceMessage(string.Format("获取数据采集服务配置时发生错误：{0}", ex.Message));
             }
             
             //启动WCF服务
@@ -89,12 +99,12 @@ namespace GDDST.DI.DataServerWinSvc
 
                 serviceHost = new ServiceHost(typeof(GDDST.DI.DataServiceWCF.DataService));
                 serviceHost.Open();
-                Console.WriteLine("OnStart");
+                ServiceLog.LogServiceMessage(string.Format("启动WCF服务成功"));
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                //throw;
+                ServiceLog.LogServiceMessage(string.Format("启动WCF服务时发生错误：",ex.Message));
+                
             }
         }
 

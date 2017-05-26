@@ -45,6 +45,12 @@
     <Compile Include="TCPClientHost.cs" />
     <Compile Include="TCPServerHost.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GDDST.DI.Utils\GDDST.DI.Utils.csproj">
+      <Project>{e26e6288-7812-4bb7-b690-f80eca830080}</Project>
+      <Name>GDDST.DI.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -8,7 +8,7 @@ namespace GDDST.DI.DataServerWinSvc
 {
     class DataServerConfig
     {
-        public string SN { get; set; }
+        public string ServerID { get; set; }
         public string IP { get; set; }
         public string Port { get; set; }
     }
