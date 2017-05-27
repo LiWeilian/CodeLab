@@ -37,6 +37,7 @@ namespace GDDST.DI.DataServiceWCF
             response.DeviceAddr = request.DeviceAddr;
             response.FunctionCode = request.FunctionCode;
             response.ErrorMessage = string.Empty;
+            response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             
             TCPServerHost tcpServerHost = HostContainer.GetTcpServerHostByServerID(request.ServerID);
             if (tcpServerHost == null)
@@ -77,13 +78,14 @@ namespace GDDST.DI.DataServiceWCF
             {
                 response.DataContent = tcpServerHost.RequestModbusRTUData(devAddr, funcCode, startAddr, regCount);
                 response.DataLength = (regCount * 2).ToString();
-
+                response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             }
             catch (Exception ex)
             {
                 response.DataContent = null;
                 response.DataLength = "0";
                 response.ErrorMessage = ex.Message;
+                response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             }
             
             return response;

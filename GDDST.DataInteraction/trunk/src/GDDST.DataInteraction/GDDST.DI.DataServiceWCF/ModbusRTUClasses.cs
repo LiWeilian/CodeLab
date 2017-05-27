@@ -23,5 +23,6 @@ namespace GDDST.DI.DataServiceWCF
         public string DataLength { get; set; }
         public string DataContent { get; set; }
         public string ErrorMessage { get; set; }
+        public string ResponseTime { get; set; }
     }
 }

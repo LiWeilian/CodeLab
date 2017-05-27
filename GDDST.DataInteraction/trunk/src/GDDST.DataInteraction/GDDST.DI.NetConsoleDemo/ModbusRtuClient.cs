@@ -76,6 +76,14 @@ namespace GDDST.DI.NetConsoleDemo
                     break;
             }
 
+            Console.WriteLine("串口写读时间间隔(默认1000ms)：");
+            string sInterval = Console.ReadLine();
+            uint iInterval;
+            if (!uint.TryParse(sInterval, out iInterval))
+            {
+                iInterval = 1000;
+            }
+
             serialPort.ReadTimeout = 500;
             serialPort.WriteTimeout = -1;
             try
@@ -183,7 +191,7 @@ namespace GDDST.DI.NetConsoleDemo
 
                 #region 读取设备返回数据
                 //延时，避免数据未返回就读取
-                Thread.Sleep(1000);
+                Thread.Sleep((int)iInterval);
                 byte[] respDataLen = new byte[2];
                 respDataLen[0] = modbusRtuReq[5];
                 respDataLen[1] = modbusRtuReq[4];
