@@ -60,9 +60,11 @@ namespace GDDST.DI.Driver
         public string RequestModbusRTUData(byte devAddr, 
             byte funcCode, 
             ushort startAddr, 
-            ushort regCount)
+            ushort regCount,
+            out string respCRC)
         {
             string mbRtuData = string.Empty;
+            respCRC = string.Empty;
 
             byte[] temp = new byte[6];
             temp[0] = devAddr;
@@ -103,6 +105,7 @@ namespace GDDST.DI.Driver
                     BitConverter.ToString(modbusRtuResponse), clientSocketEndPointInfo, ServerID, server_ip, server_port));
 
                 mbRtuData = BitConverter.ToString(modbusRtuResponse, 3, regCount * 2).Replace("-", string.Empty);
+                respCRC = BitConverter.ToString(modbusRtuResponse, 3 + regCount * 2, 2).Replace("-", string.Empty);
             }
             catch (Exception ex)
             {
@@ -130,6 +133,7 @@ namespace GDDST.DI.Driver
 
 
                     mbRtuData = BitConverter.ToString(modbusRtuResponse, 3, regCount * 2).Replace("-", string.Empty);
+                    respCRC = BitConverter.ToString(modbusRtuResponse, 3 + regCount * 2, 2).Replace("-", string.Empty);
                 }
                 catch (Exception)
                 {

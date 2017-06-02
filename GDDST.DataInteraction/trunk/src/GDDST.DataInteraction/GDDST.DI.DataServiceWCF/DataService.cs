@@ -76,9 +76,11 @@ namespace GDDST.DI.DataServiceWCF
             
             try
             {
-                response.DataContent = tcpServerHost.RequestModbusRTUData(devAddr, funcCode, startAddr, regCount);
+                string respCRC = string.Empty;
+                response.DataContent = tcpServerHost.RequestModbusRTUData(devAddr, funcCode, startAddr, regCount, out respCRC);
                 response.DataLength = (regCount * 2).ToString();
                 response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                response.ResponseCRC = respCRC;
             }
             catch (Exception ex)
             {
