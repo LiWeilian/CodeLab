@@ -25,6 +25,13 @@ namespace GDDST.DI.DataServiceWCF
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json)]
         ModbusRTUResponseBody RequestModbusRTUData(ModbusRTURequestBody request);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            UriTemplate = "modbustcp",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json)]
+        ModbusTCPResponseBody RequestModbusTCPData(ModbusTCPRequestBody request);
     }
 
     // 使用下面示例中说明的数据约定将复合类型添加到服务操作。

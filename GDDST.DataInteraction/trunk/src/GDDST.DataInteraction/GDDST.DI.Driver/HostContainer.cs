@@ -7,10 +7,11 @@ namespace GDDST.DI.Driver
 {
     public class HostContainer
     {
-        private static List<TCPServerHost> tcpServerHostList = new List<TCPServerHost>();
-        public static bool AddTcpServerHost(TCPServerHost host)
+        private static List<ModbusRtuTcpServerHost> tcpServerHostList = new List<ModbusRtuTcpServerHost>();
+        private static List<ModbusTcpClientHost> modbusTcpClientHostList = new List<ModbusTcpClientHost>();
+        public static bool AddTcpServerHost(ModbusRtuTcpServerHost host)
         {
-            TCPServerHost t = GetTcpServerHostByServerID(host.ServerID);
+            ModbusRtuTcpServerHost t = GetModbusRtuTcpServerHostByServerID(host.ServerID);
             if (t == null)
             {
                 tcpServerHostList.Add(host);
@@ -21,12 +22,41 @@ namespace GDDST.DI.Driver
             }
         }
 
-        public static TCPServerHost GetTcpServerHostByServerID(string id)
+        public static ModbusRtuTcpServerHost GetModbusRtuTcpServerHostByServerID(string id)
         {
             var r = from s in tcpServerHostList
                     where s.ServerID == id
                     select s;
-            foreach (TCPServerHost item in r)
+            foreach (ModbusRtuTcpServerHost item in r)
+            {
+                if (item != null)
+                {
+                    return item;
+                }
+            }
+
+            return null;
+        }
+
+        public static bool AddModbusTcpClientHost(ModbusTcpClientHost host)
+        {
+            ModbusTcpClientHost h = GetModbusTcpClientHostByServerID(host.ServerID);
+            if (h == null)
+            {
+                modbusTcpClientHostList.Add(host);
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
+
+        public static ModbusTcpClientHost GetModbusTcpClientHostByServerID(string id)
+        {
+            var r = from s in modbusTcpClientHostList
+                    where s.ServerID == id
+                    select s;
+            foreach (ModbusTcpClientHost item in r)
             {
                 if (item != null)
                 {

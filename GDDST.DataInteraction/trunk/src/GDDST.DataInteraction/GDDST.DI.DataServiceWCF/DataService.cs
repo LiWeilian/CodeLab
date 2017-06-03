@@ -39,10 +39,10 @@ namespace GDDST.DI.DataServiceWCF
             response.ErrorMessage = string.Empty;
             response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             
-            TCPServerHost tcpServerHost = HostContainer.GetTcpServerHostByServerID(request.ServerID);
+            ModbusRtuTcpServerHost tcpServerHost = HostContainer.GetModbusRtuTcpServerHostByServerID(request.ServerID);
             if (tcpServerHost == null)
             {
-                response.ErrorMessage = string.Format("数据采集服务未启动或未成功连接数据源", request.DeviceAddr);
+                response.ErrorMessage = string.Format("数据采集服务未启动或未成功连接数据源");
                 return response;
             }
 
@@ -92,6 +92,68 @@ namespace GDDST.DI.DataServiceWCF
             
             return response;
             
+        }
+
+        public ModbusTCPResponseBody RequestModbusTCPData(ModbusTCPRequestBody request)
+        {
+            ModbusTCPResponseBody response = new ModbusTCPResponseBody();
+            response.ServerID = request.ServerID;
+            response.DeviceAddr = request.DeviceAddr;
+            response.FunctionCode = request.FunctionCode;
+            response.ErrorMessage = string.Empty;
+            response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+            ModbusTcpClientHost mbTcpClientHost = HostContainer.GetModbusTcpClientHostByServerID(request.ServerID);
+            if (mbTcpClientHost == null)
+            {
+                response.ErrorMessage = string.Format("数据采集服务未启动或未成功连接至Modbus TCP数据服务器");
+                return response;
+            }
+
+            byte devAddr;
+            if (!byte.TryParse(request.DeviceAddr, out devAddr))
+            {
+                response.ErrorMessage = string.Format("设备地址[{0}]无效", request.DeviceAddr);
+                return response;
+            }
+
+            byte funcCode;
+            if (!byte.TryParse(request.FunctionCode, out funcCode))
+            {
+                response.ErrorMessage = string.Format("功能代码[{0}]无效", request.FunctionCode);
+                return response;
+            }
+
+            ushort startAddr;
+            if (!ushort.TryParse(request.StartAddr, out startAddr))
+            {
+                response.ErrorMessage = string.Format("起始寄存器地址[{0}]无效", request.StartAddr);
+                return response;
+            }
+
+            ushort regCount;
+            if (!ushort.TryParse(request.RegCount, out regCount))
+            {
+                response.ErrorMessage = string.Format("读取寄存器数量[{0}]无效", request.RegCount);
+                return response;
+            }
+
+            try
+            {
+                string respCRC = string.Empty;
+                response.DataContent = mbTcpClientHost.RequestModbusTcpData(devAddr, funcCode, startAddr, regCount);
+                response.DataLength = (regCount * 2).ToString();
+                response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            }
+            catch (Exception ex)
+            {
+                response.DataContent = null;
+                response.DataLength = "0";
+                response.ErrorMessage = ex.Message;
+                response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            }
+
+            return response;
         }
     }
 }
