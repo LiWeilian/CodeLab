@@ -41,18 +41,18 @@ namespace GDDST.DI.Driver
         {
             try
             {
-                ServiceLog.LogServiceMessage(string.Format("正在建立MODBUS TCP数据采集连接[{0} {1}:{2}]", ServerID, server_ip, server_port));
+                ServiceLog.LogServiceMessage(string.Format("正在建立 Modbus TCP 数据采集连接[{0} {1}:{2}]", ServerID, server_ip, server_port));
                 IPEndPoint endPoint = new IPEndPoint(server_ip, server_port);
                 clientSocket = new Socket(AddressFamily.InterNetwork,
                     SocketType.Stream, ProtocolType.Tcp);
 
                 clientSocket.Connect(endPoint);
-                ServiceLog.LogServiceMessage(string.Format("建立MODBUS TCP数据采集连接[{0} {1}:{2}]成功...", ServerID, server_ip, server_port));
+                ServiceLog.LogServiceMessage(string.Format("建立 Modbus TCP 数据采集连接[{0} {1}:{2}]成功...", ServerID, server_ip, server_port));
                 HostContainer.AddModbusTcpClientHost(this);
             }
             catch (Exception ex)
             {
-                ServiceLog.LogServiceMessage(string.Format("建立MODBUS TCP数据采集连接[{0} {1}:{2}]发生错误：{3}", ServerID, server_ip, server_port, ex.Message));
+                ServiceLog.LogServiceMessage(string.Format("建立 Modbus TCP 数据采集连接[{0} {1}:{2}]发生错误：{3}", ServerID, server_ip, server_port, ex.Message));
                 return;
             }
         }

@@ -34,18 +34,18 @@ namespace GDDST.DI.Driver
             clientSocket = null;
             try
             {
-                ServiceLog.LogServiceMessage(string.Format("正在启动数据采集服务[{0} {1}:{2}]", ServerID, server_ip, server_port));
+                ServiceLog.LogServiceMessage(string.Format("正在启动 Modbus RTU 数据采集服务[{0} {1}:{2}]", ServerID, server_ip, server_port));
                 IPEndPoint endPoint = new IPEndPoint(server_ip, server_port);
                 serverSocket = new Socket(AddressFamily.InterNetwork,
                                             SocketType.Stream,
                                             ProtocolType.Tcp);
                 serverSocket.Bind(endPoint);
                 serverSocket.Listen(10);
-                ServiceLog.LogServiceMessage(string.Format("启动数据采集服务[{0} {1}:{2}]成功，正在接收连接...", ServerID, server_ip, server_port));
+                ServiceLog.LogServiceMessage(string.Format("启动 Modbus RTU 数据采集服务[{0} {1}:{2}]成功，正在接收连接...", ServerID, server_ip, server_port));
             }
             catch (Exception ex)
             {
-                ServiceLog.LogServiceMessage(string.Format("启动数据采集服务[{0} {1}:{2}]发生错误：{3}", ServerID, server_ip, server_port, ex.Message));
+                ServiceLog.LogServiceMessage(string.Format("启动 Modbus RTU 数据采集服务[{0} {1}:{2}]发生错误：{3}", ServerID, server_ip, server_port, ex.Message));
                 return;
             }
             

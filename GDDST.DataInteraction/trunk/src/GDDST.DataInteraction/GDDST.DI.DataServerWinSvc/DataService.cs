@@ -65,20 +65,20 @@ namespace GDDST.DI.DataServerWinSvc
                     Thread.Sleep(1000);
                     if (serverCfg.ServerID.Trim() == string.Empty)
                     {
-                        ServiceLog.LogServiceMessage(string.Format("服务器标识符无效", serverCfg.ServerID));
+                        ServiceLog.LogServiceMessage(string.Format("Modbus RTU 数据采集服务器标识符[{0}]无效", serverCfg.ServerID));
                         continue;
                     }
                     IPAddress ip;
                     if (!IPAddress.TryParse(serverCfg.IP, out ip))
                     {
-                        ServiceLog.LogServiceMessage(string.Format("服务器IP地址[{0}]无效", serverCfg.IP));
+                        ServiceLog.LogServiceMessage(string.Format("Modbus RTU 数据采集服务器IP地址[{0}]无效", serverCfg.IP));
                         continue;
                     }
 
                     ushort port;
                     if (!ushort.TryParse(serverCfg.Port, out port))
                     {
-                        ServiceLog.LogServiceMessage(string.Format("服务器端口[{0}]无效", serverCfg.Port));
+                        ServiceLog.LogServiceMessage(string.Format("Modbus RTU 数据采集服务器端口[{0}]无效", serverCfg.Port));
                         continue;
                     }
                     try
@@ -90,13 +90,13 @@ namespace GDDST.DI.DataServerWinSvc
                     }
                     catch (Exception ex)
                     {
-                        ServiceLog.LogServiceMessage(string.Format("启动数据采集服务[{0} {1}:{2}]线程时发生错误：{3}", serverCfg.ServerID, serverCfg.IP, serverCfg.Port, ex.Message));
+                        ServiceLog.LogServiceMessage(string.Format("启动 Modbus RTU 数据采集服务[{0} {1}:{2}]线程时发生错误：{3}", serverCfg.ServerID, serverCfg.IP, serverCfg.Port, ex.Message));
                     }
                 }
             }
             catch (Exception ex)
             {
-                ServiceLog.LogServiceMessage(string.Format("获取数据采集服务配置时发生错误：{0}", ex.Message));
+                ServiceLog.LogServiceMessage(string.Format("获取 Modbus RTU 数据采集服务配置时发生错误：{0}", ex.Message));
             }
         }
 
@@ -118,20 +118,20 @@ namespace GDDST.DI.DataServerWinSvc
                     Thread.Sleep(1000);
                     if (serverCfg.ServerID.Trim() == string.Empty)
                     {
-                        ServiceLog.LogServiceMessage(string.Format("服务器标识符无效", serverCfg.ServerID));
+                        ServiceLog.LogServiceMessage(string.Format("Modbus TCP 服务器标识符[{0}]无效", serverCfg.ServerID));
                         continue;
                     }
                     IPAddress ip;
                     if (!IPAddress.TryParse(serverCfg.IP, out ip))
                     {
-                        ServiceLog.LogServiceMessage(string.Format("服务器IP地址[{0}]无效", serverCfg.IP));
+                        ServiceLog.LogServiceMessage(string.Format("Modbus TCP 服务器IP地址[{0}]无效", serverCfg.IP));
                         continue;
                     }
 
                     ushort port;
                     if (!ushort.TryParse(serverCfg.Port, out port))
                     {
-                        ServiceLog.LogServiceMessage(string.Format("服务器端口[{0}]无效", serverCfg.Port));
+                        ServiceLog.LogServiceMessage(string.Format("Modbus TCP 服务器端口[{0}]无效", serverCfg.Port));
                         continue;
                     }
                     try
@@ -144,13 +144,13 @@ namespace GDDST.DI.DataServerWinSvc
                     }
                     catch (Exception ex)
                     {
-                        ServiceLog.LogServiceMessage(string.Format("启动数据采集服务[{0} {1}:{2}]线程时发生错误：{3}", serverCfg.ServerID, serverCfg.IP, serverCfg.Port, ex.Message));
+                        ServiceLog.LogServiceMessage(string.Format("启动 Modbus TCP 数据采集服务[{0} {1}:{2}]线程时发生错误：{3}", serverCfg.ServerID, serverCfg.IP, serverCfg.Port, ex.Message));
                     }
                 }
             }
             catch (Exception ex)
             {
-                ServiceLog.LogServiceMessage(string.Format("获取数据采集服务配置时发生错误：{0}", ex.Message));
+                ServiceLog.LogServiceMessage(string.Format("获取 Modbus TCP 数据采集服务配置时发生错误：{0}", ex.Message));
             }
 
         }
