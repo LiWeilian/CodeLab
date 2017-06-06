@@ -39,7 +39,7 @@
             // 
             // serviceInstaller1
             // 
-            this.serviceInstaller1.Description = "数据采集服务，目前支持通过TCP与DTU连接。";
+            this.serviceInstaller1.Description = "数据采集服务，目前支持1、以Modbus RTU格式通过TCP与DTU通信。2、Modbus TCP通信。";
             this.serviceInstaller1.DisplayName = "龙泉数据采集平台";
             this.serviceInstaller1.ServiceName = "GddstDataServer";
             this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;

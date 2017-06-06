@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{FD1F0696-84D5-4A73-9B1A-C0598685E122}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GDDST.DI.DataServerWinSvc</RootNamespace>
     <AssemblyName>GDDST.DI.DataServerWinSvc</AssemblyName>

@@ -40,6 +40,7 @@ namespace GDDST.DI.DataServerWinSvc
 
         protected override void OnStop()
         {
+            ServiceLog.LogServiceMessage("停止数据采集服务");
         }
 
         private void StartModbusRtuTcpServers()
@@ -105,6 +106,10 @@ namespace GDDST.DI.DataServerWinSvc
             try
             {
                 string serversConfig = System.Configuration.ConfigurationManager.AppSettings["modbustcp"];
+                if (serversConfig.Trim() == string.Empty)
+                {
+                    return;
+                }
                 string sWaitTime = System.Configuration.ConfigurationManager.AppSettings["interval"];
                 uint waitTime;
                 if (!uint.TryParse(sWaitTime, out waitTime))

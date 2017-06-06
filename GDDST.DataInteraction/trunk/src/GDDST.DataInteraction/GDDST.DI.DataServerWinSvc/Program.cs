@@ -14,17 +14,17 @@ namespace GDDST.DI.DataServerWinSvc
         /// </summary>
         static void Main()
         {
-            //ServiceBase[] ServicesToRun;
-            //ServicesToRun = new ServiceBase[]
-            //{
-            //    new DataService()
-            //};
-            //ServiceBase.Run(ServicesToRun);
+            ServiceBase[] ServicesToRun;
+            ServicesToRun = new ServiceBase[]
+            {
+                new DataService()
+            };
+            ServiceBase.Run(ServicesToRun);
 
             //For Debug
-            DataService ds = new DataService();
-            ds.OnDebug();
-            Console.ReadLine();
+            //DataService ds = new DataService();
+            //ds.OnDebug();
+            //Console.ReadLine();
         }
     }
 }

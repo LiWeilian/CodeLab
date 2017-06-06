@@ -14,7 +14,7 @@ namespace GDDST.DI.Utils
         {
             try
             {
-                Console.WriteLine(msg);
+                //Console.WriteLine(msg);
                 if (m_logFileName == string.Empty)
                 {
                     string dir = string.Format("{0}\\log", AppDomain.CurrentDomain.BaseDirectory);
