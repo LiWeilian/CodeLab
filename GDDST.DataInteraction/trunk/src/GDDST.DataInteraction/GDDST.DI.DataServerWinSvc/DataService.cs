@@ -129,8 +129,31 @@ namespace GDDST.DI.DataServerWinSvc
                     IPAddress ip;
                     if (!IPAddress.TryParse(serverCfg.IP, out ip))
                     {
-                        ServiceLog.LogServiceMessage(string.Format("Modbus TCP 服务器IP地址[{0}]无效", serverCfg.IP));
-                        continue;
+                        IPAddress[] ips = Dns.GetHostAddresses(serverCfg.IP);
+                        if (ips.Length == 0)
+                        {
+                            ServiceLog.LogServiceMessage(string.Format("Modbus TCP 服务器IP地址[{0}]无效", serverCfg.IP));
+                            continue;
+                        }
+                        else
+                        {
+                            foreach (IPAddress tempip in ips)
+                            {
+                                if (!tempip.IsIPv6LinkLocal && !tempip.IsIPv6Multicast && !tempip.IsIPv6SiteLocal)
+                                {
+                                    ip = tempip;
+                                    break;
+                                }
+                            }
+
+                            if (ip == null)
+                            {
+                                ServiceLog.LogServiceMessage(string.Format("Modbus TCP 服务器IP地址[{0}]无效", serverCfg.IP));
+                                continue;
+                            }
+                        }
+                        //ServiceLog.LogServiceMessage(string.Format("Modbus TCP 服务器IP地址[{0}]无效", serverCfg.IP));
+                        //continue;
                     }
 
                     ushort port;
