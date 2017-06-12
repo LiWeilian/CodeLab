@@ -41,18 +41,18 @@ namespace GDDST.DI.Driver
         {
             try
             {
-                ServiceLog.LogServiceMessage(string.Format("正在建立 Modbus TCP 数据采集连接[{0} {1}:{2}]", ServerID, server_ip, server_port));
+                ServiceLog.Info(string.Format("正在建立 Modbus TCP 数据采集连接[{0} {1}:{2}]", ServerID, server_ip, server_port));
                 IPEndPoint endPoint = new IPEndPoint(server_ip, server_port);
                 clientSocket = new Socket(AddressFamily.InterNetwork,
                     SocketType.Stream, ProtocolType.Tcp);
 
                 clientSocket.Connect(endPoint);
-                ServiceLog.LogServiceMessage(string.Format("建立 Modbus TCP 数据采集连接[{0} {1}:{2}]成功...", ServerID, server_ip, server_port));
+                ServiceLog.Info(string.Format("建立 Modbus TCP 数据采集连接[{0} {1}:{2}]成功...", ServerID, server_ip, server_port));
                 HostContainer.AddModbusTcpClientHost(this);
             }
             catch (Exception ex)
             {
-                ServiceLog.LogServiceMessage(string.Format("建立 Modbus TCP 数据采集连接[{0} {1}:{2}]发生错误：{3}", ServerID, server_ip, server_port, ex.Message));
+                ServiceLog.Error(string.Format("建立 Modbus TCP 数据采集连接[{0} {1}:{2}]发生错误：{3}", ServerID, server_ip, server_port, ex.Message));
                 return;
             }
         }
@@ -91,13 +91,13 @@ namespace GDDST.DI.Driver
 
             try
             {
-                ServiceLog.LogServiceMessage(string.Format("正在发送请求到 Modbus TCP 服务器[{0} {1}:{2}]\r\n请求报文内容：{3}",
+                ServiceLog.Debug(string.Format("正在发送请求到 Modbus TCP 服务器[{0} {1}:{2}]\r\n请求报文内容：{3}",
                     ServerID, server_ip, server_port, BitConverter.ToString(mbTcpSend)));
                 clientSocket.Send(mbTcpSend, mbTcpSend.Length, SocketFlags.None);
             }
             catch (Exception ex)
             {
-                ServiceLog.LogServiceMessage(string.Format("发送请求到 Modbus TCP 服务器[{0} {1}:{2}]连接发生错误：{3}\r\n请求报文内容：{4}",
+                ServiceLog.Error(string.Format("发送请求到 Modbus TCP 服务器[{0} {1}:{2}]连接发生错误：{3}\r\n请求报文内容：{4}",
                         ServerID, server_ip, server_port, ex.Message, BitConverter.ToString(mbTcpSend)));
                 throw new Exception(string.Format("发送请求到 Modbus TCP 服务器时发生错误：{0}", ex.Message));
             }
@@ -106,14 +106,14 @@ namespace GDDST.DI.Driver
             {
                 byte[] mbTcpRecv = new byte[9 + regCount * 2];
                 clientSocket.Receive(mbTcpRecv, mbTcpRecv.Length, SocketFlags.None);
-                ServiceLog.LogServiceMessage(string.Format("接收到 Modbus TCP 服务器[{0} {1}:{2}]回应\r\n回应报文内容：{3}",
+                ServiceLog.Debug(string.Format("接收到 Modbus TCP 服务器[{0} {1}:{2}]回应\r\n回应报文内容：{3}",
                     ServerID, server_ip, server_port, BitConverter.ToString(mbTcpRecv)));
 
                 mbTcpData = BitConverter.ToString(mbTcpRecv, 9, regCount * 2).Replace("-", string.Empty);
             }
             catch (Exception ex)
             {
-                ServiceLog.LogServiceMessage(string.Format("接收 Modbus TCP 服务器[{0} {1}:{2}]回应时发生错误：{3}",
+                ServiceLog.Error(string.Format("接收 Modbus TCP 服务器[{0} {1}:{2}]回应时发生错误：{3}",
                     ServerID, server_ip, server_port, ex.Message));
                 throw new Exception(string.Format("接收 Modbus TCP 服务器回应时发生错误：{0}", ex.Message));
             }

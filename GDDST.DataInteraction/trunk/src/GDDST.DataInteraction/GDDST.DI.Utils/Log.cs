@@ -8,10 +8,40 @@ namespace GDDST.DI.Utils
 {
     public class ServiceLog
     {
+        public enum LogLevel
+        {
+            Fatal,
+            Error,
+            Warn,
+            Info,
+            Debug            
+        }
+
+        public static LogLevel ConfigLogLevel { get; set; }
         private static string m_logFileName = string.Empty;
 
-        public static void LogServiceMessage(string msg)
+        //private static LogLevel GetConfigLogLevel()
+        //{
+        //    string sLogLevel;
+        //    try
+        //    {
+        //        sLogLevel = System.Configuration.ConfigurationManager.AppSettings["loglevel"];
+        //    }
+        //    catch (Exception)
+        //    {
+        //        sLogLevel = "info";
+        //    }
+
+        //    return ServiceLog.TranslateLogLevel(sLogLevel);
+        //}
+
+        public static void LogServiceMessage(string msg, LogLevel logLevel)
         {
+            //ConfigLogLevel = GetConfigLogLevel();
+            if (logLevel > ConfigLogLevel)
+            {
+                return;
+            }
             try
             {
                 //Console.WriteLine(msg);
@@ -47,7 +77,7 @@ namespace GDDST.DI.Utils
                     }
 
                     StreamWriter sw = new StreamWriter(fs);
-                    sw.WriteLine(string.Format("{0}\r\n{1}\r\n", DateTime.Now, msg));
+                    sw.WriteLine(string.Format("{0}\r\n日志级别：{1}\r\n{2}\r\n", DateTime.Now, logLevel, msg));
                     sw.Flush();
                     sw.Close();
                     fs.Close();
@@ -56,6 +86,50 @@ namespace GDDST.DI.Utils
             catch
             {
 
+            }
+        }
+
+        public static void Fatal(string msg)
+        {
+            LogServiceMessage(msg, LogLevel.Fatal);
+        }
+
+        public static void Error(string msg)
+        {
+            LogServiceMessage(msg, LogLevel.Error);
+        }
+
+        public static void Warn(string msg)
+        {
+            LogServiceMessage(msg, LogLevel.Warn);
+        }
+
+        public static void Info(string msg)
+        {
+            LogServiceMessage(msg, LogLevel.Info);
+        }
+
+        public static void Debug(string msg)
+        {
+            LogServiceMessage(msg, LogLevel.Debug);
+        }
+
+        public static LogLevel TranslateLogLevel(string logLevel)
+        {
+            switch (logLevel.ToUpper().Trim())
+            {
+                case "FATAL":
+                    return LogLevel.Fatal;
+                case "ERROR":
+                    return LogLevel.Error;
+                case "WARN":
+                    return LogLevel.Warn;
+                case "INFO":
+                    return LogLevel.Info;
+                case "DEBUG":
+                    return LogLevel.Debug;
+                default:
+                    return LogLevel.Info;
             }
         }
     }

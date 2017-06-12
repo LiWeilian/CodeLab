@@ -34,18 +34,18 @@ namespace GDDST.DI.Driver
             clientSocket = null;
             try
             {
-                ServiceLog.LogServiceMessage(string.Format("正在启动 Modbus RTU 数据采集服务[{0} {1}:{2}]", ServerID, server_ip, server_port));
+                ServiceLog.Info(string.Format("正在启动 Modbus RTU 数据采集服务[{0} {1}:{2}]", ServerID, server_ip, server_port));
                 IPEndPoint endPoint = new IPEndPoint(server_ip, server_port);
                 serverSocket = new Socket(AddressFamily.InterNetwork,
                                             SocketType.Stream,
                                             ProtocolType.Tcp);
                 serverSocket.Bind(endPoint);
                 serverSocket.Listen(10);
-                ServiceLog.LogServiceMessage(string.Format("启动 Modbus RTU 数据采集服务[{0} {1}:{2}]成功，正在接收连接...", ServerID, server_ip, server_port));
+                ServiceLog.Info(string.Format("启动 Modbus RTU 数据采集服务[{0} {1}:{2}]成功，正在接收连接...", ServerID, server_ip, server_port));
             }
             catch (Exception ex)
             {
-                ServiceLog.LogServiceMessage(string.Format("启动 Modbus RTU 数据采集服务[{0} {1}:{2}]发生错误：{3}", ServerID, server_ip, server_port, ex.Message));
+                ServiceLog.Error(string.Format("启动 Modbus RTU 数据采集服务[{0} {1}:{2}]发生错误：{3}", ServerID, server_ip, server_port, ex.Message));
                 return;
             }
             
@@ -95,13 +95,13 @@ namespace GDDST.DI.Driver
             byte[] modbusRtuResponse = new byte[5 + regCount * 2];
             try
             {
-                ServiceLog.LogServiceMessage(string.Format("请求报文：{0}\r\n发送端：[{1} {2}:{3}]\r\n接收端：{4}",
+                ServiceLog.Debug(string.Format("请求报文：{0}\r\n发送端：[{1} {2}:{3}]\r\n接收端：{4}",
                     BitConverter.ToString(modbusRtuReq), ServerID, server_ip, server_port, clientSocketEndPointInfo));
 
                 clientSocket.Send(modbusRtuReq);           
                 clientSocket.Receive(modbusRtuResponse, modbusRtuResponse.Length, SocketFlags.None);
 
-                ServiceLog.LogServiceMessage(string.Format("回应报文：{0}\r\n发送端：{1}\r\n接收端：[{2} {3}:{4}]",
+                ServiceLog.Debug(string.Format("回应报文：{0}\r\n发送端：{1}\r\n接收端：[{2} {3}:{4}]",
                     BitConverter.ToString(modbusRtuResponse), clientSocketEndPointInfo, ServerID, server_ip, server_port));
 
                 mbRtuData = BitConverter.ToString(modbusRtuResponse, 3, regCount * 2).Replace("-", string.Empty);
@@ -110,7 +110,7 @@ namespace GDDST.DI.Driver
             catch (Exception ex)
             {
                 //可能客户端连接断开，重试一次
-                ServiceLog.LogServiceMessage(string.Format("数据采集服务[{0} {1}:{2}]与[{3}]连接发生错误：{4}\r\n重试连接", 
+                ServiceLog.Error(string.Format("数据采集服务[{0} {1}:{2}]与[{3}]连接发生错误：{4}\r\n重试连接", 
                     ServerID, server_ip, server_port, clientSocketEndPointInfo, ex.Message));
                 if (clientSocket != null && clientSocket.Connected)
                 {
@@ -122,13 +122,13 @@ namespace GDDST.DI.Driver
                 {
 
                     Thread.Sleep((int)waitTime);
-                    ServiceLog.LogServiceMessage(string.Format("请求报文：{0}\r\n发送端：[{1} {2}:{3}]\r\n接收端：{4}",
+                    ServiceLog.Debug(string.Format("请求报文：{0}\r\n发送端：[{1} {2}:{3}]\r\n接收端：{4}",
                         BitConverter.ToString(modbusRtuReq), ServerID, server_ip, server_port, clientSocketEndPointInfo));
 
                     clientSocket.Send(modbusRtuReq);
                     clientSocket.Receive(modbusRtuResponse, modbusRtuResponse.Length, SocketFlags.None);
 
-                    ServiceLog.LogServiceMessage(string.Format("回应报文：{0}\r\n发送端：{1}\r\n接收端：[{2} {3}:{4}]",
+                    ServiceLog.Debug(string.Format("回应报文：{0}\r\n发送端：{1}\r\n接收端：[{2} {3}:{4}]",
                         BitConverter.ToString(modbusRtuResponse), clientSocketEndPointInfo, ServerID, server_ip, server_port));
 
 
@@ -139,7 +139,7 @@ namespace GDDST.DI.Driver
                 {
                     string errMsg = string.Format("数据采集服务[{0} {1}:{2}]与[{3}]连接发生错误：{4}",
                         ServerID, server_ip, server_port, clientSocketEndPointInfo, ex.Message);
-                    ServiceLog.LogServiceMessage(errMsg);
+                    ServiceLog.Error(errMsg);
                     if (clientSocket != null && clientSocket.Connected)
                     {
                         clientSocket.Disconnect(false);
@@ -163,7 +163,7 @@ namespace GDDST.DI.Driver
                 try
                 {
                     clientSocket = serverSocket.Accept();
-                    ServiceLog.LogServiceMessage(string.Format("数据采集服务[{0} {1}:{2}]接收到连接[{3}]", ServerID, server_ip, server_port, clientSocket.RemoteEndPoint));
+                    ServiceLog.Info(string.Format("数据采集服务[{0} {1}:{2}]接收到连接[{3}]", ServerID, server_ip, server_port, clientSocket.RemoteEndPoint));
                     HostContainer.AddTcpServerHost(this);
                     clientSocketEndPointInfo = clientSocket.RemoteEndPoint.ToString();
                     return clientSocket;
@@ -171,7 +171,7 @@ namespace GDDST.DI.Driver
                 catch (Exception ex)
                 {
                     clientSocket = null;
-                    ServiceLog.LogServiceMessage(string.Format("数据采集服务[{0} {1}:{2}]接收连接发生错误：{3}", ServerID, server_ip, server_port, ex.Message));
+                    ServiceLog.Error(string.Format("数据采集服务[{0} {1}:{2}]接收连接发生错误：{3}", ServerID, server_ip, server_port, ex.Message));
                     return null;
                 }
             } else
