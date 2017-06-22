@@ -7,12 +7,12 @@ object Form1: TForm1
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
+  Font.Height = -12
+  Font.Name = #23435#20307
   Font.Style = []
   OldCreateOrder = False
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 12
   object Button1: TButton
     Left = 32
     Top = 56
@@ -43,10 +43,20 @@ object Form1: TForm1
   object Button4: TButton
     Left = 160
     Top = 56
-    Width = 145
+    Width = 161
     Height = 25
     Caption = 'Create Remote COM Object'
     TabOrder = 3
     OnClick = Button4Click
+  end
+  object ledtRemoteServer: TLabeledEdit
+    Left = 160
+    Top = 24
+    Width = 121
+    Height = 20
+    EditLabel.Width = 90
+    EditLabel.Height = 12
+    EditLabel.Caption = 'Remote Server'#65306
+    TabOrder = 4
   end
 end

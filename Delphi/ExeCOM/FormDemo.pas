@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls,
-  execom_TLB;
+  execom_TLB, ExtCtrls;
 
 type
   TForm1 = class(TForm)
@@ -13,6 +13,7 @@ type
     Button2: TButton;
     Button3: TButton;
     Button4: TButton;
+    ledtRemoteServer: TLabeledEdit;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -59,8 +60,15 @@ end;
 procedure TForm1.Button4Click(Sender: TObject);
 begin
   execom := nil;
-  execom := CoTestExeCOM.CreateRemote('gddst-xp-vpn');
-  ShowMessage('ok');
+  try
+    execom := CoTestExeCOM.CreateRemote(ledtRemoteServer.Text);     
+    ShowMessage('ok');
+  except
+    on e: Exception do
+    begin
+      ShowMessage(e.Message);
+    end;
+  end;
 end;
 
 end.
