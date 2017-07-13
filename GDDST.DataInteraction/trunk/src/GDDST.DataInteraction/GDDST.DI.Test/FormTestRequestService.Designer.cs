@@ -149,7 +149,7 @@
             this.Controls.Add(this.btnSend);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "FormTestRequestService";
-            this.Text = "Form1";
+            this.Text = "Request Simulator";
             this.ResumeLayout(false);
             this.PerformLayout();
 

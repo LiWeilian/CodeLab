@@ -66,12 +66,21 @@ namespace GDDST.DI.DataServerWinSvc
             try
             {
                 string serversConfig = System.Configuration.ConfigurationManager.AppSettings["modbusrtutcp"];
+
                 string sWaitTime = System.Configuration.ConfigurationManager.AppSettings["interval"];
                 uint waitTime;
                 if (!uint.TryParse(sWaitTime, out waitTime))
                 {
                     waitTime = 500;
                 }
+
+                string sRetryTimes = System.Configuration.ConfigurationManager.AppSettings["retrytimes"];
+                int retryTimes;
+                if (!int.TryParse(sRetryTimes, out retryTimes) || retryTimes < 0)
+                {
+                    retryTimes = 3;
+                }
+
                 JavaScriptSerializer jss = new JavaScriptSerializer();
                 //{SN:001,IP:172.16.1.2,PORT:6008}
                 //{"SN":"001","IP":"172.16.1.2","PORT":"6008"}
@@ -133,6 +142,14 @@ namespace GDDST.DI.DataServerWinSvc
                 {
                     waitTime = 500;
                 }
+
+                string sRetryTimes = System.Configuration.ConfigurationManager.AppSettings["retrytimes"];
+                int retryTimes;
+                if (!int.TryParse(sRetryTimes, out retryTimes) || retryTimes < 0)
+                {
+                    retryTimes = 3;
+                }
+
                 JavaScriptSerializer jss = new JavaScriptSerializer();
                 List<DataServerConfig> serverCfgList = jss.Deserialize<List<DataServerConfig>>(serversConfig);
                 foreach (DataServerConfig serverCfg in serverCfgList)
@@ -182,7 +199,7 @@ namespace GDDST.DI.DataServerWinSvc
                     try
                     {
                         ModbusTcpClientHost mbTcpClientHost = new ModbusTcpClientHost(serverCfg.ServerID,
-                            ip, port, waitTime);
+                            ip, port, waitTime, retryTimes);
                         Thread thread = new Thread(new ThreadStart(mbTcpClientHost.Run));
                         thread.IsBackground = true;
                         thread.Start();

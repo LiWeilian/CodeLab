@@ -18,6 +18,7 @@ namespace GDDST.DI.Driver
         private uint waitTime = 500;
         private Socket clientSocket = null;
         private ushort identifier = 0;
+        private int retryTimes = 3;
         private ushort GetIdentifier()
         {
             if (identifier < 65535)
@@ -29,12 +30,13 @@ namespace GDDST.DI.Driver
             }
             return identifier;
         }
-        public ModbusTcpClientHost(string server_id, IPAddress server_ip, ushort server_port, uint waitTime)
+        public ModbusTcpClientHost(string server_id, IPAddress server_ip, ushort server_port, uint waitTime, int retryTimes)
         {
             ServerID = server_id;
             this.server_ip = server_ip;
             this.server_port = server_port;
             this.waitTime = waitTime;
+            this.retryTimes = retryTimes;
         }
 
         public void Run()
@@ -42,17 +44,45 @@ namespace GDDST.DI.Driver
             try
             {
                 ServiceLog.Info(string.Format("正在建立 Modbus TCP 数据采集连接[{0} {1}:{2}]", ServerID, server_ip, server_port));
-                IPEndPoint endPoint = new IPEndPoint(server_ip, server_port);
-                clientSocket = new Socket(AddressFamily.InterNetwork,
-                    SocketType.Stream, ProtocolType.Tcp);
-
-                clientSocket.Connect(endPoint);
+                clientSocket = ConnectToServer();
                 ServiceLog.Info(string.Format("建立 Modbus TCP 数据采集连接[{0} {1}:{2}]成功...", ServerID, server_ip, server_port));
                 HostContainer.AddModbusTcpClientHost(this);
             }
             catch (Exception ex)
             {
                 ServiceLog.Error(string.Format("建立 Modbus TCP 数据采集连接[{0} {1}:{2}]发生错误：{3}", ServerID, server_ip, server_port, ex.Message));
+                return;
+            }
+        }
+
+        private Socket ConnectToServer()
+        {
+            try
+            {
+                IPEndPoint endPoint = new IPEndPoint(server_ip, server_port);
+                Socket socket = new Socket(AddressFamily.InterNetwork,
+                    SocketType.Stream, ProtocolType.Tcp);
+
+                socket.Connect(endPoint);
+                return socket;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        private void ReconnectToServer()
+        {
+            try
+            {
+                ServiceLog.Info(string.Format("正在重新建立 Modbus TCP 数据采集连接[{0} {1}:{2}]", ServerID, server_ip, server_port));
+                clientSocket = ConnectToServer();
+                ServiceLog.Info(string.Format("重新建立 Modbus TCP 数据采集连接[{0} {1}:{2}]成功...", ServerID, server_ip, server_port));
+            }
+            catch (Exception ex)
+            {
+                ServiceLog.Error(string.Format("重新建立 Modbus TCP 数据采集连接[{0} {1}:{2}]发生错误：{3}", ServerID, server_ip, server_port, ex.Message));
                 return;
             }
         }
@@ -89,34 +119,58 @@ namespace GDDST.DI.Driver
             mbTcpSend[10] = bRegCount[1];
             mbTcpSend[11] = bRegCount[0];
 
-            try
-            {
-                ServiceLog.Debug(string.Format("正在发送请求到 Modbus TCP 服务器[{0} {1}:{2}]\r\n请求报文内容：{3}",
-                    ServerID, server_ip, server_port, BitConverter.ToString(mbTcpSend)));
-                clientSocket.Send(mbTcpSend, mbTcpSend.Length, SocketFlags.None);
-            }
-            catch (Exception ex)
-            {
-                ServiceLog.Error(string.Format("发送请求到 Modbus TCP 服务器[{0} {1}:{2}]连接发生错误：{3}\r\n请求报文内容：{4}",
-                        ServerID, server_ip, server_port, ex.Message, BitConverter.ToString(mbTcpSend)));
-                throw new Exception(string.Format("发送请求到 Modbus TCP 服务器时发生错误：{0}", ex.Message));
-            }
+            int retryTimes = 0;
 
-            try
+            while (retryTimes <= this.retryTimes)
             {
-                byte[] mbTcpRecv = new byte[9 + regCount * 2];
-                clientSocket.Receive(mbTcpRecv, mbTcpRecv.Length, SocketFlags.None);
-                ServiceLog.Debug(string.Format("接收到 Modbus TCP 服务器[{0} {1}:{2}]回应\r\n回应报文内容：{3}",
-                    ServerID, server_ip, server_port, BitConverter.ToString(mbTcpRecv)));
+                try
+                {
+                    ServiceLog.Debug(string.Format("正在发送请求到 Modbus TCP 服务器[{0} {1}:{2}]\r\n请求报文内容：{3}",
+                        ServerID, server_ip, server_port, BitConverter.ToString(mbTcpSend)));
+                    clientSocket.Send(mbTcpSend, mbTcpSend.Length, SocketFlags.None);
+                }
+                catch (Exception ex)
+                {
+                    ServiceLog.Error(string.Format("发送请求到 Modbus TCP 服务器[{0} {1}:{2}]连接发生错误：{3}\r\n请求报文内容：{4}",
+                            ServerID, server_ip, server_port, ex.Message, BitConverter.ToString(mbTcpSend)));
+                    if (retryTimes >= this.retryTimes)
+                    {
+                        throw new Exception(string.Format("发送请求到 Modbus TCP 服务器时发生错误：{0}", ex.Message));
+                    }
+                    retryTimes++;
 
-                mbTcpData = BitConverter.ToString(mbTcpRecv, 9, regCount * 2).Replace("-", string.Empty);
+                    ReconnectToServer();
+
+                    continue;
+                }
+
+                try
+                {
+                    byte[] mbTcpRecv = new byte[9 + regCount * 2];
+                    clientSocket.Receive(mbTcpRecv, mbTcpRecv.Length, SocketFlags.None);
+                    ServiceLog.Debug(string.Format("接收到 Modbus TCP 服务器[{0} {1}:{2}]回应\r\n回应报文内容：{3}",
+                        ServerID, server_ip, server_port, BitConverter.ToString(mbTcpRecv)));
+
+                    mbTcpData = BitConverter.ToString(mbTcpRecv, 9, regCount * 2).Replace("-", string.Empty);
+                }
+                catch (Exception ex)
+                {
+                    ServiceLog.Error(string.Format("接收 Modbus TCP 服务器[{0} {1}:{2}]回应时发生错误：{3}",
+                        ServerID, server_ip, server_port, ex.Message));
+                    if (retryTimes >= this.retryTimes)
+                    {
+                        throw new Exception(string.Format("接收 Modbus TCP 服务器回应时发生错误：{0}", ex.Message));
+                    }
+                    retryTimes++;
+
+                    ReconnectToServer();
+
+                    continue;
+                }
+
+                break;
             }
-            catch (Exception ex)
-            {
-                ServiceLog.Error(string.Format("接收 Modbus TCP 服务器[{0} {1}:{2}]回应时发生错误：{3}",
-                    ServerID, server_ip, server_port, ex.Message));
-                throw new Exception(string.Format("接收 Modbus TCP 服务器回应时发生错误：{0}", ex.Message));
-            }
+            
             return mbTcpData;
         }
     }

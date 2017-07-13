@@ -57,7 +57,7 @@ namespace GDDST.DI.Test
 
                     Stream responseStream = response.GetResponseStream();
                     StreamReader sr = new StreamReader(responseStream);
-                    txtResponse.AppendText(DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss\r\n"));
+                    txtResponse.AppendText(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss\r\n"));
                     txtResponse.AppendText(sr.ReadToEnd());
                     txtResponse.AppendText("\r\n\r\n");
 
