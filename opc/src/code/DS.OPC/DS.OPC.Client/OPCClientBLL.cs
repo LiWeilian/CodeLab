@@ -108,9 +108,12 @@ namespace DS.OPC.Client
                 foreach (OPCItemData itemData in itemDataList)
                 {
                     OPCClientItemEntity itemEntity = new OPCClientItemEntity();
-                    
                     //如果是特殊的OPC项，则使用配置的映射
-                    OPCItemMappingInfo opcItemMappingInfo = OPCItemMapping.GetOPCItemMappingInfo(itemData.ItemID);
+                    OPCItemMappingInfo opcItemMappingInfo = null;
+                    if (OPCItemMapping != null)
+                    {
+                        opcItemMappingInfo = OPCItemMapping.GetOPCItemMappingInfo(itemData.ItemID);
+                    }
                     if (opcItemMappingInfo != null)
                     {
                         dbFieldMappingList = opcItemMappingInfo.DBFieldMappingList;
@@ -336,6 +339,7 @@ namespace DS.OPC.Client
                 }
             } catch (Exception e)
             {
+                OPCLog.Error(string.Format("获取OPC数据项映射配置时发生错误：{0}", e.Message));
             }
             
 
@@ -369,6 +373,7 @@ namespace DS.OPC.Client
                 || NewDataTableName.Trim() == string.Empty)
             {
                 errMsg = "数据库连接设置无效";
+                OPCLog.Error("数据库连接设置无效");
                 return false;
             }
             if (this.m_dal == null)
@@ -429,6 +434,7 @@ namespace DS.OPC.Client
                 || NewDataTableName.Trim() == string.Empty)
             {
                 errMsg = "数据库连接设置无效";
+                OPCLog.Error("数据库连接设置无效");
                 return false;
             }
             if (this.m_dal == null)

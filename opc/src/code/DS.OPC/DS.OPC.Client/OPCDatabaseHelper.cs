@@ -30,7 +30,9 @@ namespace DS.OPC.Client
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception("打开数据库连接时出现错误：" + ex.Message);
+                            string errMsg = "打开数据库连接时出现错误：" + ex.Message;
+                            OPCLog.Error(errMsg);
+                            throw new Exception(errMsg);
                         }
                     }
                     else
@@ -42,12 +44,16 @@ namespace DS.OPC.Client
                             }
                             catch (Exception ex)
                             {
-                                throw new Exception("关闭数据库连接时出现错误：" + ex.Message);
+                            string errMsg = "关闭数据库连接时出现错误：" + ex.Message;
+                            OPCLog.Error(errMsg);
+                            throw new Exception(errMsg);
                             }
                         }
                 } else
                 {
-                    throw new Exception("数据库连接未设置");
+                    string errMsg = "数据库连接未设置";
+                    OPCLog.Error(errMsg);
+                    throw new Exception(errMsg);
                 }
             }
 
@@ -60,6 +66,7 @@ namespace DS.OPC.Client
             if (this.m_dbConn == null)
             {
                 errMsg = "数据库连接未设置";
+                OPCLog.Error(errMsg);
                 return false;
             }
 
@@ -72,6 +79,7 @@ namespace DS.OPC.Client
                 catch (Exception ex)
                 {
                     errMsg = "打开数据库连接失败：" + ex.Message;
+                    OPCLog.Error(errMsg);
                     return false;
                 }
 
@@ -80,6 +88,7 @@ namespace DS.OPC.Client
             if (this.m_dbConn.State == System.Data.ConnectionState.Closed)
             {
                 errMsg = "未连接到数据库";
+                OPCLog.Error(errMsg);
                 return false;
             }
 

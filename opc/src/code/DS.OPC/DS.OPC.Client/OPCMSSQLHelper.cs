@@ -30,6 +30,7 @@ namespace DS.OPC.Client
             catch (Exception ex)
             {
                 errMsg = "打开数据连接时出现错误：" + ex.Message;
+                OPCLog.Error(errMsg);
                 return false;
             }
         }
@@ -53,6 +54,7 @@ namespace DS.OPC.Client
             catch (Exception ex)
             {
                 errMsg = ex.Message;
+                OPCLog.Error(string.Format("执行SQL语句\r\n{0}\r\n时发生错误：{1}", clause, ex.Message));
                 return false;
             }
         }
@@ -78,6 +80,7 @@ namespace DS.OPC.Client
             catch (Exception ex)
             {
                 errMsg = "查询数据时出现错误：" + ex.Message;
+                OPCLog.Error(errMsg);
                 return null;
             }
 

@@ -29,6 +29,7 @@ namespace DS.OPC.Client
             catch (Exception ex)
             {
                 errMsg = "打开数据连接时出现错误：" + ex.Message;
+                OPCLog.Error(errMsg);
                 return false;
             }
         }
@@ -42,18 +43,22 @@ namespace DS.OPC.Client
                 {
                     return false;
                 }
-
+                
+                OPCLog.Info(string.Format("执行SQL语句：{0}", clause));
                 OracleCommand cmd = new OracleCommand(clause, (OracleConnection)base.m_dbConn);
-                cmd.ExecuteNonQuery();
+                int count = cmd.ExecuteNonQuery();
+                OPCLog.Info(string.Format("影响行数：{0}", count));
                 base.m_dbConn.Close();
                 return true;
             }
             catch (Exception ex)
             {
                 errMsg = ex.Message;
+                OPCLog.Error(string.Format("执行SQL语句\r\n{0}\r\n时发生错误：{1}", clause, ex.Message));
                 return false;
             }
         }
+
 
         public override DataTable QueryRecords(string clause, out string errMsg)
         {
@@ -76,6 +81,7 @@ namespace DS.OPC.Client
             catch (Exception ex)
             {
                 errMsg = "查询数据时出现错误：" + ex.Message;
+                OPCLog.Error(errMsg);
                 return null;
             }
 

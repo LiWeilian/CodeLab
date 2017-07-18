@@ -33,9 +33,25 @@ namespace DS.OPC.Client
         {
             InitializeComponent();
             InitializeOPCItemMappingConfig();
+            InitializeLogLevel();
         }
 
         #region 系统方法
+        private void InitializeLogLevel()
+        {
+            string sLogLevel;
+            try
+            {
+                sLogLevel = System.Configuration.ConfigurationManager.AppSettings["loglevel"];
+            }
+            catch (Exception)
+            {
+                sLogLevel = "info";
+            }
+
+            OPCLog.ConfigLogLevel = OPCLog.TranslateLogLevel(sLogLevel);
+        }
+
         private void ShowErrorMessageBox(string errMsg)
         {
             MessageBox.Show(errMsg, "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -86,6 +102,7 @@ namespace DS.OPC.Client
                 object serverList = m_OPCServer.GetOPCServers(serverIP);
                 if (serverList == null)
                 {
+                    OPCLog.Error("无法获取服务器");
                     ShowErrorMessageBox("无法获取服务器");
                     return;
                 } else
@@ -99,6 +116,7 @@ namespace DS.OPC.Client
             }
             catch (Exception ex)
             {
+                OPCLog.Error("获取服务器出现错误：" + ex.Message);
                 ShowErrorMessageBox("获取服务器出现错误：" + ex.Message);
                 return;
             }
@@ -157,6 +175,7 @@ namespace DS.OPC.Client
             }
             catch (Exception ex)
             {
+                OPCLog.Error("连接远程服务器出现错误：" + ex.Message);
                 ShowErrorMessageBox("连接远程服务器出现错误：" + ex.Message);
                 return false;
             }
@@ -179,6 +198,7 @@ namespace DS.OPC.Client
             }
             catch (Exception ex)
             {
+                OPCLog.Error("断开远程服务器出现错误：" + ex.Message);
                 ShowErrorMessageBox("断开远程服务器出现错误：" + ex.Message);
                 return false;
             }
@@ -203,6 +223,7 @@ namespace DS.OPC.Client
                         }
                         catch (Exception ex)
                         {
+                            OPCLog.Error("设置订阅模式出现错误：" + ex.Message);
                             ShowErrorMessageBox("设置订阅模式出现错误：" + ex.Message);
                         }
                         newGroup.DataChange += new DIOPCGroupEvent_DataChangeEventHandler(OPCGroup_DataChange);
@@ -214,6 +235,7 @@ namespace DS.OPC.Client
             catch (Exception ex)
             {
                 newGroup = null;
+                OPCLog.Error("添加组出现错误：" + ex.Message);
                 ShowErrorMessageBox("添加组出现错误：" + ex.Message);
             }
             return newGroup;
@@ -249,7 +271,8 @@ namespace DS.OPC.Client
             }
             catch (Exception ex)
             {
-                ShowErrorMessageBox("移除组 " + groupName + " 出现错误：" + ex.Message);
+                OPCLog.Error("移除组 [" + groupName + "] 出现错误：" + ex.Message);
+                ShowErrorMessageBox("移除组 [" + groupName + "] 出现错误：" + ex.Message);
             }
         }
 
@@ -319,6 +342,7 @@ namespace DS.OPC.Client
             }
             catch (Exception ex)
             {
+                OPCLog.Error("设置组属性时出现错误：" + ex.Message);
                 ShowErrorMessageBox("设置组属性时出现错误：" + ex.Message);
                 return;
             }
@@ -334,6 +358,7 @@ namespace DS.OPC.Client
             }
             catch (Exception ex)
             {
+                OPCLog.Error("设置默认组属性时出现错误：" + ex.Message);
                 ShowErrorMessageBox("设置默认组属性时出现错误：" + ex.Message);
             }
 
@@ -669,6 +694,7 @@ namespace DS.OPC.Client
             }
             catch (Exception ex)
             {
+                OPCLog.Error("添加项时出现错误：" + ex.Message);
                 ShowErrorMessageBox("添加项时出现错误：" + ex.Message);
                 return null;
             }
@@ -685,6 +711,7 @@ namespace DS.OPC.Client
             }
             catch (Exception ex)
             {
+                OPCLog.Error("移除项时出现错误：" + ex.Message);
                 ShowErrorMessageBox("移除项时出现错误：" + ex.Message);
                 return false;
             }
@@ -1010,10 +1037,12 @@ namespace DS.OPC.Client
                     //特殊OPC项映射设置
                     //MessageBox.Show(txtServerHost.Text);
                     //MessageBox.Show(this.m_OPCServer.ServerName);
+
+                    
+
                     bll.OPCItemMapping = this.m_OPCItemMappingConfig.
                         GetCurrentOPCItemMappingConfig(txtServerHost.Text, 
                         this.m_OPCServer.ServerName);
-
                     m_blls.Add(bll);
 
                     //加入列表

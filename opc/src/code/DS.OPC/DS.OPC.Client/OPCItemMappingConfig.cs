@@ -118,13 +118,13 @@ namespace DS.OPC.Client
 
         private string GetServerHost(out XmlNode serverHostNode)
         {
-            serverHostNode = this.m_xmlDoc.SelectSingleNode("OPCItemMapping/serverhost");
+            serverHostNode = this.m_xmlDoc.SelectSingleNode("opcclient/serverhost");
             return serverHostNode != null ? serverHostNode.Attributes["hostname"].Value : string.Empty;
         }
 
         private string GetOPCServerName(out XmlNode opcServerNode)
         {
-            opcServerNode = this.m_xmlDoc.SelectSingleNode("OPCItemMapping/serverhost/opcserver");
+            opcServerNode = this.m_xmlDoc.SelectSingleNode("opcclient/serverhost/opcserver");
             return opcServerNode != null ? opcServerNode.Attributes["servername"].Value : string.Empty;
         }
     }

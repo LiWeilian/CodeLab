@@ -200,6 +200,7 @@ namespace DS.OPC.Client
             catch (Exception ex)
             {
                 errMsg = ex.Message;
+                OPCLog.Error(string.Format("创建 MS SQL Server 数据库连接时发生错误：{0}", errMsg));
                 return false;
             }
         }
@@ -311,6 +312,7 @@ namespace DS.OPC.Client
             if (!this.m_oraHelper.Connected)
             {
                 errMsg = "未连接到数据库";
+                OPCLog.Error(errMsg);
                 return false;
             }
 
@@ -319,7 +321,7 @@ namespace DS.OPC.Client
 
             foreach (OPCClientItemProperty itemProp in item.Properties)
             {
-                if (!itemProp.IsEntityIdentity)
+                if (itemProp.IsEntityIdentity)
                 {
                     switch (itemProp.DataType)
                     {
@@ -359,10 +361,12 @@ namespace DS.OPC.Client
             if (whereClause != string.Empty)
             {
                 deleteStr = deleteStr + whereClause;
+
                 return this.m_oraHelper.ExecuteNonQuery(deleteStr, out errMsg);
             }
             else
             {
+                
                 return true;
             }
         }
@@ -373,6 +377,7 @@ namespace DS.OPC.Client
             if (!this.m_oraHelper.Connected)
             {
                 errMsg = "未连接到数据库";
+                OPCLog.Error(errMsg);
                 return false;
             }
 
@@ -453,6 +458,7 @@ namespace DS.OPC.Client
             catch (Exception e)
             {
                 errMsg = e.Message;
+                OPCLog.Error(string.Format("创建 Oracle 数据库连接时发生错误：{0}", errMsg));
                 return false;
             }
         }
