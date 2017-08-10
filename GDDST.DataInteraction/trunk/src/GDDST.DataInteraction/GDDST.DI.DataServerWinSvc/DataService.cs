@@ -196,10 +196,17 @@ namespace GDDST.DI.DataServerWinSvc
                         ServiceLog.Warn(string.Format("Modbus TCP 服务器端口[{0}]无效", serverCfg.Port));
                         continue;
                     }
+
+                    byte devAddr;
+                    if (!byte.TryParse(serverCfg.DevAddr, out devAddr))
+                    {
+                        devAddr = 1;
+                    }
+
                     try
                     {
                         ModbusTcpClientHost mbTcpClientHost = new ModbusTcpClientHost(serverCfg.ServerID,
-                            ip, port, waitTime, retryTimes);
+                            ip, port, devAddr, waitTime, retryTimes);
                         Thread thread = new Thread(new ThreadStart(mbTcpClientHost.Run));
                         thread.IsBackground = true;
                         thread.Start();

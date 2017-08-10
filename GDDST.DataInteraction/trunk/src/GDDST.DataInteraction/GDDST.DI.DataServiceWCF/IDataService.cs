@@ -32,6 +32,34 @@ namespace GDDST.DI.DataServiceWCF
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json)]
         ModbusTCPResponseBody RequestModbusTCPData(ModbusTCPRequestBody request);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            UriTemplate = "modbustcp/rmr",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json)]
+        ModbusTCPResponseBody RequestModbusTCPMultiRegData(ModbusTCPRequestBody request);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            UriTemplate = "modbustcp/rmc",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json)]
+        ModbusTCPResponseBody RequestModbusTCPMultiCoilData(ModbusTCPRequestBody request);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            UriTemplate = "modbustcp/wmr",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json)]
+        ModbusTCPResponseBody WriteModbusTCPData(ModbusTCPWriteDataBody writeInfo);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            UriTemplate = "modbustcp/wmc",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json)]
+        ModbusTCPResponseBody WriteModbusTCPCoilStatus(ModbusTCPWriteDataBody writeInfo);
     }
 
     // 使用下面示例中说明的数据约定将复合类型添加到服务操作。

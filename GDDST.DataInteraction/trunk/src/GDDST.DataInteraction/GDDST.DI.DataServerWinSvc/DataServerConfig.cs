@@ -11,6 +11,7 @@ namespace GDDST.DI.DataServerWinSvc
         public string ServerID { get; set; }
         public string IP { get; set; }
         public string Port { get; set; }
+        public string DevAddr { get; set; }
     }
 
     class DataServerConfigList

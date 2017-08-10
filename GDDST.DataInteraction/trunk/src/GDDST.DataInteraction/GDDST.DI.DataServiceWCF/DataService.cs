@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
 using GDDST.DI.Driver;
+using System.Web.Script.Serialization;
 
 namespace GDDST.DI.DataServiceWCF
 {
@@ -110,39 +111,49 @@ namespace GDDST.DI.DataServiceWCF
                 return response;
             }
 
-            byte devAddr;
-            if (!byte.TryParse(request.DeviceAddr, out devAddr))
-            {
-                response.ErrorMessage = string.Format("设备地址[{0}]无效", request.DeviceAddr);
-                return response;
-            }
-
-            byte funcCode;
-            if (!byte.TryParse(request.FunctionCode, out funcCode))
-            {
-                response.ErrorMessage = string.Format("功能代码[{0}]无效", request.FunctionCode);
-                return response;
-            }
-
             ushort startAddr;
             if (!ushort.TryParse(request.StartAddr, out startAddr))
             {
-                response.ErrorMessage = string.Format("起始寄存器地址[{0}]无效", request.StartAddr);
+                response.ErrorMessage = string.Format("起始地址[{0}]无效", request.StartAddr);
                 return response;
             }
 
             ushort regCount;
             if (!ushort.TryParse(request.RegCount, out regCount))
             {
-                response.ErrorMessage = string.Format("读取寄存器数量[{0}]无效", request.RegCount);
+                response.ErrorMessage = string.Format("读取地址数量[{0}]无效", request.RegCount);
                 return response;
             }
 
+            string returnFormat = "string";
+            if (request.ReturnFormat != null && request.ReturnFormat.ToLower().Trim() == "json")
+            {
+                returnFormat = "json";
+            }
+
+            byte functCode;
+            if (!byte.TryParse(request.FunctionCode, out functCode))
+            {
+                response.ErrorMessage = string.Format("功能代码[{0}]无效", request.FunctionCode);
+                return response;
+            }            
+
             try
             {
-                string respCRC = string.Empty;
-                response.DataContent = mbTcpClientHost.RequestModbusTcpData(devAddr, funcCode, startAddr, regCount);
-                response.DataLength = (regCount * 2).ToString();
+                //string respCRC = string.Empty;
+                switch (functCode)
+                {
+                    case 1:
+                        response.DataContent = mbTcpClientHost.RequestModbusTcpCoilStatus(startAddr, regCount, returnFormat);
+                        response.DataLength = (regCount * 2).ToString();
+                        break;
+                    case 3:
+                        response.DataContent = mbTcpClientHost.RequestModbusTcpData(startAddr, regCount, returnFormat);
+                        response.DataLength = (regCount * 2).ToString();
+                        break;
+                    default:
+                        break;
+                }
                 response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             }
             catch (Exception ex)
@@ -153,6 +164,82 @@ namespace GDDST.DI.DataServiceWCF
                 response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             }
 
+            return response;
+        }
+
+        public ModbusTCPResponseBody RequestModbusTCPMultiCoilData(ModbusTCPRequestBody request)
+        {
+            request.FunctionCode = "1";
+
+            return RequestModbusTCPData(request);
+        }
+
+        public ModbusTCPResponseBody RequestModbusTCPMultiRegData(ModbusTCPRequestBody request)
+        {
+            request.FunctionCode = "3";
+
+            return RequestModbusTCPData(request);
+        }
+
+        public ModbusTCPResponseBody WriteModbusTCPCoilStatus(ModbusTCPWriteDataBody writeInfo)
+        {
+            ModbusTCPResponseBody response = new ModbusTCPResponseBody();
+            response.ServerID = writeInfo.ServerID;
+            response.DeviceAddr = writeInfo.DeviceAddr;
+            response.ErrorMessage = string.Empty;
+            response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            response.DataContent = string.Empty;
+
+
+            ModbusTcpClientHost mbTcpClientHost = HostContainer.GetModbusTcpClientHostByServerID(writeInfo.ServerID);
+            if (mbTcpClientHost == null)
+            {
+                response.ErrorMessage = string.Format("数据采集服务未启动或未成功连接至Modbus TCP数据服务器");
+                return response;
+            }
+
+            try
+            {
+                mbTcpClientHost.WriteModbusTCPCoilStatus(writeInfo.WriteData);
+            }
+            catch (Exception ex)
+            {
+                response.DataContent = null;
+                response.DataLength = "0";
+                response.ErrorMessage = ex.Message;
+                response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            }
+            return response;
+        }
+
+        public ModbusTCPResponseBody WriteModbusTCPData(ModbusTCPWriteDataBody writeInfo)
+        {
+            ModbusTCPResponseBody response = new ModbusTCPResponseBody();
+            response.ServerID = writeInfo.ServerID;
+            response.DeviceAddr = writeInfo.DeviceAddr;
+            response.ErrorMessage = string.Empty;
+            response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            response.DataContent = string.Empty;
+
+
+            ModbusTcpClientHost mbTcpClientHost = HostContainer.GetModbusTcpClientHostByServerID(writeInfo.ServerID);
+            if (mbTcpClientHost == null)
+            {
+                response.ErrorMessage = string.Format("数据采集服务未启动或未成功连接至Modbus TCP数据服务器");
+                return response;
+            }
+
+            try
+            {
+                mbTcpClientHost.WriteModbusTCPData(writeInfo.WriteData);
+            }
+            catch (Exception ex)
+            {
+                response.DataContent = null;
+                response.DataLength = "0";
+                response.ErrorMessage = ex.Message;
+                response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            }
             return response;
         }
     }
