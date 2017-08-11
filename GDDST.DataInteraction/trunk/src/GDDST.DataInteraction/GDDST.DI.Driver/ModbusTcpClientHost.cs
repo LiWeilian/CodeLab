@@ -376,13 +376,29 @@ namespace GDDST.DI.Driver
                     inputValues16Byte[i] = Convert.ToByte(sValue, 16);
                 }
 
+                /*
+                * 01：传输标志Hi
+                * 02：传输标志Lo
+                * 03、04：协议标志
+                * 05、06：此位置以后字节数
+                * 07：单元标志
+                * 08：功能代码，0x10表示写多个寄存器
+                * 09、10：起始寄存器
+                * 11、12：寄存器数量
+                * 13：数据字节数
+                * 14~：数据
+                */
+
                 byte[] plc_send16 = new byte[13 + regCount * 2];
-                plc_send16[0] = 0;
-                plc_send16[1] = 1;
+                //标识符
+                ushort identifier = GetIdentifier();
+                byte[] bIdentifier = BitConverter.GetBytes(identifier);
+                plc_send16[0] = bIdentifier[1];
+                plc_send16[1] = bIdentifier[0];
                 plc_send16[2] = 0;
                 plc_send16[3] = 0;
                 plc_send16[4] = 0;
-                plc_send16[5] = 6;
+                plc_send16[5] = (byte)(7 + regCount * 2);
                 plc_send16[6] = this.devAddr;
                 plc_send16[7] = 16;
                 byte[] bRegAddr16 = BitConverter.GetBytes(startAddr);
@@ -440,12 +456,14 @@ namespace GDDST.DI.Driver
                         continue;
                     }
 
-                    byte[] recMsgByte16 = new byte[12 + regCount * 2];
+                    byte[] recMsgByte16 = new byte[12];
                     int recLen16;
                     try
                     {
                         //Thread.Sleep(5000);
                         recLen16 = clientSocket.Receive(recMsgByte16, recMsgByte16.Length, SocketFlags.None);
+                        ServiceLog.Debug(string.Format("接收到 Modbus TCP 服务器[{0} {1}:{2}]数据\r\n报文内容：{3}",
+                            ServerID, server_ip, server_port, BitConverter.ToString(recMsgByte16)));
                     }
                     catch (SocketException se)
                     {
@@ -477,9 +495,25 @@ namespace GDDST.DI.Driver
                     return;
                 }
 
+                /*
+                * 01：传输标志Hi
+                * 02：传输标志Lo
+                * 03、04：协议标志
+                * 05、06：此位置以后字节数
+                * 07：单元标志
+                * 08：功能代码，0x0F表示写多个线圈
+                * 09、10：起始线圈地址
+                * 11、12：线圈数量
+                * 13：数据字节数
+                * 14~：数据
+                */
+
                 byte[] plc_send15 = new byte[14];
-                plc_send15[0] = 0;
-                plc_send15[1] = 1;
+                //标识符
+                ushort identifier = GetIdentifier();
+                byte[] bIdentifier = BitConverter.GetBytes(identifier);
+                plc_send15[0] = bIdentifier[1];
+                plc_send15[1] = bIdentifier[0];
                 plc_send15[2] = 0;
                 plc_send15[3] = 0;
                 ushort iLen15 = 8;
@@ -531,6 +565,8 @@ namespace GDDST.DI.Driver
                     {
                         //Thread.Sleep(5000);
                         recLen15 = clientSocket.Receive(recMsgByte15, recMsgByte15.Length, SocketFlags.None);
+                        ServiceLog.Debug(string.Format("接收到 Modbus TCP 服务器[{0} {1}:{2}]数据\r\n报文内容：{3}",
+                            ServerID, server_ip, server_port, BitConverter.ToString(recMsgByte15)));
                     }
                     catch (SocketException se)
                     {
