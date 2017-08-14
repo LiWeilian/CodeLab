@@ -49,6 +49,7 @@ namespace GDDST.DI.DataServiceWCF
         public string DataContent { get; set; }
         public string ErrorMessage { get; set; }
         public string ResponseTime { get; set; }
+        public string Status { get; set; }
     }
 
     public class ModbusTCPWriteDataBody

@@ -20,7 +20,7 @@ namespace GDDST.DI.Driver
         private Socket clientSocket = null;
         private ushort identifier = 0;
         private int retryTimes = 3;
-        private byte devAddr;
+        public byte DevAddr { get; set; }
         private ushort GetIdentifier()
         {
             if (identifier < 65535)
@@ -37,7 +37,7 @@ namespace GDDST.DI.Driver
             ServerID = server_id;
             this.server_ip = server_ip;
             this.server_port = server_port;
-            this.devAddr = devAddr;
+            this.DevAddr = devAddr;
             this.waitTime = waitTime;
             this.retryTimes = retryTimes;
         }
@@ -90,6 +90,60 @@ namespace GDDST.DI.Driver
             }
         }
 
+        private string CheckExceptionCode(byte[] recvBytes)
+        {
+            string errMsg = string.Empty;
+            if (recvBytes.Length < 9)
+            {
+
+            } else
+            {
+                if (recvBytes[5] == 0x03 && recvBytes[6] == this.DevAddr)
+                {
+                    switch (recvBytes[7])
+                    {
+                        case 0x81:
+                        case 0x83:
+                        case 0x8f:
+                        case 0x90:
+                            switch (recvBytes[8])
+                            {
+                                case 0x01:
+                                    errMsg = "错误代码[0x01]，错误的请求类型";
+                                    break;
+                                case 0x02:
+                                    errMsg = "错误代码[0x02]，访问了非法地址";
+                                    break;
+                                default:
+                                    errMsg = "其他错误";
+                                    break;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    
+                }
+            }
+
+            return errMsg;
+        }
+
+        private string CheckIsNullData(byte[] recvBytes)
+        {
+            string errMsg = string.Empty;
+            for (int i = 0; i < recvBytes.Length; i++)
+            {
+                if (recvBytes[i] != 0)
+                {
+                    return string.Empty;
+                }
+            }
+
+            errMsg = "返回数据为空";
+            return errMsg;
+        }
+
         public string RequestModbusTcpData(ushort startAddr,
             ushort regCount,
             string returnFormat)
@@ -109,7 +163,7 @@ namespace GDDST.DI.Driver
             mbTcpSend[4] = 0;
             mbTcpSend[5] = 6;
             //设备地址
-            mbTcpSend[6] = this.devAddr;
+            mbTcpSend[6] = this.DevAddr;
             //功能代码
             mbTcpSend[7] = 3;
             //起始寄存器
@@ -146,15 +200,12 @@ namespace GDDST.DI.Driver
                     continue;
                 }
 
+                byte[] mbTcpRecv = new byte[9 + regCount * 2];
                 try
-                {
-                    byte[] mbTcpRecv = new byte[9 + regCount * 2];
+                {                    
                     clientSocket.Receive(mbTcpRecv, mbTcpRecv.Length, SocketFlags.None);
                     ServiceLog.Debug(string.Format("接收到 Modbus TCP 服务器[{0} {1}:{2}]回应\r\n回应报文内容：{3}",
                         ServerID, server_ip, server_port, BitConverter.ToString(mbTcpRecv)));
-
-                    mbTcpData = BitConverter.ToString(mbTcpRecv, 9, regCount * 2).Replace("-", string.Empty);
-
                 }
                 catch (Exception ex)
                 {
@@ -170,6 +221,22 @@ namespace GDDST.DI.Driver
 
                     continue;
                 }
+
+                //判断是否返回异常代码
+                string errMsg = CheckExceptionCode(mbTcpRecv);
+                if (errMsg != string.Empty)
+                {
+                    throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg));
+                }
+
+                errMsg = CheckIsNullData(mbTcpRecv);
+                if (errMsg != string.Empty)
+                {
+                    throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg));
+                }
+                //
+
+                mbTcpData = BitConverter.ToString(mbTcpRecv, 9, regCount * 2).Replace("-", string.Empty);
 
                 break;
             }
@@ -228,7 +295,7 @@ namespace GDDST.DI.Driver
             mbTcpSend[4] = 0;
             mbTcpSend[5] = 6;
             //设备地址
-            mbTcpSend[6] = this.devAddr;
+            mbTcpSend[6] = this.DevAddr;
             //功能代码
             mbTcpSend[7] = 1;
             //起始寄存器
@@ -271,14 +338,12 @@ namespace GDDST.DI.Driver
                     continue;
                 }
 
+                byte[] mbTcpRecv = new byte[9 + iResultLen01];
                 try
                 {
-                    byte[] mbTcpRecv = new byte[9 + iResultLen01];
                     clientSocket.Receive(mbTcpRecv, mbTcpRecv.Length, SocketFlags.None);
                     ServiceLog.Debug(string.Format("接收到 Modbus TCP 服务器[{0} {1}:{2}]回应\r\n回应报文内容：{3}",
                         ServerID, server_ip, server_port, BitConverter.ToString(mbTcpRecv)));
-
-                    mbTcpStatus = BitConverter.ToString(mbTcpRecv, 9, iResultLen01).Replace("-", string.Empty);
 
                 }
                 catch (Exception ex)
@@ -295,6 +360,22 @@ namespace GDDST.DI.Driver
 
                     continue;
                 }
+
+                //判断是否返回异常代码
+                string errMsg = CheckExceptionCode(mbTcpRecv);
+                if (errMsg != string.Empty)
+                {
+                    throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg));
+                }
+
+                errMsg = CheckIsNullData(mbTcpRecv);
+                if (errMsg != string.Empty)
+                {
+                    throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg));
+                }
+                //
+
+                mbTcpStatus = BitConverter.ToString(mbTcpRecv, 9, iResultLen01).Replace("-", string.Empty);
 
                 break;
             }
@@ -377,16 +458,16 @@ namespace GDDST.DI.Driver
                 }
 
                 /*
-                * 01：传输标志Hi
-                * 02：传输标志Lo
-                * 03、04：协议标志
-                * 05、06：此位置以后字节数
-                * 07：单元标志
-                * 08：功能代码，0x10表示写多个寄存器
-                * 09、10：起始寄存器
-                * 11、12：寄存器数量
-                * 13：数据字节数
-                * 14~：数据
+                * 00：传输标志Hi
+                * 01：传输标志Lo
+                * 02、03：协议标志
+                * 04、05：此位置以后字节数
+                * 06：单元标志
+                * 07：功能代码，0x10表示写多个寄存器
+                * 08、9：起始寄存器
+                * 10、11：寄存器数量
+                * 12：数据字节数
+                * 13~：数据
                 */
 
                 byte[] plc_send16 = new byte[13 + regCount * 2];
@@ -399,7 +480,7 @@ namespace GDDST.DI.Driver
                 plc_send16[3] = 0;
                 plc_send16[4] = 0;
                 plc_send16[5] = (byte)(7 + regCount * 2);
-                plc_send16[6] = this.devAddr;
+                plc_send16[6] = this.DevAddr;
                 plc_send16[7] = 16;
                 byte[] bRegAddr16 = BitConverter.GetBytes(startAddr);
                 plc_send16[8] = bRegAddr16[1];
@@ -471,6 +552,18 @@ namespace GDDST.DI.Driver
                         break;
                     }
 
+                    //判断是否返回异常代码
+
+                    string errMsg = CheckExceptionCode(recMsgByte16);
+                    if (errMsg != string.Empty)
+                    {
+                        throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg));
+                    }
+                    errMsg = CheckIsNullData(recMsgByte16);
+                    if (errMsg != string.Empty)
+                    {
+                        throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg));
+                    }
                     break;
                 }
             }
@@ -520,7 +613,7 @@ namespace GDDST.DI.Driver
                 byte[] bLen15 = BitConverter.GetBytes(iLen15);
                 plc_send15[4] = bLen15[1];
                 plc_send15[5] = bLen15[0];
-                plc_send15[6] = this.devAddr;
+                plc_send15[6] = this.DevAddr;
                 plc_send15[7] = 15;
                 byte[] bRegAddr15 = BitConverter.GetBytes(startAddr);
                 plc_send15[8] = bRegAddr15[1];
@@ -574,6 +667,17 @@ namespace GDDST.DI.Driver
                         break;
                     }
 
+                    //判断是否返回异常代码
+                    string errMsg = CheckExceptionCode(recMsgByte15);
+                    if (errMsg != string.Empty)
+                    {
+                        throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg));
+                    }
+                    errMsg = CheckIsNullData(recMsgByte15);
+                    if (errMsg != string.Empty)
+                    {
+                        throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg));
+                    }
                     break;
                 }
             }

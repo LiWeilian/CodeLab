@@ -108,13 +108,17 @@ namespace GDDST.DI.DataServiceWCF
             if (mbTcpClientHost == null)
             {
                 response.ErrorMessage = string.Format("数据采集服务未启动或未成功连接至Modbus TCP数据服务器");
+                response.Status = "0";
                 return response;
             }
+
+            response.DeviceAddr = mbTcpClientHost.DevAddr.ToString();
 
             ushort startAddr;
             if (!ushort.TryParse(request.StartAddr, out startAddr))
             {
                 response.ErrorMessage = string.Format("起始地址[{0}]无效", request.StartAddr);
+                response.Status = "0";
                 return response;
             }
 
@@ -122,6 +126,7 @@ namespace GDDST.DI.DataServiceWCF
             if (!ushort.TryParse(request.RegCount, out regCount))
             {
                 response.ErrorMessage = string.Format("读取地址数量[{0}]无效", request.RegCount);
+                response.Status = "0";
                 return response;
             }
 
@@ -135,6 +140,7 @@ namespace GDDST.DI.DataServiceWCF
             if (!byte.TryParse(request.FunctionCode, out functCode))
             {
                 response.ErrorMessage = string.Format("功能代码[{0}]无效", request.FunctionCode);
+                response.Status = "0";
                 return response;
             }            
 
@@ -155,6 +161,7 @@ namespace GDDST.DI.DataServiceWCF
                         break;
                 }
                 response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                response.Status = "1";
             }
             catch (Exception ex)
             {
@@ -162,6 +169,7 @@ namespace GDDST.DI.DataServiceWCF
                 response.DataLength = "0";
                 response.ErrorMessage = ex.Message;
                 response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                response.Status = "0";
             }
 
             return response;
@@ -195,12 +203,16 @@ namespace GDDST.DI.DataServiceWCF
             if (mbTcpClientHost == null)
             {
                 response.ErrorMessage = string.Format("数据采集服务未启动或未成功连接至Modbus TCP数据服务器");
+                response.Status = "0";
                 return response;
             }
+
+            response.DeviceAddr = mbTcpClientHost.DevAddr.ToString();
 
             try
             {
                 mbTcpClientHost.WriteModbusTCPCoilStatus(writeInfo.WriteData);
+                response.Status = "1";
             }
             catch (Exception ex)
             {
@@ -208,6 +220,7 @@ namespace GDDST.DI.DataServiceWCF
                 response.DataLength = "0";
                 response.ErrorMessage = ex.Message;
                 response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                response.Status = "0";
             }
             return response;
         }
@@ -226,12 +239,16 @@ namespace GDDST.DI.DataServiceWCF
             if (mbTcpClientHost == null)
             {
                 response.ErrorMessage = string.Format("数据采集服务未启动或未成功连接至Modbus TCP数据服务器");
+                response.Status = "0";
                 return response;
             }
+
+            response.DeviceAddr = mbTcpClientHost.DevAddr.ToString();
 
             try
             {
                 mbTcpClientHost.WriteModbusTCPData(writeInfo.WriteData);
+                response.Status = "1";
             }
             catch (Exception ex)
             {
@@ -239,6 +256,7 @@ namespace GDDST.DI.DataServiceWCF
                 response.DataLength = "0";
                 response.ErrorMessage = ex.Message;
                 response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                response.Status = "0";
             }
             return response;
         }
