@@ -206,6 +206,12 @@ namespace GDDST.DI.Driver
                     clientSocket.Receive(mbTcpRecv, mbTcpRecv.Length, SocketFlags.None);
                     ServiceLog.Debug(string.Format("接收到 Modbus TCP 服务器[{0} {1}:{2}]回应\r\n回应报文内容：{3}",
                         ServerID, server_ip, server_port, BitConverter.ToString(mbTcpRecv)));
+
+                    string nullDataErrMsg = CheckIsNullData(mbTcpRecv);
+                    if (nullDataErrMsg != string.Empty)
+                    {
+                        throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", nullDataErrMsg));
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -224,12 +230,6 @@ namespace GDDST.DI.Driver
 
                 //判断是否返回异常代码
                 string errMsg = CheckExceptionCode(mbTcpRecv);
-                if (errMsg != string.Empty)
-                {
-                    throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg));
-                }
-
-                errMsg = CheckIsNullData(mbTcpRecv);
                 if (errMsg != string.Empty)
                 {
                     throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg));
@@ -345,6 +345,12 @@ namespace GDDST.DI.Driver
                     ServiceLog.Debug(string.Format("接收到 Modbus TCP 服务器[{0} {1}:{2}]回应\r\n回应报文内容：{3}",
                         ServerID, server_ip, server_port, BitConverter.ToString(mbTcpRecv)));
 
+                    string nullDataErrMsg = CheckIsNullData(mbTcpRecv);
+                    if (nullDataErrMsg != string.Empty)
+                    {
+                        throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", nullDataErrMsg));
+                    }
+
                 }
                 catch (Exception ex)
                 {
@@ -363,12 +369,6 @@ namespace GDDST.DI.Driver
 
                 //判断是否返回异常代码
                 string errMsg = CheckExceptionCode(mbTcpRecv);
-                if (errMsg != string.Empty)
-                {
-                    throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg));
-                }
-
-                errMsg = CheckIsNullData(mbTcpRecv);
                 if (errMsg != string.Empty)
                 {
                     throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg));
@@ -545,6 +545,12 @@ namespace GDDST.DI.Driver
                         recLen16 = clientSocket.Receive(recMsgByte16, recMsgByte16.Length, SocketFlags.None);
                         ServiceLog.Debug(string.Format("接收到 Modbus TCP 服务器[{0} {1}:{2}]数据\r\n报文内容：{3}",
                             ServerID, server_ip, server_port, BitConverter.ToString(recMsgByte16)));
+
+                        string nullDataErrMsg = CheckIsNullData(recMsgByte16);
+                        if (nullDataErrMsg != string.Empty)
+                        {
+                            throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", nullDataErrMsg));
+                        }
                     }
                     catch (SocketException se)
                     {
@@ -555,11 +561,6 @@ namespace GDDST.DI.Driver
                     //判断是否返回异常代码
 
                     string errMsg = CheckExceptionCode(recMsgByte16);
-                    if (errMsg != string.Empty)
-                    {
-                        throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg));
-                    }
-                    errMsg = CheckIsNullData(recMsgByte16);
                     if (errMsg != string.Empty)
                     {
                         throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg));
@@ -660,6 +661,12 @@ namespace GDDST.DI.Driver
                         recLen15 = clientSocket.Receive(recMsgByte15, recMsgByte15.Length, SocketFlags.None);
                         ServiceLog.Debug(string.Format("接收到 Modbus TCP 服务器[{0} {1}:{2}]数据\r\n报文内容：{3}",
                             ServerID, server_ip, server_port, BitConverter.ToString(recMsgByte15)));
+
+                        string nullDataErrMsg = CheckIsNullData(recMsgByte15);
+                        if (nullDataErrMsg != string.Empty)
+                        {
+                            throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", nullDataErrMsg));
+                        }
                     }
                     catch (SocketException se)
                     {
@@ -669,11 +676,6 @@ namespace GDDST.DI.Driver
 
                     //判断是否返回异常代码
                     string errMsg = CheckExceptionCode(recMsgByte15);
-                    if (errMsg != string.Empty)
-                    {
-                        throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg));
-                    }
-                    errMsg = CheckIsNullData(recMsgByte15);
                     if (errMsg != string.Empty)
                     {
                         throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg));
