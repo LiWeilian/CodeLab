@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.IO;
 
 namespace GDDST.DI.NetConsoleDemo
 {
@@ -9,6 +10,7 @@ namespace GDDST.DI.NetConsoleDemo
     {
         static private byte[] m_receiveBuffer;
         const int m_receiveBufferSize = 4096;
+        private static string m_logFileName = string.Empty;
 
         static public void Run()
         {
@@ -64,12 +66,63 @@ namespace GDDST.DI.NetConsoleDemo
             serverSocket.Close();
         }
 
+        public static void LogServiceMessage(string msg)
+        {
+            //ConfigLogLevel = GetConfigLogLevel();
+
+            try
+            {
+                //Console.WriteLine(msg);
+                if (m_logFileName == string.Empty)
+                {
+                    string dir = string.Format("{0}\\log", AppDomain.CurrentDomain.BaseDirectory);
+                    if (!Directory.Exists(dir))
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+
+                    if (Directory.Exists(dir))
+                    {
+                        m_logFileName = string.Format("{0}\\Service_{1}.log", dir,
+                            DateTime.Now.ToString("yyyyMMddhhmmss"));
+                    }
+                }
+
+                if (m_logFileName == string.Empty)
+                {
+                    return;
+                }
+                else
+                {
+                    FileStream fs;
+                    if (File.Exists(m_logFileName))
+                    {
+                        fs = new FileStream(m_logFileName, FileMode.Append, FileAccess.Write);
+                    }
+                    else
+                    {
+                        fs = new FileStream(m_logFileName, FileMode.Create, FileAccess.Write);
+                    }
+
+                    StreamWriter sw = new StreamWriter(fs);
+                    sw.WriteLine(string.Format("{0}\r\n日志级别：{1}\r\n", DateTime.Now, msg));
+                    sw.Flush();
+                    sw.Close();
+                    fs.Close();
+                }
+            }
+            catch
+            {
+
+            }
+        }
 
         static public void ProcessSocketClient(object client)
         {
             if (client != null && client is Socket)
             {
-                ProcessSocketClientAsync(client as Socket);
+                //ProcessSocketClientAsync(client as Socket);
+                ProcessSocketClient(client as Socket);
             }
         }
 
@@ -100,6 +153,8 @@ namespace GDDST.DI.NetConsoleDemo
                     Console.WriteLine("客户端: " + client.Handle);
                     Console.WriteLine(msg);
                     Console.WriteLine("");
+
+                    LogServiceMessage(string.Format("客户端： {0}\r\n{1}\r\n", client.Handle, msg));
 
 
                     try
