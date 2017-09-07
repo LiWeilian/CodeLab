@@ -19,13 +19,15 @@ namespace GDDST.DI.Driver
         private Socket clientSocket = null;
         private string clientSocketEndPointInfo = string.Empty;
         private uint waitTime = 500;
+        private int retryTimes = 3;
         public ModbusRtuTcpServerHost(string server_id, IPAddress server_ip,
-            ushort server_port, uint waitTime)
+            ushort server_port, uint waitTime, int retryTimes)
         {
             ServerID = server_id;
             this.server_ip = server_ip;
             this.server_port = server_port;
             this.waitTime = waitTime;
+            this.retryTimes = retryTimes;
         }
 
         public void Run()
@@ -92,6 +94,61 @@ namespace GDDST.DI.Driver
             modbusRtuReq[6] = bCrc16[0];
             modbusRtuReq[7] = bCrc16[1];
 
+            int retryTimes = 0;
+
+            while (retryTimes <= this.retryTimes)
+            {
+                try
+                {
+                    ServiceLog.Debug(string.Format("请求报文：{0}\r\n发送端：[{1} {2}:{3}]\r\n接收端：{4}",
+                    BitConverter.ToString(modbusRtuReq), ServerID, server_ip, server_port, clientSocketEndPointInfo));
+
+                    clientSocket.Send(modbusRtuReq);
+                }
+                catch (Exception ex)
+                {
+                    ServiceLog.Error(string.Format("数据采集服务[{0} {1}:{2}]发送请求到[{3}]时连接发生错误：{4}\r\n重试连接",
+                        ServerID, server_ip, server_port, clientSocketEndPointInfo, ex.Message));
+                    if (retryTimes >= this.retryTimes)
+                    {
+                        throw new Exception(string.Format("数据采集服务[{0} {1}:{2}]发送请求到[{3}]时连接发生错误：{4}",
+                            ServerID, server_ip, server_port, clientSocketEndPointInfo, ex.Message));
+                    }
+
+                    retryTimes++;
+                    ReconnectToServer();
+                    continue;
+                }
+
+                byte[] modbusRtuResponse = new byte[5 + regCount * 2];
+                try
+                {
+                    clientSocket.Receive(modbusRtuResponse, modbusRtuResponse.Length, SocketFlags.None);
+
+                    ServiceLog.Debug(string.Format("回应报文：{0}\r\n发送端：{1}\r\n接收端：[{2} {3}:{4}]",
+                        BitConverter.ToString(modbusRtuResponse), clientSocketEndPointInfo, ServerID, server_ip, server_port));
+
+                    mbRtuData = BitConverter.ToString(modbusRtuResponse, 3, regCount * 2).Replace("-", string.Empty);
+                    respCRC = BitConverter.ToString(modbusRtuResponse, 3 + regCount * 2, 2).Replace("-", string.Empty);
+                }
+                catch (Exception ex)
+                {
+                    ServiceLog.Error(string.Format("数据采集服务[{0} {1}:{2}]接收[{3}]回应时连接发生错误：{4}\r\n重试连接",
+                        ServerID, server_ip, server_port, clientSocketEndPointInfo, ex.Message));
+                    if (retryTimes >= this.retryTimes)
+                    {
+                        throw new Exception(string.Format("数据采集服务[{0} {1}:{2}]接收[{3}]回应时连接发生错误：{4}",
+                            ServerID, server_ip, server_port, clientSocketEndPointInfo, ex.Message));
+                    }
+
+                    retryTimes++;
+                    ReconnectToServer();
+                    continue;
+                }
+
+                break;
+            }   
+            /*
             byte[] modbusRtuResponse = new byte[5 + regCount * 2];
             try
             {
@@ -151,7 +208,7 @@ namespace GDDST.DI.Driver
                 }
                 
             }
-
+            */
 
             return mbRtuData;
         }
@@ -177,6 +234,21 @@ namespace GDDST.DI.Driver
             } else
             {
                 return clientSocket;
+            }
+        }
+
+        private void ReconnectToServer()
+        {
+            try
+            {
+                ServiceLog.Info(string.Format("正在重新建立 Modbus TCP 数据采集连接[{0} {1}:{2}]", ServerID, server_ip, server_port));
+                clientSocket = AcceptConnection();
+                ServiceLog.Info(string.Format("重新建立 Modbus TCP 数据采集连接[{0} {1}:{2}]成功...", ServerID, server_ip, server_port));
+            }
+            catch (Exception ex)
+            {
+                ServiceLog.Error(string.Format("重新建立 Modbus TCP 数据采集连接[{0} {1}:{2}]发生错误：{3}", ServerID, server_ip, server_port, ex.Message));
+                return;
             }
         }
 

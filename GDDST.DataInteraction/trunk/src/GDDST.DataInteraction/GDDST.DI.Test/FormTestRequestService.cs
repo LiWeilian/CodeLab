@@ -43,23 +43,31 @@ namespace GDDST.DI.Test
                     byte[] postDataByte = Encoding.UTF8.GetBytes(postData);
 
                     //"http://172.16.1.2:8734/gddstdataserver/dataservice/modbustcp"
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(txtURL.Text);
-                    request.Method = "POST";
-                    request.ContentType = "application/json;charset=utf-8";
-                    request.ContentLength = postData.Length;
 
-                    using (Stream requestStream = request.GetRequestStream())
+                    try
                     {
-                        requestStream.Write(postDataByte, 0, postDataByte.Length);
+                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(txtURL.Text);
+                        request.Method = "POST";
+                        request.ContentType = "application/json;charset=utf-8";
+                        request.ContentLength = postData.Length;
+
+                        using (Stream requestStream = request.GetRequestStream())
+                        {
+                            requestStream.Write(postDataByte, 0, postDataByte.Length);
+                        }
+
+                        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                        Stream responseStream = response.GetResponseStream();
+                        StreamReader sr = new StreamReader(responseStream);
+                        txtResponse.AppendText(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss\r\n"));
+                        txtResponse.AppendText(sr.ReadToEnd());
+                        txtResponse.AppendText("\r\n\r\n");
                     }
-
-                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-                    Stream responseStream = response.GetResponseStream();
-                    StreamReader sr = new StreamReader(responseStream);
-                    txtResponse.AppendText(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss\r\n"));
-                    txtResponse.AppendText(sr.ReadToEnd());
-                    txtResponse.AppendText("\r\n\r\n");
+                    catch (Exception)
+                    {
+                    }
+                    
 
                     if (interval <= 0)
                     {

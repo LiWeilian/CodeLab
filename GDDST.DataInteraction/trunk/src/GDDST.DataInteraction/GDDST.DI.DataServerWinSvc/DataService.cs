@@ -110,7 +110,7 @@ namespace GDDST.DI.DataServerWinSvc
                     }
                     try
                     {
-                        ModbusRtuTcpServerHost tcpSvrHost = new ModbusRtuTcpServerHost(serverCfg.ServerID, ip, port, waitTime);
+                        ModbusRtuTcpServerHost tcpSvrHost = new ModbusRtuTcpServerHost(serverCfg.ServerID, ip, port, waitTime, retryTimes);
                         Thread thread = new Thread(new ThreadStart(tcpSvrHost.Run));
                         thread.IsBackground = true;
                         thread.Start();
