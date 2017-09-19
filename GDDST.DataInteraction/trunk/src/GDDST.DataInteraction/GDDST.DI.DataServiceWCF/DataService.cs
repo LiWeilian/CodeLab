@@ -44,6 +44,7 @@ namespace GDDST.DI.DataServiceWCF
             if (tcpServerHost == null)
             {
                 response.ErrorMessage = string.Format("数据采集服务未启动或未成功连接数据源");
+                response.Status = "0";
                 return response;
             }
 
@@ -51,6 +52,7 @@ namespace GDDST.DI.DataServiceWCF
             if (!byte.TryParse(request.DeviceAddr, out devAddr))
             {
                 response.ErrorMessage = string.Format("设备地址[{0}]无效", request.DeviceAddr);
+                response.Status = "0";
                 return response;
             }
 
@@ -58,6 +60,7 @@ namespace GDDST.DI.DataServiceWCF
             if (!byte.TryParse(request.FunctionCode, out funcCode))
             {
                 response.ErrorMessage = string.Format("功能代码[{0}]无效", request.FunctionCode);
+                response.Status = "0";
                 return response;
             }
 
@@ -65,6 +68,7 @@ namespace GDDST.DI.DataServiceWCF
             if (!ushort.TryParse(request.StartAddr, out startAddr))
             {
                 response.ErrorMessage = string.Format("起始寄存器地址[{0}]无效", request.StartAddr);
+                response.Status = "0";
                 return response;
             }
 
@@ -72,6 +76,7 @@ namespace GDDST.DI.DataServiceWCF
             if (!ushort.TryParse(request.RegCount, out regCount))
             {
                 response.ErrorMessage = string.Format("读取寄存器数量[{0}]无效", request.RegCount);
+                response.Status = "0";
                 return response;
             }
             
@@ -82,12 +87,14 @@ namespace GDDST.DI.DataServiceWCF
                 response.DataLength = (regCount * 2).ToString();
                 response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 response.ResponseCRC = respCRC;
+                response.Status = "1";
             }
             catch (Exception ex)
             {
                 response.DataContent = null;
                 response.DataLength = "0";
                 response.ErrorMessage = ex.Message;
+                response.Status = "0";
                 response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             }
             

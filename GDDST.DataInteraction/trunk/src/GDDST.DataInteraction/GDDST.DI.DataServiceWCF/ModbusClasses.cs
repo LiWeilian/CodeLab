@@ -25,6 +25,7 @@ namespace GDDST.DI.DataServiceWCF
         public string ErrorMessage { get; set; }
         public string ResponseTime { get; set; }
         public string ResponseCRC { get; set; }
+        public string Status { get; set; }
     }
 
     public class ModbusTCPRequestBody
