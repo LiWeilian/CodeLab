@@ -62,6 +62,10 @@
       <Project>{07889f56-55c2-4dd1-b81d-6481cecb10e7}</Project>
       <Name>GDDST.DI.Driver</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GDDST.DI.Utils\GDDST.DI.Utils.csproj">
+      <Project>{e26e6288-7812-4bb7-b690-f80eca830080}</Project>
+      <Name>GDDST.DI.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="说明.txt" />

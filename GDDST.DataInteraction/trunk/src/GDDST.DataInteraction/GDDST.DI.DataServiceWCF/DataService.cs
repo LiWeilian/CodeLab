@@ -4,8 +4,11 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
-using GDDST.DI.Driver;
+
 using System.Web.Script.Serialization;
+
+using GDDST.DI.Driver;
+using GDDST.DI.Utils;
 
 namespace GDDST.DI.DataServiceWCF
 {
@@ -115,27 +118,11 @@ namespace GDDST.DI.DataServiceWCF
             if (mbTcpClientHost == null)
             {
                 response.ErrorMessage = string.Format("数据采集服务未启动或未成功连接至Modbus TCP数据服务器");
-                response.Status = "0";
+                response.Status = "2";
                 return response;
             }
 
             response.DeviceAddr = mbTcpClientHost.DevAddr.ToString();
-
-            ushort startAddr;
-            if (!ushort.TryParse(request.StartAddr, out startAddr))
-            {
-                response.ErrorMessage = string.Format("起始地址[{0}]无效", request.StartAddr);
-                response.Status = "0";
-                return response;
-            }
-
-            ushort regCount;
-            if (!ushort.TryParse(request.RegCount, out regCount))
-            {
-                response.ErrorMessage = string.Format("读取地址数量[{0}]无效", request.RegCount);
-                response.Status = "0";
-                return response;
-            }
 
             string returnFormat = "string";
             if (request.ReturnFormat != null && request.ReturnFormat.ToLower().Trim() == "json")
@@ -147,28 +134,96 @@ namespace GDDST.DI.DataServiceWCF
             if (!byte.TryParse(request.FunctionCode, out functCode))
             {
                 response.ErrorMessage = string.Format("功能代码[{0}]无效", request.FunctionCode);
-                response.Status = "0";
+                response.Status = "2";
                 return response;
-            }            
+            }
+            
+
+            List<ModbusTCPRequestAddress> addrs = new List<ModbusTCPRequestAddress>();
+
+            if (request.RequestAddrs != null)
+            {
+                for (int i = 0; i < request.RequestAddrs.Length; i++)
+                {
+                    ModbusTCPRequestAddress addr = new ModbusTCPRequestAddress();
+                    addr.StartAddr = request.RequestAddrs[i].StartAddr;
+                    addr.RegCount = request.RequestAddrs[i].RegCount;
+                    addrs.Add(addr);
+                }
+            } else
+            {
+                ModbusTCPRequestAddress addr = new ModbusTCPRequestAddress();
+                addr.StartAddr = request.StartAddr;
+                addr.RegCount = request.RegCount;
+                addrs.Add(addr);
+
+                /*
+                ushort startAddr;
+                if (!ushort.TryParse(request.StartAddr, out startAddr))
+                {
+                    response.ErrorMessage = string.Format("起始地址[{0}]无效", request.StartAddr);
+                    response.Status = "0";
+                    return response;
+                }
+
+                ushort regCount;
+                if (!ushort.TryParse(request.RegCount, out regCount))
+                {
+                    response.ErrorMessage = string.Format("读取地址数量[{0}]无效", request.RegCount);
+                    response.Status = "0";
+                    return response;
+                }
+                */
+            }          
 
             try
             {
                 //string respCRC = string.Empty;
-                switch (functCode)
+
+                string dataContent = string.Empty;
+                string tempDataContent = string.Empty;
+                int dataLen = 0;
+                int tempDataLen = 0;
+
+                foreach (ModbusTCPRequestAddress addr in addrs)
                 {
-                    case 1:
-                        response.DataContent = mbTcpClientHost.RequestModbusTcpCoilStatus(startAddr, regCount, returnFormat);
-                        response.DataLength = (regCount * 2).ToString();
-                        break;
-                    case 3:
-                        response.DataContent = mbTcpClientHost.RequestModbusTcpData(startAddr, regCount, returnFormat);
-                        response.DataLength = (regCount * 2).ToString();
-                        break;
-                    default:
-                        break;
+                    switch (functCode)
+                    {
+                        case 1:
+                            tempDataContent = mbTcpClientHost.RequestModbusTcpCoilStatus(addr.StartAddr, addr.RegCount, returnFormat);
+                            tempDataLen = addr.RegCount * 2;
+                            break;
+                        case 3:
+                            tempDataContent = mbTcpClientHost.RequestModbusTcpData(addr.StartAddr, addr.RegCount, returnFormat);
+                            tempDataLen = addr.RegCount * 2;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    if (dataContent == string.Empty)
+                    {
+                        dataContent = tempDataContent;
+                    } else
+                    {
+                        dataContent = dataContent + "," + tempDataContent;
+                    }
+
+                    dataLen = dataLen + tempDataLen;
                 }
+
+                response.DataContent = dataContent;
+                response.DataLength = dataLen.ToString();
                 response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 response.Status = "1";
+            }
+            catch (CustomException cex)
+            {
+                response.DataContent = null;
+                response.DataLength = "0";
+                response.ErrorMessage = cex.Message;
+                response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                response.Status = ((int)cex.ExceptionCode).ToString();
             }
             catch (Exception ex)
             {
@@ -221,6 +276,15 @@ namespace GDDST.DI.DataServiceWCF
                 mbTcpClientHost.WriteModbusTCPCoilStatus(writeInfo.WriteData);
                 response.Status = "1";
             }
+            catch (CustomException cex)
+            {
+
+                response.DataContent = null;
+                response.DataLength = "0";
+                response.ErrorMessage = cex.Message;
+                response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                response.Status = ((int)cex.ExceptionCode).ToString();
+            }
             catch (Exception ex)
             {
                 response.DataContent = null;
@@ -256,6 +320,15 @@ namespace GDDST.DI.DataServiceWCF
             {
                 mbTcpClientHost.WriteModbusTCPData(writeInfo.WriteData);
                 response.Status = "1";
+            }
+            catch (CustomException cex)
+            {
+
+                response.DataContent = null;
+                response.DataLength = "0";
+                response.ErrorMessage = cex.Message;
+                response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                response.Status = ((int)cex.ExceptionCode).ToString();
             }
             catch (Exception ex)
             {

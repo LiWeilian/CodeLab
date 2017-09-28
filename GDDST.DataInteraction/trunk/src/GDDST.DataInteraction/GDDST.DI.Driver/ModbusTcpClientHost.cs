@@ -90,12 +90,13 @@ namespace GDDST.DI.Driver
             }
         }
 
-        private string CheckExceptionCode(byte[] recvBytes)
+        private string CheckExceptionCode(byte[] recvBytes, out CustomExceptionType exCode)
         {
+            exCode = CustomExceptionType.CET_OK;
             string errMsg = string.Empty;
             if (recvBytes.Length < 9)
             {
-
+                
             } else
             {
                 if (recvBytes[5] == 0x03 && recvBytes[6] == this.DevAddr)
@@ -110,12 +111,15 @@ namespace GDDST.DI.Driver
                             {
                                 case 0x01:
                                     errMsg = "错误代码[0x01]，错误的请求类型";
+                                    exCode = CustomExceptionType.CET_MB_WRONG_REQ_TYPE;
                                     break;
                                 case 0x02:
                                     errMsg = "错误代码[0x02]，访问了非法地址";
+                                    exCode = CustomExceptionType.CET_MB_INVALID_ADDR;
                                     break;
                                 default:
                                     errMsg = "其他错误";
+                                    exCode = CustomExceptionType.CET_Unknown;
                                     break;
                             }
                             break;
@@ -191,7 +195,7 @@ namespace GDDST.DI.Driver
                             ServerID, server_ip, server_port, ex.Message, BitConverter.ToString(mbTcpSend)));
                     if (retryTimes >= this.retryTimes)
                     {
-                        throw new Exception(string.Format("发送请求到 Modbus TCP 服务器时发生错误：{0}", ex.Message));
+                        throw new CustomException(string.Format("发送请求到 Modbus TCP 服务器时发生错误：{0}", ex.Message), CustomExceptionType.CET_NETWORK_ERROR);
                     }
                     retryTimes++;
 
@@ -210,7 +214,7 @@ namespace GDDST.DI.Driver
                     string nullDataErrMsg = CheckIsNullData(mbTcpRecv);
                     if (nullDataErrMsg != string.Empty)
                     {
-                        throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", nullDataErrMsg));
+                        throw new CustomException(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", nullDataErrMsg), CustomExceptionType.CET_MB_NULL_DATA);
                     }
                 }
                 catch (Exception ex)
@@ -219,7 +223,7 @@ namespace GDDST.DI.Driver
                         ServerID, server_ip, server_port, ex.Message));
                     if (retryTimes >= this.retryTimes)
                     {
-                        throw new Exception(string.Format("接收 Modbus TCP 服务器回应时发生错误：{0}", ex.Message));
+                        throw new CustomException(string.Format("接收 Modbus TCP 服务器回应时发生错误：{0}", ex.Message), CustomExceptionType.CET_NETWORK_ERROR);
                     }
                     retryTimes++;
 
@@ -229,10 +233,11 @@ namespace GDDST.DI.Driver
                 }
 
                 //判断是否返回异常代码
-                string errMsg = CheckExceptionCode(mbTcpRecv);
+                CustomExceptionType cet;
+                string errMsg = CheckExceptionCode(mbTcpRecv, out cet);
                 if (errMsg != string.Empty)
                 {
-                    throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg));
+                    throw new CustomException(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg), cet);
                 }
                 //
 
@@ -268,7 +273,7 @@ namespace GDDST.DI.Driver
                         ServerID, server_ip, server_port, mbTcpData, ex.Message));
                 if (retryTimes >= this.retryTimes)
                 {
-                    throw new Exception(string.Format("转换 Modbus TCP 服务器回应数据时发生错误：{0}", ex.Message));
+                    throw new CustomException(string.Format("转换 Modbus TCP 服务器回应数据时发生错误：{0}", ex.Message), CustomExceptionType.CET_Unknown);
                 }
             }
             
@@ -329,7 +334,7 @@ namespace GDDST.DI.Driver
                             ServerID, server_ip, server_port, ex.Message, BitConverter.ToString(mbTcpSend)));
                     if (retryTimes >= this.retryTimes)
                     {
-                        throw new Exception(string.Format("发送请求到 Modbus TCP 服务器时发生错误：{0}", ex.Message));
+                        throw new CustomException(string.Format("发送请求到 Modbus TCP 服务器时发生错误：{0}", ex.Message), CustomExceptionType.CET_NETWORK_ERROR);
                     }
                     retryTimes++;
 
@@ -348,7 +353,7 @@ namespace GDDST.DI.Driver
                     string nullDataErrMsg = CheckIsNullData(mbTcpRecv);
                     if (nullDataErrMsg != string.Empty)
                     {
-                        throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", nullDataErrMsg));
+                        throw new CustomException(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", nullDataErrMsg), CustomExceptionType.CET_MB_NULL_DATA);
                     }
 
                 }
@@ -358,7 +363,7 @@ namespace GDDST.DI.Driver
                         ServerID, server_ip, server_port, ex.Message));
                     if (retryTimes >= this.retryTimes)
                     {
-                        throw new Exception(string.Format("接收 Modbus TCP 服务器回应时发生错误：{0}", ex.Message));
+                        throw new CustomException(string.Format("接收 Modbus TCP 服务器回应时发生错误：{0}", ex.Message), CustomExceptionType.CET_NETWORK_ERROR);
                     }
                     retryTimes++;
 
@@ -368,10 +373,11 @@ namespace GDDST.DI.Driver
                 }
 
                 //判断是否返回异常代码
-                string errMsg = CheckExceptionCode(mbTcpRecv);
+                CustomExceptionType cet;
+                string errMsg = CheckExceptionCode(mbTcpRecv, out cet);
                 if (errMsg != string.Empty)
                 {
-                    throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg));
+                    throw new CustomException(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg), cet);
                 }
                 //
 
@@ -418,7 +424,7 @@ namespace GDDST.DI.Driver
                         ServerID, server_ip, server_port, mbTcpStatus, ex.Message));
                 if (retryTimes >= this.retryTimes)
                 {
-                    throw new Exception(string.Format("转换 Modbus TCP 服务器回应数据时发生错误：{0}", ex.Message));
+                    throw new CustomException(string.Format("转换 Modbus TCP 服务器回应数据时发生错误：{0}", ex.Message), CustomExceptionType.CET_Unknown);
                 }
             }
 
@@ -528,7 +534,7 @@ namespace GDDST.DI.Driver
                                 ServerID, server_ip, server_port, ex.Message, BitConverter.ToString(plc_send16)));
                         if (retryTimes >= this.retryTimes)
                         {
-                            throw new Exception(string.Format("写入数据到 Modbus TCP 服务器时发生错误：{0}", ex.Message));
+                            throw new CustomException(string.Format("写入数据到 Modbus TCP 服务器时发生错误：{0}", ex.Message), CustomExceptionType.CET_NETWORK_ERROR);
                         }
                         retryTimes++;
 
@@ -549,7 +555,7 @@ namespace GDDST.DI.Driver
                         string nullDataErrMsg = CheckIsNullData(recMsgByte16);
                         if (nullDataErrMsg != string.Empty)
                         {
-                            throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", nullDataErrMsg));
+                            throw new CustomException(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", nullDataErrMsg), CustomExceptionType.CET_MB_NULL_DATA);
                         }
                     }
                     catch (SocketException se)
@@ -559,11 +565,11 @@ namespace GDDST.DI.Driver
                     }
 
                     //判断是否返回异常代码
-
-                    string errMsg = CheckExceptionCode(recMsgByte16);
+                    CustomExceptionType cet;
+                    string errMsg = CheckExceptionCode(recMsgByte16, out cet);
                     if (errMsg != string.Empty)
                     {
-                        throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg));
+                        throw new CustomException(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg), cet);
                     }
                     break;
                 }
@@ -644,7 +650,7 @@ namespace GDDST.DI.Driver
                                 ServerID, server_ip, server_port, ex.Message, BitConverter.ToString(plc_send15)));
                         if (retryTimes >= this.retryTimes)
                         {
-                            throw new Exception(string.Format("写入数据到 Modbus TCP 服务器时发生错误：{0}", ex.Message));
+                            throw new CustomException(string.Format("写入数据到 Modbus TCP 服务器时发生错误：{0}", ex.Message), CustomExceptionType.CET_NETWORK_ERROR);
                         }
                         retryTimes++;
 
@@ -665,7 +671,7 @@ namespace GDDST.DI.Driver
                         string nullDataErrMsg = CheckIsNullData(recMsgByte15);
                         if (nullDataErrMsg != string.Empty)
                         {
-                            throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", nullDataErrMsg));
+                            throw new CustomException(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", nullDataErrMsg), CustomExceptionType.CET_MB_NULL_DATA);
                         }
                     }
                     catch (SocketException se)
@@ -675,10 +681,11 @@ namespace GDDST.DI.Driver
                     }
 
                     //判断是否返回异常代码
-                    string errMsg = CheckExceptionCode(recMsgByte15);
+                    CustomExceptionType exCode;
+                    string errMsg = CheckExceptionCode(recMsgByte15, out exCode);
                     if (errMsg != string.Empty)
                     {
-                        throw new Exception(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg));
+                        throw new CustomException(string.Format("接收到 Modbus TCP 服务器返回的错误：{0}", errMsg), exCode);
                     }
                     break;
                 }

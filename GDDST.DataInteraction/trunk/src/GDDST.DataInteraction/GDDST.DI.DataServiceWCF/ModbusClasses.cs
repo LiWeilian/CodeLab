@@ -28,13 +28,21 @@ namespace GDDST.DI.DataServiceWCF
         public string Status { get; set; }
     }
 
+
+    public class ModbusTCPRequestAddress
+    {
+        public ushort StartAddr { get; set; }
+        public ushort RegCount { get; set; }
+    }
+
     public class ModbusTCPRequestBody
     {
         public string ServerID { get; set; }
         public string DeviceAddr { get; set; }
         public string FunctionCode { get; set; }
-        public string StartAddr { get; set; }
-        public string RegCount { get; set; }
+        public ushort StartAddr { get; set; }
+        public ushort RegCount { get; set; }
+        public ModbusTCPRequestAddress[] RequestAddrs { get; set; }
         /// <summary>
         /// 返回类型，string或json，默认string
         /// </summary>
@@ -50,6 +58,15 @@ namespace GDDST.DI.DataServiceWCF
         public string DataContent { get; set; }
         public string ErrorMessage { get; set; }
         public string ResponseTime { get; set; }
+        /// <summary>
+        /// 返回状态
+        /// 0：未知错误
+        /// 1：正常
+        /// 2：请求格式错误
+        /// 3：网络连接错误
+        /// 4：Modbus错误，错误的请求类型
+        /// 5：Modbus错误，访问了非法地址
+        /// </summary>
         public string Status { get; set; }
     }
 
