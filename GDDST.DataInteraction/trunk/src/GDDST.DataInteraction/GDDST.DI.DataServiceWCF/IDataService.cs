@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.Web;
 using System.Text;
 
 namespace GDDST.DI.DataServiceWCF
@@ -42,10 +43,24 @@ namespace GDDST.DI.DataServiceWCF
 
         [OperationContract]
         [WebInvoke(Method = "POST",
+            UriTemplate = "modbustcp/rmrtxt",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json)]
+        ModbusTCPResponseBody RequestModbusTCPMultiRegDataWithText(object request);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
             UriTemplate = "modbustcp/rmc",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json)]
         ModbusTCPResponseBody RequestModbusTCPMultiCoilData(ModbusTCPRequestBody request);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+            UriTemplate = "modbustcp/rmctxt",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json)]
+        ModbusTCPResponseBody RequestModbusTCPMultiCoilDataWithText(string request);
 
         [OperationContract]
         [WebInvoke(Method = "POST",

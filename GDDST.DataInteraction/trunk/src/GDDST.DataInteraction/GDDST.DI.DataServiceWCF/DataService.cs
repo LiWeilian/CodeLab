@@ -118,7 +118,7 @@ namespace GDDST.DI.DataServiceWCF
             if (mbTcpClientHost == null)
             {
                 response.ErrorMessage = string.Format("数据采集服务未启动或未成功连接至Modbus TCP数据服务器");
-                response.Status = "2";
+                response.Status = "3";
                 return response;
             }
 
@@ -143,6 +143,18 @@ namespace GDDST.DI.DataServiceWCF
 
             if (request.RequestAddrs != null)
             {
+                try
+                {
+
+                    JavaScriptSerializer jss = new JavaScriptSerializer();
+                    //ModbusTCPRequestAddress addr = (ModbusTCPRequestAddress)jss.Deserialize(request.RequestAddrs, typeof(ModbusTCPRequestAddress));
+                    //addrs.Add(addr);
+                    addrs = jss.Deserialize<List<ModbusTCPRequestAddress>>(request.RequestAddrs);
+                }
+                catch (Exception)
+                {
+                }
+                /*
                 for (int i = 0; i < request.RequestAddrs.Length; i++)
                 {
                     ModbusTCPRequestAddress addr = new ModbusTCPRequestAddress();
@@ -150,6 +162,7 @@ namespace GDDST.DI.DataServiceWCF
                     addr.RegCount = request.RequestAddrs[i].RegCount;
                     addrs.Add(addr);
                 }
+                */
             } else
             {
                 ModbusTCPRequestAddress addr = new ModbusTCPRequestAddress();
@@ -244,11 +257,56 @@ namespace GDDST.DI.DataServiceWCF
             return RequestModbusTCPData(request);
         }
 
+        public ModbusTCPResponseBody RequestModbusTCPMultiCoilDataWithText(string request)
+        {
+            throw new NotImplementedException();
+        }
+
         public ModbusTCPResponseBody RequestModbusTCPMultiRegData(ModbusTCPRequestBody request)
         {
             request.FunctionCode = "3";
 
             return RequestModbusTCPData(request);
+        }
+
+        public ModbusTCPResponseBody RequestModbusTCPMultiRegDataWithText(object request)
+        {
+            try
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                ModbusTCPRequestBody requestBody = (ModbusTCPRequestBody)jss.Deserialize((string)request, typeof(ModbusTCPRequestBody));
+
+                if (requestBody != null)
+                {
+                    requestBody.FunctionCode = "3";
+                    return RequestModbusTCPData(requestBody);
+                }
+                else
+                {
+                    ModbusTCPResponseBody response = new ModbusTCPResponseBody();
+                    response.ServerID = string.Empty;
+                    response.DeviceAddr = string.Empty;
+                    response.ErrorMessage = "传入参数格式无法解析";
+                    response.Status = "2";
+                    response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    response.DataContent = string.Empty;
+
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                ModbusTCPResponseBody response = new ModbusTCPResponseBody();
+                response.ServerID = string.Empty;
+                response.DeviceAddr = string.Empty;
+                response.ErrorMessage = string.Format("传入参数格式无法解析，错误信息：{0}", ex.Message);
+                response.Status = "2";
+                response.ResponseTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                response.DataContent = string.Empty;
+
+                return response;
+            }
+            
         }
 
         public ModbusTCPResponseBody WriteModbusTCPCoilStatus(ModbusTCPWriteDataBody writeInfo)
